@@ -10,7 +10,7 @@
     @onItemsPerPage="handleItemsPerPage"
   >
     <template #title-button>
-      <button-light to="/coordinator/projects/project/addSupportPlan">
+      <button-light to="/coordinator/projects/project/add-supportPlan">
         <span>Add Support Plan</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />

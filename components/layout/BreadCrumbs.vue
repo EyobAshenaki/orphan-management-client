@@ -16,8 +16,8 @@
           {{ item.title }}
         </button>
       </nuxt-link>
-      <fa-layers v-if="!item.disabled" class="fa-2xs">
-        <fa :icon="['fas', 'chevron-right']" />
+      <fa-layers v-if="!item.disabled">
+        <fa class="tw-w-2.5 tw-h-2.5" :icon="['fas', 'chevron-right']" />
       </fa-layers>
     </li>
   </ol>

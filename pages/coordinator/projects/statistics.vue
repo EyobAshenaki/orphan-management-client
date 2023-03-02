@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'AddProjectPage',
+  name: 'StatisticsPage',
   layout: 'coordinator',
 }
 </script>

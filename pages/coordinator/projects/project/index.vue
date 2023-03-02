@@ -13,7 +13,7 @@
 
       <h1 class="tw-font-bold tw-text-3xl mb-3">Project-x</h1>
 
-      <button-light to="/coordinator/projects/addProject">
+      <button-light to="/coordinator/projects/add-project">
         <span>Add Project</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />

@@ -51,7 +51,7 @@ export default {
         {
           icon: ['fas', 'people-group'],
           title: 'Social Workers',
-          to: '/coordinator/socialWorkers',
+          to: '/coordinator/social-workers',
         },
         {
           icon: ['fas', 'hand-holding-dollar'],

@@ -10,7 +10,7 @@
     @onItemsPerPage="handleItemsPerPage"
   >
     <template #title-button>
-      <button-light to="/coordinator/projects/addProject">
+      <button-light to="/coordinator/projects/add-project">
         <span>Add Project</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
@@ -52,7 +52,7 @@ export default {
         },
         { text: 'Date started', value: 'startDate' },
         { text: 'Total budget', value: 'totalBudget' },
-        { text: 'Managed by', value: 'coordinatorFullName' },
+        { text: 'Coordinated by', value: 'coordinatorFullName' },
       ]
     },
     projects() {
