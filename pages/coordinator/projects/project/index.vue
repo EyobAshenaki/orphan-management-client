@@ -29,7 +29,6 @@
         class="pb-7 mt-3"
         active-class="tw-text-emerald-800"
       >
-        <!-- active-class="tw-text-emerald-800 tw-bg-emerald-800/20" -->
         <v-tabs-slider
           class="tw-w-[65%] tw-absolute tw-top-1/2 tw-left-1/2 tw--translate-x-1/2 tw--translate-y-1/2"
           color="tw-bg-emerald-800"
@@ -66,12 +65,10 @@
           <districts-table />
         </div>
 
-        <div v-if="tab > 3" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
-          <div
-            class="tw-w-full tw-max-h-full tw-flex tw-flex-col tw-justify-center tw-items-center"
-          >
-            <work-in-progress class="tw-aspect-square tw-w-1/2" />
-          </div>
+        <div v-if="tab === 4" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+          <orphans-table
+            @onOrphanDetailClick="handleOrphanDetailClick($event)"
+          />
         </div>
       </v-tab-item>
     </v-tabs-items>
@@ -83,6 +80,7 @@ import SupportPlansTable from '~/components/tables/SupportPlansTable.vue'
 import PaymentsTable from '~/components/tables/PaymentsTable.vue'
 import IndividualPaymentsTable from '~/components/tables/IndividualPaymentsTable.vue'
 import DistrictsTable from '~/components/tables/DistrictsTable.vue'
+import OrphansTable from '~/components/tables/OrphansTable.vue'
 export default {
   name: 'ProjectPage',
 
@@ -91,6 +89,7 @@ export default {
     PaymentsTable,
     IndividualPaymentsTable,
     DistrictsTable,
+    OrphansTable,
   },
 
   layout: 'coordinator',
@@ -104,7 +103,7 @@ export default {
         'Individual Payments',
         'Districts',
         'Orphans',
-        'Documents',
+        // 'Documents',
       ],
     }
   },
@@ -113,9 +112,19 @@ export default {
       console.log('Go to payments tab', item)
       this.tab = 1
     },
+
     navigateToIndividualPaymentsTab(item) {
       console.log('Generate Individual Payment: ', item)
       this.tab = 2
+    },
+
+    handleOrphanDetailClick(item) {
+      console.log('Go to orphan detail: ', item)
+      this.$router.push({
+        name: 'coordinator-projects-project-orphan',
+        // Instead of passing the id to the route, we should store it in the vuex store
+        // params: { id: item.id },
+      })
     },
   },
 }
