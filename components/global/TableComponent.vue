@@ -28,6 +28,14 @@
       </div>
     </template>
 
+    <template #[`item.districtProjects`]="{ item }">
+      <slot name="district-projects" :item="item"></slot>
+    </template>
+
+    <template #[`item.districtSocialWorkers`]="{ item }">
+      <slot name="district-social-workers" :item="item"></slot>
+    </template>
+
     <template #:no-data>
       <slot name="no-data"></slot>
     </template>

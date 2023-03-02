@@ -26,7 +26,7 @@
         v-model="tab"
         height="35"
         slider-size="3"
-        class="tw-capitalize tw-text-emerald-800 pb-7 mt-3"
+        class="pb-7 mt-3"
         active-class="tw-text-emerald-800"
       >
         <!-- active-class="tw-text-emerald-800 tw-bg-emerald-800/20" -->
@@ -62,7 +62,11 @@
           <individual-payments-table />
         </div>
 
-        <div v-if="tab > 2" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div v-if="tab === 3" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+          <districts-table />
+        </div>
+
+        <div v-if="tab > 3" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
           <div
             class="tw-w-full tw-max-h-full tw-flex tw-flex-col tw-justify-center tw-items-center"
           >
@@ -78,6 +82,7 @@
 import SupportPlansTable from '~/components/tables/SupportPlansTable.vue'
 import PaymentsTable from '~/components/tables/PaymentsTable.vue'
 import IndividualPaymentsTable from '~/components/tables/IndividualPaymentsTable.vue'
+import DistrictsTable from '~/components/tables/DistrictsTable.vue'
 export default {
   name: 'ProjectPage',
 
@@ -85,6 +90,7 @@ export default {
     SupportPlansTable,
     PaymentsTable,
     IndividualPaymentsTable,
+    DistrictsTable,
   },
 
   layout: 'coordinator',

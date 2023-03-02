@@ -28,8 +28,8 @@
             router
             exact
             :ripple="false"
-            class="hover:tw-text-emerald-800 hover:tw-bg-teal-50"
-            active-class="tw-text-emerald-800 tw-bg-teal-50 tw-border-l-4 tw-border-teal-700"
+            class="hover:tw-text-emerald-800 hover:tw-bg-emerald-800/10"
+            active-class="tw-text-emerald-800 tw-border-l-4 tw-border-teal-700"
           >
             <v-list-item-action class="tw-mr-5">
               <fa-layers class="fa-lg">
