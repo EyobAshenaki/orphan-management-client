@@ -3,7 +3,7 @@
     <header class="tw-w-full tw-relative tw-bg-white tw-px-8 tw-pt-8">
       <button-dark
         class="tw-absolute tw-top-6 tw-right-6"
-        to="/coordinator/projects/statistics"
+        to="/coordinator/project/statistics"
       >
         <fa-layers class="tw-mr-2">
           <fa :icon="['fa', 'chart-line']" />
