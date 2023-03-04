@@ -8,6 +8,7 @@
     :items-per-page="itemsPerPage"
     :single-select="false"
     :show-select="false"
+    @onDoubleClickRow="navigateToDistrict($event)"
     @onItemsPerPage="handleItemsPerPage"
   >
     <template #top-right>
@@ -30,12 +31,12 @@
     </template>
 
     <template #district-social-workers="{ item }">
-      <div class="tw-relative tw-flex">
+      <div class="tw-flex">
         <v-avatar
           v-for="(socialWorker, idx) in item.districtSocialWorkers"
           :key="idx"
           size="28"
-          class="tw-static tw-bg-emerald-500 tw-ring-1 tw-ring-white tw-ring-opacity-95"
+          class="tw-bg-emerald-500 tw-ring-1 tw-ring-white tw-ring-opacity-95"
           :class="idx === 0 ? '-tw-ml-0' : '-tw-ml-1'"
           @click="handleSocialWorkerClick(socialWorker)"
         >
@@ -55,7 +56,7 @@
 <script>
 import TableComponent from '../global/TableComponent.vue'
 export default {
-  name: 'IndividualPaymentTable',
+  name: 'DistrictsTable',
 
   components: {
     TableComponent,
@@ -220,6 +221,13 @@ export default {
 
     handleSearch(value) {
       this.searchValue = value
+    },
+
+    navigateToDistrict(item) {
+      this.$router.push({
+        name: 'coordinator-districts-district',
+        // change selected project state using the item argument
+      })
     },
 
     handleItemsPerPage(value) {
