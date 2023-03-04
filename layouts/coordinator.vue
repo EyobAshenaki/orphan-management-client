@@ -2,7 +2,7 @@
   <v-app>
     <side-bar :items="items" />
     <v-main class="tw-bg-gray-100">
-      <v-container class="tw-h-full">
+      <v-container class="tw-overflow-y-hidden">
         <section class="tw-h-fit tw-flex tw-justify-between tw-gap-10">
           <back-button />
 

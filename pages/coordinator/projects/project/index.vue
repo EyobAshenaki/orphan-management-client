@@ -67,6 +67,8 @@
 
         <div v-if="tab === 4" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
           <orphans-table
+            add-button-label="Add Orphan in Project"
+            add-orphan-route="/coordinator/projects/project/add-orphan"
             @onOrphanDetailClick="handleOrphanDetailClick($event)"
           />
         </div>
