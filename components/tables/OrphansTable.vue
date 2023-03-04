@@ -12,8 +12,8 @@
     @onItemsPerPage="handleItemsPerPage"
   >
     <template #title-button>
-      <button-light to="/coordinator/projects/project/add-orphan">
-        <span>Add Orphan</span>
+      <button-light :to="addOrphanRoute">
+        <span>{{ addButtonLabel }}</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
         </fa-layers>
@@ -54,6 +54,17 @@ export default {
 
   components: {
     TableComponent,
+  },
+
+  props: {
+    addOrphanRoute: {
+      type: String,
+      required: true,
+    },
+    addButtonLabel: {
+      type: String,
+      required: true,
+    },
   },
 
   data() {
