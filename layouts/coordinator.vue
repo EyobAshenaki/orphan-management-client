@@ -1,38 +1,22 @@
 <template>
   <v-app>
     <side-bar :items="items" />
-    <v-main class="tw-bg-gray-100">
-      <v-container class="tw-overflow-y-hidden">
-        <section class="tw-h-fit tw-flex tw-justify-between tw-gap-10">
-          <back-button />
-
-          <v-spacer></v-spacer>
-
-          <search-field />
-
-          <v-avatar size="40" color="grey lighten-2">
-            <fa-layers class="fa-lg">
-              <fa :icon="['fa', 'user']" />
-            </fa-layers>
-          </v-avatar>
-        </section>
-
-        <bread-crumbs />
-        <Nuxt />
-      </v-container>
-    </v-main>
+    <users-layout>
+      <nuxt />
+    </users-layout>
   </v-app>
 </template>
 
 <script>
+import UsersLayout from '~/layouts/users.vue'
 import SideBar from '~/components/layout/SideBar.vue'
-import BreadCrumbs from '~/components/layout/BreadCrumbs.vue'
+
 export default {
   name: 'CoordinatorLayout',
 
   components: {
+    UsersLayout,
     SideBar,
-    BreadCrumbs,
   },
 
   data() {
@@ -68,5 +52,3 @@ export default {
   },
 }
 </script>
-
-<style scoped></style>
