@@ -36,6 +36,10 @@
       <slot name="district-social-workers" :item="item"></slot>
     </template>
 
+    <template #[`item.villageSocialWorker`]="{ item }">
+      <slot name="village-social-worker" :item="item"></slot>
+    </template>
+
     <template #:no-data>
       <slot name="no-data"></slot>
     </template>
