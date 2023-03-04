@@ -24,8 +24,8 @@ export default {
     items() {
       return [
         {
-          icon: ['fas', 'people-group'],
-          title: 'Total Social Workers',
+          icon: ['fas', 'city'],
+          title: 'Total Districts',
           value: 10,
         },
         {

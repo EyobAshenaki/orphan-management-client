@@ -11,11 +11,11 @@
     @onDoubleClickRow="navigateToOrphanDetails($event)"
     @onItemsPerPage="handleItemsPerPage"
   >
-    <template #title-button>
-      <button-light :to="addOrphanRoute">
-        <span>{{ addButtonLabel }}</span>
+    <template v-if="buttonLabel" #title-button>
+      <button-light :to="routeTo">
+        <span>{{ buttonLabel }}</span>
         <fa-layers class="tw-ml-2">
-          <fa :icon="['fa', 'plus']" />
+          <fa :icon="buttonIcon" />
         </fa-layers>
       </button-light>
     </template>
@@ -57,13 +57,17 @@ export default {
   },
 
   props: {
-    addOrphanRoute: {
+    routeTo: {
       type: String,
-      required: true,
+      default: '/',
     },
-    addButtonLabel: {
+    buttonLabel: {
       type: String,
-      required: true,
+      default: '',
+    },
+    buttonIcon: {
+      type: Array,
+      default: () => ['fas', 'plus'],
     },
   },
 

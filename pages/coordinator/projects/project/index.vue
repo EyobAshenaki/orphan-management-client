@@ -13,12 +13,12 @@
 
       <h1 class="tw-font-bold tw-text-3xl mb-3">Project-x</h1>
 
-      <button-light to="/coordinator/projects/add-project">
+      <!-- <button-light to="/coordinator/projects/add-project">
         <span>Add Project</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
         </fa-layers>
-      </button-light>
+      </button-light> -->
 
       <v-spacer></v-spacer>
 
@@ -67,8 +67,6 @@
 
         <div v-if="tab === 4" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
           <orphans-table
-            add-button-label="Add Orphan in Project"
-            add-orphan-route="/coordinator/projects/project/add-orphan"
             @onOrphanDetailClick="handleOrphanDetailClick($event)"
           />
         </div>

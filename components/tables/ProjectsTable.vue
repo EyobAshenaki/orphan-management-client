@@ -9,14 +9,15 @@
     @onDoubleClickRow="navigateToProject($event)"
     @onItemsPerPage="handleItemsPerPage"
   >
-    <template #title-button>
+    <!-- The code should be active for the head account -->
+    <!-- <template #title-button>
       <button-light to="/coordinator/projects/add-project">
         <span>Add Project</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
         </fa-layers>
       </button-light>
-    </template>
+    </template> -->
 
     <template #top-right>
       <search-field @onSearch="handleSearch($event)" />

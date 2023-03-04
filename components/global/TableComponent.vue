@@ -19,7 +19,7 @@
     <template #top>
       <div class="tw-w-full tw-flex tw-justify-between tw-py-5 tw-px-2">
         <header>
-          <h1 class="tw-font-medium tw-text-xl mb-2">{{ title }}</h1>
+          <h1 class="tw-font-medium tw-text-2xl mb-2">{{ title }}</h1>
 
           <slot name="title-button"></slot>
         </header>
