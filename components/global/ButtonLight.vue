@@ -4,6 +4,7 @@
     text
     :ripple="false"
     :to="to"
+    :x-small="isXSmall"
     @click="$emit('click')"
   >
     <slot> Click Me </slot>
@@ -17,6 +18,10 @@ export default {
     to: {
       type: String,
       default: '',
+    },
+    isXSmall: {
+      type: Boolean,
+      default: false,
     },
   },
 }

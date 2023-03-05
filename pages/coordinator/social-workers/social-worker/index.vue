@@ -39,11 +39,7 @@
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="(item, idx) in items" :key="idx">
         <div v-if="tab === 0" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
-          <div
-            class="tw-w-full tw-max-h-full tw-flex tw-flex-col tw-justify-center tw-items-center"
-          >
-            <work-in-progress class="tw-aspect-square tw-w-1/2" />
-          </div>
+          <profile @onVillagesViewAllClick="navigateToVillagesTab" />
         </div>
 
         <div v-if="tab === 1" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
@@ -69,12 +65,14 @@
 <script>
 import VillagesTable from '~/components/tables/VillagesTable.vue'
 import OrphansTable from '~/components/tables/OrphansTable.vue'
+import Profile from '~/components/coordinator/social-worker/Profile.vue'
 export default {
   name: 'DistrictPage',
 
   components: {
     VillagesTable,
     OrphansTable,
+    Profile,
   },
 
   layout: 'coordinator',
@@ -87,6 +85,11 @@ export default {
   },
 
   methods: {
+    navigateToVillagesTab() {
+      console.log('Go to villages tab ')
+      this.tab = 1
+    },
+
     navigateToOrphansTab(village) {
       console.log('Go to orphans tab ', village)
       this.tab = 2
