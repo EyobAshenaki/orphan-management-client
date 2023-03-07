@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    class="tw-w-fit tw-text-white tw-text-sm tw-capitalize tw-bg-emerald-600 hover:tw-bg-emerald-700"
+    class="tw-w-fit tw-text-white tw-text-sm tw-capitalize tw-bg-emerald-800 hover:tw-bg-emerald-700"
     depressed
     :ripple="false"
     :to="to"
