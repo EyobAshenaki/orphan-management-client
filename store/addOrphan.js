@@ -33,6 +33,12 @@ export const state = () => ({
   ],
 })
 
+export const getters = {
+  activeStep: (state) => state.activeStep,
+  totalSteps: (state) => state.totalSteps,
+  registrationSteps: (state) => state.registrationSteps,
+}
+
 export const mutations = {
   SET_ACTIVE_STEP(state, payload) {
     if (typeof payload !== 'number')

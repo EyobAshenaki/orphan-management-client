@@ -25,7 +25,7 @@ export default {
 
   computed: {
     registrationSteps() {
-      return this.$store.state.addOrphan.registrationSteps
+      return this.$store.getters['addOrphan/registrationSteps']
     },
   },
 
