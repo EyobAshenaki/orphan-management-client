@@ -49,7 +49,7 @@ export default {
 
   computed: {
     activeStep() {
-      return this.$store.state.addOrphan.activeStep
+      return this.$store.getters['addOrphan/activeStep']
     },
 
     active() {
