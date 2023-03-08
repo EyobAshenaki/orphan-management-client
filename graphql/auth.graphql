@@ -1,0 +1,67 @@
+fragment UserData on Auth {
+  user {
+    id
+    email
+    personalInfo {
+      id
+      firstName
+      middleName
+      lastName
+      dateOfBirth
+      gender
+      phoneNumber
+    }
+    role
+    ...AccountDetails
+  }
+}
+
+fragment AccountDetails on User {
+  admin {
+    id
+    createdAt
+    updatedAt
+  }
+  head {
+    id
+    createdAt
+    updatedAt
+  }
+  coordinator {
+    id
+    createdAt
+    updatedAt
+    donors {
+      id
+    }
+  }
+  donor {
+    id
+    createdAt
+    updatedAt
+    coordinators {
+      id
+    }
+  }
+  socialWorker {
+    id
+    createdAt
+    updatedAt
+  }
+}
+
+mutation Signup($input: SignupInput!) {
+  signup(input: $input) {
+    ...UserData
+  }
+}
+
+mutation Login($input: LoginInput!) {
+  login(input: $input) {
+    ...UserData
+  }
+}
+
+mutation Logout {
+  logout
+}

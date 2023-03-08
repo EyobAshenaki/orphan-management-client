@@ -1,0 +1,42 @@
+query Me {
+  me {
+    ...UserData
+  }
+}
+
+query FetchUsers {
+  users {
+    ...UserData
+  }
+}
+
+mutation UpdateUser($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    ...UserData
+  }
+}
+
+mutation ChangePassword($input: ChangePasswordInput!) {
+  changePassword(input: $input) {
+    ...UserData
+  }
+}
+
+fragment UserData on User {
+  id
+  email
+  personalInfo {
+    ...PersonalInfoData
+  }
+  role
+}
+
+fragment PersonalInfoData on PersonalInfo {
+  id
+  firstName
+  middleName
+  lastName
+  dateOfBirth
+  gender
+  phoneNumber
+}

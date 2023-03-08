@@ -47,6 +47,10 @@ export default {
     baseURL: '/',
   },
 
+  env: {
+    NUXT_API_URL: process.env.NUXT_API_URL || 'http://localhost:3300',
+  },
+
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
@@ -84,6 +88,13 @@ export default {
           autoprefixer: {},
         },
       },
+    },
+    extend(config) {
+      config.module.rules.push({
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        loader: 'graphql-tag/loader',
+      })
     },
   },
 }
