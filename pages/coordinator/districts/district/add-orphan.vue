@@ -5,6 +5,7 @@
     <add-orphan-family-step v-else-if="activeStep === 3" />
     <add-orphan-guardian-step v-else-if="activeStep === 4" />
     <add-orphan-supplementary-step v-else-if="activeStep === 5" />
+    <add-orphan-documents-step v-else-if="activeStep === 6" />
     <div
       v-else
       class="tw-w-full tw-max-h-full tw-flex tw-flex-col tw-justify-center tw-items-center"
@@ -20,6 +21,7 @@ import AddOrphanEducationStep from '~/components/coordinator/district/AddOrphanE
 import AddOrphanFamilyStep from '~/components/coordinator/district/AddOrphanFamilyStep.vue'
 import AddOrphanGuardianStep from '~/components/coordinator/district/AddOrphanGuardianStep.vue'
 import AddOrphanSupplementaryStep from '~/components/coordinator/district/AddOrphanSupplementaryStep.vue'
+import AddOrphanDocumentsStep from '~/components/coordinator/district/AddOrphanDocumentsStep.vue'
 
 export default {
   name: 'AddOrphanPage',
@@ -29,6 +31,7 @@ export default {
     AddOrphanFamilyStep,
     AddOrphanGuardianStep,
     AddOrphanSupplementaryStep,
+    AddOrphanDocumentsStep,
   },
   layout: 'add_orphan',
 

@@ -4,14 +4,14 @@
     color="teal darken-2"
     dense
     filled
-    counter
+    :counter="multiple"
     :multiple="multiple"
     prepend-icon="mdi-paperclip"
     outlined
     :show-size="1000"
     :placeholder="placeholder"
   >
-    <template #selection="{ index, text }">
+    <template v-if="multiple" #selection="{ index, text }">
       <v-chip v-if="index < 2" color="teal darken-2" dark label small>
         {{ text }}
       </v-chip>
