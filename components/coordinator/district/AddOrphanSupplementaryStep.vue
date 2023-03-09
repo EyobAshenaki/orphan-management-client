@@ -139,7 +139,7 @@ export default {
 
   methods: {
     submit() {
-      this.$store.dispatch('addOrphan/setActiveStep', 5)
+      this.$store.dispatch('addOrphan/setActiveStep', 6)
     },
   },
 }
