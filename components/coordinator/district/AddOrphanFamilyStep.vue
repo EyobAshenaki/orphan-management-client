@@ -76,34 +76,34 @@
         <v-radio-group v-model="vitalStatus" class="-tw-mt-1" row>
           <custom-radio
             :class="[isAlive ? 'tw-border-emerald-800' : '']"
-            label="Enrolled"
-            value="enrolled"
+            label="Alive"
+            value="alive"
           />
           <custom-radio
             :class="[isDeceased ? 'tw-border-emerald-800' : '']"
-            label="Drop-out"
-            value="dropout"
+            label="Deceased"
+            value="deceased"
           />
         </v-radio-group>
       </div>
 
-      <div class="form-control">
+      <div v-if="isAlive" class="form-control">
         <label class="form-label"> Marital Status </label>
         <v-radio-group v-model="maritalStatus" class="-tw-mt-1" row>
           <custom-radio
             :class="[isMarried ? 'tw-border-emerald-800' : '']"
-            label="Enrolled"
-            value="enrolled"
+            label="Married"
+            value="married"
           />
           <custom-radio
             :class="[isWidow ? 'tw-border-emerald-800' : '']"
-            label="Drop-out"
-            value="dropout"
+            label="Widow"
+            value="widow"
           />
         </v-radio-group>
       </div>
 
-      <div class="form-control-group">
+      <div v-if="isDeceased" class="form-control-group">
         <div class="form-control">
           <label class="form-label"> Date of Death </label>
           <custom-date-picker />
