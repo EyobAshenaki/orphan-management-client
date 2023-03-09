@@ -66,12 +66,7 @@
 
         <div class="form-control">
           <label class="form-label"> Date of Birth </label>
-          <v-text-field
-            color="teal darken-2"
-            dense
-            filled
-            outlined
-          ></v-text-field>
+          <custom-date-picker />
         </div>
       </div>
 
@@ -92,21 +87,9 @@
         </div>
       </div>
 
-      <div class="form-control-group">
-        <div class="form-control">
-          <label class="form-label"> Spoken Languages </label>
-          <custom-combobox :items="languages" :multiple="true" />
-        </div>
-
-        <div class="form-control">
-          <label class="form-label"> Hobbies </label>
-          <v-text-field
-            color="teal darken-2"
-            dense
-            filled
-            outlined
-          ></v-text-field>
-        </div>
+      <div class="form-control">
+        <label class="form-label"> Spoken Languages </label>
+        <custom-combobox class="tw-w-1/2" :items="languages" :multiple="true" />
       </div>
 
       <div class="tw-flex tw-justify-end">
