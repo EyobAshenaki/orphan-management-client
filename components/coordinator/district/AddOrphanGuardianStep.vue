@@ -7,7 +7,15 @@
     <v-form class="tw-max-w-[37rem]">
       <div class="form-control">
         <label class="form-label"> Relation to Orphan </label>
-        <custom-combobox class="tw-w-1/2" :items="orphanRelationOptions" />
+        <v-select
+          :items="orphanRelationOptions"
+          item-color="teal darken-3"
+          color="teal darken-3"
+          dense
+          filled
+          outlined
+          class="tw-w-1/2"
+        ></v-select>
       </div>
 
       <div class="form-control">
