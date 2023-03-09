@@ -1,0 +1,16 @@
+{
+  "relationOptions": [
+    "Mother",
+    "Grandfather",
+    "Grandmother",
+    "Sister",
+    "Brother",
+    "Uncle",
+    "Aunt",
+    "Cousin",
+    "Niece",
+    "Nephew",
+    "Legal Guardian",
+    "Other"
+  ]
+}
