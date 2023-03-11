@@ -66,7 +66,7 @@ export default {
         this.$router.push(`/${this.$store.getters['auth/userRole']}`)
         this.$toaster.showToast({
           content: 'Successfully logged in!',
-          state: 'warning',
+          state: 'success',
         })
       })
     },

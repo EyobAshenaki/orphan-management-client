@@ -1,4 +1,4 @@
-import axiosService from '~/services/axios.service'
+import axiosService from '~/services/user.service'
 
 export const state = () => ({
   user: null,

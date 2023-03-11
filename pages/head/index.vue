@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'AdminDashboard',
-  layout: 'admin',
+  name: 'HeadDashboard',
+  layout: 'head',
 }
 </script>

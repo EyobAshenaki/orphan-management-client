@@ -1,0 +1,175 @@
+query Regions {
+  regions {
+    ...RegionFragment
+    zones {
+      ...ZoneFragment
+      districts {
+        ...DistrictFragment
+        villages {
+          ...VillageFragment
+        }
+      }
+    }
+  }
+}
+
+query Region($id: ID!) {
+  region(id: $id) {
+    ...RegionFragment
+    zones {
+      ...ZoneFragment
+      districts {
+        ...DistrictFragment
+        villages {
+          ...VillageFragment
+        }
+      }
+    }
+  }
+}
+
+query Zones($regionId: ID) {
+  zones(regionId: $regionId) {
+    ...ZoneFragment
+    districts {
+      ...DistrictFragment
+      villages {
+        ...VillageFragment
+      }
+    }
+  }
+}
+
+query Zone($id: ID!) {
+  zone(id: $id) {
+    ...ZoneFragment
+    districts {
+      ...DistrictFragment
+      villages {
+        ...VillageFragment
+      }
+    }
+  }
+}
+
+query Districts($zoneId: ID) {
+  districts(zoneId: $zoneId) {
+    ...DistrictFragment
+    villages {
+      ...VillageFragment
+    }
+  }
+}
+
+query District($id: ID!) {
+  district(id: $id) {
+    ...DistrictFragment
+    villages {
+      ...VillageFragment
+    }
+  }
+}
+
+query Villages($districtId: ID) {
+  villages(districtId: $districtId) {
+    ...VillageFragment
+  }
+}
+
+query Village($id: ID!) {
+  village(id: $id) {
+    ...VillageFragment
+  }
+}
+
+mutation CreateRegion($input: CreateRegionInput!) {
+  createRegion(input: $input) {
+    ...RegionFragment
+  }
+}
+
+mutation UpdateRegion($input: GenericLocationUpdateInput!) {
+  updateRegion(input: $input) {
+    ...RegionFragment
+  }
+}
+
+mutation DeleteRegion($id: ID!) {
+  deleteRegion(id: $id) {
+    ...RegionFragment
+  }
+}
+
+mutation CreateZone($input: CreateZoneInput!) {
+  createZone(input: $input) {
+    ...ZoneFragment
+  }
+}
+
+mutation UpdateZone($input: GenericLocationUpdateInput!) {
+  updateZone(input: $input) {
+    ...ZoneFragment
+  }
+}
+
+mutation DeleteZone($id: ID!) {
+  deleteZone(id: $id) {
+    ...ZoneFragment
+  }
+}
+
+mutation CreateDistrict($input: CreateDistrictInput!) {
+  createDistrict(input: $input) {
+    ...DistrictFragment
+  }
+}
+
+mutation UpdateDistrict($input: GenericLocationUpdateInput!) {
+  updateDistrict(input: $input) {
+    ...DistrictFragment
+  }
+}
+
+mutation DeleteDistrict($id: ID!) {
+  deleteDistrict(id: $id) {
+    ...DistrictFragment
+  }
+}
+
+mutation CreateVillage($input: CreateVillageInput!) {
+  createVillage(input: $input) {
+    ...VillageFragment
+  }
+}
+
+mutation UpdateVillage($input: GenericLocationUpdateInput!) {
+  updateVillage(input: $input) {
+    ...VillageFragment
+  }
+}
+
+mutation DeleteVillage($id: ID!) {
+  deleteVillage(id: $id) {
+    ...VillageFragment
+  }
+}
+
+fragment RegionFragment on Region {
+  id
+  name
+}
+
+fragment ZoneFragment on Zone {
+  id
+  name
+}
+
+fragment DistrictFragment on District {
+  id
+  name
+}
+
+fragment VillageFragment on Village {
+  id
+  name
+}
