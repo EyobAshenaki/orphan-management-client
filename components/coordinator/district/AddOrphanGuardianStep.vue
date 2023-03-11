@@ -1,30 +1,33 @@
 <template>
   <section>
     <h1 class="tw-text-2xl tw-text-emerald-800 tw-mt-8 tw-mb-6">
-      Orphan Details
+      Orphan Guardian
     </h1>
 
     <v-form class="tw-max-w-[37rem]">
-      <div class="form-control mt-5">
-        <label class="form-label"> Code </label>
-        <v-text-field
-          color="teal darken-2"
+      <div class="form-control">
+        <label class="form-label"> Relation to Orphan </label>
+        <v-select
+          :items="orphanRelationOptions"
+          item-color="teal darken-3"
+          color="teal darken-3"
           dense
           filled
           outlined
-        ></v-text-field>
+          class="tw-w-1/2"
+        ></v-select>
       </div>
 
       <div class="form-control">
         <label class="form-label"> Gender </label>
         <v-radio-group v-model="gender" class="-tw-mt-1" row>
           <custom-radio
-            :class="[gender === 'M' ? 'tw-border-emerald-800' : '']"
+            :class="[isMale ? 'tw-border-emerald-800' : '']"
             label="Male"
             value="M"
           />
           <custom-radio
-            :class="[gender === 'F' ? 'tw-border-emerald-800' : '']"
+            :class="[isFemale ? 'tw-border-emerald-800' : '']"
             label="Female"
             value="F"
           />
@@ -33,7 +36,7 @@
 
       <div class="form-control-group">
         <div class="form-control">
-          <label class="form-label"> Name </label>
+          <label class="form-label"> First Name </label>
           <v-text-field
             color="teal darken-2"
             dense
@@ -43,7 +46,7 @@
         </div>
 
         <div class="form-control">
-          <label class="form-label"> Father Name </label>
+          <label class="form-label"> Middle Name </label>
           <v-text-field
             color="teal darken-2"
             dense
@@ -55,7 +58,7 @@
 
       <div class="form-control-group">
         <div class="form-control">
-          <label class="form-label"> Grand Father Name </label>
+          <label class="form-label"> Last Name </label>
           <v-text-field
             color="teal darken-2"
             dense
@@ -72,7 +75,24 @@
 
       <div class="form-control-group">
         <div class="form-control">
-          <label class="form-label"> Place of Birth </label>
+          <label class="form-label"> Nationality </label>
+          <custom-combobox :items="countries" />
+        </div>
+
+        <div class="form-control">
+          <label class="form-label"> Monthly Expense </label>
+          <v-text-field
+            color="teal darken-2"
+            dense
+            filled
+            outlined
+          ></v-text-field>
+        </div>
+      </div>
+
+      <div class="form-control-group">
+        <div class="form-control">
+          <label class="form-label"> Mobile Number </label>
           <v-text-field
             color="teal darken-2"
             dense
@@ -82,14 +102,14 @@
         </div>
 
         <div class="form-control">
-          <label class="form-label"> Religion </label>
-          <custom-combobox :items="religions" />
+          <label class="form-label"> Telephone Number </label>
+          <v-text-field
+            color="teal darken-2"
+            dense
+            filled
+            outlined
+          ></v-text-field>
         </div>
-      </div>
-
-      <div class="form-control">
-        <label class="form-label"> Spoken Languages </label>
-        <custom-combobox class="tw-w-1/2" :items="languages" :multiple="true" />
       </div>
 
       <div class="tw-flex tw-justify-end">
@@ -106,14 +126,18 @@
 
 <script>
 import ButtonDark from '~/components/global/ButtonDark.vue'
-import CustomCombobox from '~/components/global/CustomCombobox.vue'
+import CustomDatePicker from '~/components/global/CustomDatePicker.vue'
 import CustomRadio from '~/components/global/CustomRadio.vue'
-import * as ethiopianLanguages from '~/helpers/commonEthiopianLanguages.json'
-import * as ethiopianReligions from '~/helpers/commonEthiopianReligions.json'
+import * as eastAfricanCountries from '~/helpers/eastAfricanCountries.json'
+import * as relationToOrphanOptions from '~/helpers/relationToOrphanOptions.json'
 
 export default {
   name: 'OrphanDetailStep',
-  components: { ButtonDark, CustomRadio, CustomCombobox },
+  components: {
+    ButtonDark,
+    CustomRadio,
+    CustomDatePicker,
+  },
 
   data() {
     return {
@@ -122,17 +146,26 @@ export default {
   },
 
   computed: {
-    languages() {
-      return ethiopianLanguages.default.languages
+    orphanRelationOptions() {
+      return relationToOrphanOptions.default.relationOptions
     },
-    religions() {
-      return ethiopianReligions.default.religions
+
+    countries() {
+      return eastAfricanCountries.default.countries
+    },
+
+    isMale() {
+      return this.gender === 'M'
+    },
+
+    isFemale() {
+      return this.gender === 'F'
     },
   },
 
   methods: {
     submit() {
-      this.$store.dispatch('addOrphan/setActiveStep', 2)
+      this.$store.dispatch('addOrphan/setActiveStep', 5)
     },
   },
 }

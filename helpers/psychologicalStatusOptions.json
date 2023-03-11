@@ -1,0 +1,16 @@
+{
+  "psychologicalStatuses": [
+    "Normal",
+    "Isolated",
+    "Stressed",
+    "Unsociable",
+    "Overly Sociable",
+    "Depressed",
+    "Anxious",
+    "Agitated",
+    "Aggressive",
+    "Withdrawn",
+    "Disoriented",
+    "Confused"
+  ]
+}
