@@ -24,7 +24,7 @@
       <search-field @onSearch="handleSearch($event)" />
     </template>
 
-    <template #district-social-workers="{ item }">
+    <template #districtSocialWorkers="{ item }">
       <div class="tw-relative tw-flex">
         <v-avatar
           v-for="(socialWorker, idx) in item.districtSocialWorkers"

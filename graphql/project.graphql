@@ -1,0 +1,13 @@
+query Projects {
+  projects {
+    ...ProjectFragment
+  }
+}
+
+fragment ProjectFragment on Project {
+  id
+  number
+  startDate
+  grandTotalBudget
+  maximumNumberOfBeneficiaries
+}
