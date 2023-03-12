@@ -48,7 +48,7 @@ export default {
   },
 
   env: {
-    NUXT_API_URL: process.env.NUXT_API_URL || 'http://localhost:3300',
+    NUXT_API_URL: process.env.NUXT_API_URL || 'http://localhost:3002',
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -97,4 +97,13 @@ export default {
       })
     },
   },
+  watchers: {
+    webpack: {
+      ignored: ['**/.git/**/*'],
+    },
+    chokidar: {
+      ignored: ['**/.git/**/*'],
+    },
+  }
+
 }
