@@ -20,7 +20,7 @@
           <div class="form-control">
             <label class="form-label">Zone Name</label>
             <v-text-field
-              v-model="name"
+              v-model.trim="name"
               :rules="[rules.required]"
               outlined
               filled
@@ -29,7 +29,7 @@
             ></v-text-field>
           </div>
           <div class="tw-w-full tw-flex tw-justify-end tw-gap-6">
-            <button-dark @click.prevent="saveZone">Save</button-dark>
+            <button-dark @click="saveZone">Save</button-dark>
           </div>
         </div>
       </v-form>

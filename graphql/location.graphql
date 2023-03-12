@@ -57,6 +57,25 @@ query Districts($zoneId: ID) {
     ...DistrictFragment
     villages {
       ...VillageFragment
+      orphans {
+        id
+        name
+      }
+    }
+    projects {
+      id
+      number
+    }
+    socialWorkers {
+      id
+      user {
+        id
+        personalInfo {
+          firstName
+          middleName
+          lastName
+        }
+      }
     }
   }
 }

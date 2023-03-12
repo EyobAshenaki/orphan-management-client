@@ -4,6 +4,10 @@ import {
   createRegion,
   fetchZones,
   createZone,
+  fetchDistricts,
+  createDistrict,
+  fetchVillages,
+  createVillage,
 } from '~/services/location.service'
 
 export const state = () => ({
@@ -11,10 +15,13 @@ export const state = () => ({
   selectedRegion: {},
   regionInput: {},
   zones: [],
+  selectedZone: {},
   zoneInput: {},
   districts: [],
+  selectedDistrict: {},
   districtInput: {},
   villages: [],
+  selectedVillage: {},
   villageInput: {},
 })
 
@@ -28,6 +35,7 @@ export const mutations = {
     if (typeof payload !== 'object')
       throw new TypeError('Payload must be an an object')
     state.selectedRegion = payload
+    localStorage.setItem('selectedRegion', JSON.stringify(payload))
   },
   SET_REGION_INPUT(state, payload) {
     if (typeof payload !== 'object')
@@ -39,6 +47,11 @@ export const mutations = {
       throw new TypeError('Payload must be an an array')
     state.zones = payload
   },
+  SET_SELECTED_ZONE(state, payload) {
+    if (typeof payload !== 'object')
+      throw new TypeError('Payload must be an an object')
+    state.selectedZone = payload
+  },
   SET_ZONE_INPUT(state, payload) {
     if (typeof payload !== 'object')
       throw new TypeError('Payload must be an an object')
@@ -48,7 +61,32 @@ export const mutations = {
     if (typeof payload !== 'object' && !Array.isArray(payload))
       throw new TypeError('Payload must be an an array')
     state.districts = payload
-  }
+  },
+  SET_SELECTED_DISTRICT(state, payload) {
+    if (typeof payload !== 'object')
+      throw new TypeError('Payload must be an an object')
+    state.selectedDistrict = payload
+  },
+  SET_DISTRICT_INPUT(state, payload) {
+    if (typeof payload !== 'object')
+      throw new TypeError('Payload must be an an object')
+    state.districtInput = payload
+  },
+  SET_VILLAGES(state, payload) {
+    if (typeof payload !== 'object' && !Array.isArray(payload))
+      throw new TypeError('Payload must be an an array')
+    state.villages = payload
+  },
+  SET_SELECTED_VILLAGE(state, payload) {
+    if (typeof payload !== 'object')
+      throw new TypeError('Payload must be an an object')
+    state.selectedVillage = payload
+  },
+  SET_VILLAGE_INPUT(state, payload) {
+    if (typeof payload !== 'object')
+      throw new TypeError('Payload must be an an object')
+    state.villageInput = payload
+  },
 }
 
 export const actions = {
@@ -105,5 +143,61 @@ export const actions = {
       } else console.error(error)
       throw error
     }
-  }
+  },
+  // todo: update Zone
+  // todo: delete Zone
+  async fetchDistricts({ commit, state }) {
+    try {
+      const districts = await fetchDistricts(state.selectedZone.id)
+      commit('SET_DISTRICTS', districts)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error({ error })
+    }
+  },
+  async createDistrict({ commit, state }) {
+    try {
+      const district = await createDistrict(state.districtInput)
+      commit('SET_DISTRICTS', [...state.districts, district])
+    } catch (error) {
+      if (Array.from(error)[0] instanceof GraphQLError) {
+        error.forEach((e) => {
+          this.$toaster.showToast({
+            content: e.message,
+            state: 'error',
+          })
+        })
+        // eslint-disable-next-line no-console
+      } else console.error(error)
+      throw error
+    }
+  },
+  // todo: update District
+  // todo: delete District
+  async fetchVillages({ commit, state }) {
+    try {
+      const villages = await fetchVillages(state.selectedDistrict.id)
+      commit('SET_VILLAGES', villages)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error({ error })
+    }
+  },
+  async createVillage({ commit, state }) {
+    try {
+      const village = await createVillage(state.villageInput)
+      commit('SET_VILLAGES', [...state.villages, village])
+    } catch (error) {
+      if (Array.from(error)[0] instanceof GraphQLError) {
+        error.forEach((e) => {
+          this.$toaster.showToast({
+            content: e.message,
+            state: 'error',
+          })
+        })
+        // eslint-disable-next-line no-console
+      } else console.error(error)
+      throw error
+    }
+  },
 }

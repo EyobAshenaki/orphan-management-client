@@ -51,24 +51,27 @@ export default {
       ]
     },
     zones() {
-      return this.$store.state.location.selectedRegion.zones
+      return this.$store.state.location.selectedRegion
+        ? this.$store.state.location.selectedRegion.zones
+        : this.$store.state.location.zones
     },
   },
-  // mounted() {
-  //   this.initialize()
-  // },
+  mounted() {
+    this.initialize()
+  },
   methods: {
     handleSearch(value) {
       this.searchValue = value
     },
     navigateToZone(selectedZone) {
       this.$store.commit('location/SET_SELECTED_ZONE', selectedZone)
-      console.log(selectedZone)
-      // this.$router.push(`/head/locations/region`)
+      this.$router.push(`/head/locations/zone`)
     },
-    // initialize() {
-    //   this.$store.dispatch('location/fetchZones')
-    // },
+    initialize() {
+      if (!this.$store.state.location.selectedRegion) {
+        this.$store.dispatch('location/fetchZones')
+      }
+    },
   },
 }
 </script>

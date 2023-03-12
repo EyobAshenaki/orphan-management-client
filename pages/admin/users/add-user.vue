@@ -5,17 +5,17 @@
       <v-form ref="userForm">
         <div class="tw-flex tw-flex-row tw-gap-6">
           <v-text-field
-            v-model="firstName"
+            v-model.trim="firstName"
             label="First Name"
             :rules="[rules.required]"
           ></v-text-field>
           <v-text-field
-            v-model="middleName"
+            v-model.trim="middleName"
             label="Middle Name"
             :rules="[rules.required]"
           ></v-text-field>
           <v-text-field
-            v-model="lastName"
+            v-model.trim="lastName"
             label="Last Name"
             :rules="[rules.required]"
           ></v-text-field>
@@ -68,7 +68,7 @@
             required
           ></v-select>
           <v-text-field
-            v-model="email"
+            v-model.trim="email"
             class="tw-shrink-0"
             label="Email"
             :rules="[rules.required, rules.email]"
@@ -158,7 +158,7 @@ export default {
       }
       this.password = retVal
       // eslint-disable-next-line no-console
-      console.log(this.password)
+      console.debug(this.password)
     },
     saveUser() {
       if (!this.$refs.userForm.validate()) return

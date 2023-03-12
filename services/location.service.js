@@ -7,7 +7,9 @@ import {
   Zones,
   CreateZone,
   Districts,
+  CreateDistrict,
   Villages,
+  CreateVillage,
 } from '~/graphql/location.graphql'
 
 export async function fetchRegions() {
@@ -104,6 +106,21 @@ export async function fetchDistricts(zoneId = undefined) {
   throw errors
 }
 
+export async function createDistrict(districtInput) {
+  const createDistrict = async () => {
+    return await graphqlInstance.post('', {
+      operationName: 'CreateDistrict',
+      query: print(CreateDistrict),
+      variables: {
+        input: districtInput,
+      },
+    })
+  }
+  const { data, errors } = await handleGQL(createDistrict)
+  if (data) return data.createDistrict
+  throw errors
+}
+
 /**
  * Fetch villages by districtId
  * If districtId is undefined, fetch all villages
@@ -126,5 +143,20 @@ export async function fetchVillages(districtId = undefined) {
 
   const { data, errors } = await handleGQL(fetchVillagesByDistrict, districtId)
   if (data) return data.villages
+  throw errors
+}
+
+export async function createVillage(villageInput) {
+  const createVillage = async () => {
+    return await graphqlInstance.post('', {
+      operationName: 'CreateVillage',
+      query: print(CreateVillage),
+      variables: {
+        input: villageInput,
+      },
+    })
+  }
+  const { data, errors } = await handleGQL(createVillage)
+  if (data) return data.createVillage
   throw errors
 }
