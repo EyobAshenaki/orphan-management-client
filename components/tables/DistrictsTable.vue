@@ -15,7 +15,7 @@
       <search-field @onSearch="handleSearch($event)" />
     </template>
 
-    <template #district-projects="{ item }">
+    <template #districtProjects="{ item }">
       <div class="tw-flex">
         <v-avatar
           v-for="(project, idx) in item.districtProjects"
@@ -30,7 +30,7 @@
       </div>
     </template>
 
-    <template #district-social-workers="{ item }">
+    <template #districtSocialWorkers="{ item }">
       <div class="tw-flex">
         <v-avatar
           v-for="(socialWorker, idx) in item.districtSocialWorkers"
