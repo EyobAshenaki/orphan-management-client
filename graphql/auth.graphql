@@ -1,4 +1,4 @@
-fragment UserData on Auth {
+fragment AuthUserData on Auth {
   user {
     id
     email
@@ -52,13 +52,13 @@ fragment AccountDetails on User {
 
 mutation Signup($input: SignupInput!) {
   signup(input: $input) {
-    ...UserData
+    ...AuthUserData
   }
 }
 
 mutation Login($input: LoginInput!) {
   login(input: $input) {
-    ...UserData
+    ...AuthUserData
   }
 }
 
