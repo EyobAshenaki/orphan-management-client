@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Projects"
     :headers="headers"
     :items="projects"
@@ -9,15 +10,21 @@
     @onDoubleClickRow="navigateToProject($event)"
     @onItemsPerPage="handleItemsPerPage"
   >
+  <template #[`startDate`]="{item}">
+    {{ Intl.DateTimeFormat().format(new Date(item.startDate)) }}
+  </template>
+  <template #grandTotalBudget="{item}">
+    {{ Intl.NumberFormat({style: 'currency', currency: 'ETB'}).format(item.grandTotalBudget) }}
+  </template>
     <!-- The code should be active for the head account -->
-    <!-- <template #title-button>
+    <template #title-button>
       <button-light to="/coordinator/projects/add-project">
         <span>Add Project</span>
-        <fa-layers class="tw-ml-2">
+        <fa-layers class="tw-ml-2"> 
           <fa :icon="['fa', 'plus']" />
         </fa-layers>
       </button-light>
-    </template> -->
+    </template>
 
     <template #top-right>
       <search-field @onSearch="handleSearch($event)" />
@@ -30,6 +37,7 @@
 </template>
 
 <script>
+import { fetchProjects } from '~/services/project.service'
 export default {
   name: 'ProjectsTable',
 
@@ -37,117 +45,36 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      projects: [],
+      loading: false
     }
   },
   computed: {
     headers() {
       return [
         {
-          text: 'Project Name',
+          text: 'Project Number',
           align: 'start',
-          value: 'name',
+          value: 'number',
         },
         {
           text: 'Max beneficiaries',
-          value: 'maxBeneficiaries',
+          value: 'maximumNumberOfBeneficiaries',
         },
         { text: 'Date started', value: 'startDate' },
-        { text: 'Total budget', value: 'totalBudget' },
+        { text: 'Total budget', value: 'grandTotalBudget' },
         { text: 'Coordinated by', value: 'coordinatorFullName' },
       ]
     },
-    projects() {
-      return [
-        {
-          name: 'Project 1',
-          maxBeneficiaries: 10,
-          startDate: '2021-01-01',
-          totalBudget: 1000,
-          coordinatorFullName: 'John Doe',
-        },
-        {
-          name: 'Project 2',
-          maxBeneficiaries: 50,
-          startDate: '2021-02-06',
-          totalBudget: 500,
-          coordinatorFullName: 'Jane Doe',
-        },
-        {
-          name: 'Project 3',
-          maxBeneficiaries: 100,
-          startDate: '2022-03-08',
-          totalBudget: 10000,
-          coordinatorFullName: 'John Doe',
-        },
-        {
-          name: 'Project 4',
-          maxBeneficiaries: 82,
-          startDate: '2022-12-25',
-          totalBudget: 10000,
-          coordinatorFullName: 'Jane Doe',
-        },
-        {
-          name: 'Project 5',
-          maxBeneficiaries: 17,
-          startDate: '2022-10-01',
-          totalBudget: 10000,
-          coordinatorFullName: 'John Doe',
-        },
-        {
-          name: 'Project 6',
-          maxBeneficiaries: 23,
-          startDate: '2022-09-18',
-          totalBudget: 10000,
-          coordinatorFullName: 'Jane Doe',
-        },
-        {
-          name: 'Project 7',
-          maxBeneficiaries: 10,
-          startDate: '2021-01-01',
-          totalBudget: 1000,
-          coordinatorFullName: 'John Doe',
-        },
-        {
-          name: 'Project 8',
-          maxBeneficiaries: 50,
-          startDate: '2021-02-06',
-          totalBudget: 500,
-          coordinatorFullName: 'Jane Doe',
-        },
-        {
-          name: 'Project 9',
-          maxBeneficiaries: 100,
-          startDate: '2022-03-08',
-          totalBudget: 10000,
-          coordinatorFullName: 'John Doe',
-        },
-        {
-          name: 'Project 10',
-          maxBeneficiaries: 82,
-          startDate: '2022-12-25',
-          totalBudget: 10000,
-          coordinatorFullName: 'Jane Doe',
-        },
-        {
-          name: 'Project 11',
-          maxBeneficiaries: 17,
-          startDate: '2022-10-01',
-          totalBudget: 10000,
-          coordinatorFullName: 'John Doe',
-        },
-        {
-          name: 'Project 12',
-          maxBeneficiaries: 23,
-          startDate: '2022-09-18',
-          totalBudget: 10000,
-          coordinatorFullName: 'Jane Doe',
-        },
-      ]
-    },
+  },
+  mounted(){
+    this.initialize()
   },
   methods: {
-    initialize() {
-      console.log('Initialize')
+    async initialize() {
+      this.loading = true;
+      this.projects = await fetchProjects()
+      this.loading = false;
     },
 
     handleSearch(value) {

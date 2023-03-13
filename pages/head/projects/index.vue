@@ -1,16 +1,19 @@
 <template>
   <section>
-    <div
-      class="tw-w-full tw-max-h-full tw-flex tw-flex-col tw-justify-center tw-items-center"
-    >
-      <work-in-progress class="tw-aspect-square tw-w-1/2" />
+    <div>
+      <projects-table />
     </div>
   </section>
 </template>
 
 <script>
+import ProjectsTable from '~/components/tables/ProjectsTable.vue';
+
 export default {
   name: 'ProjectsPage',
+  components: {
+    ProjectsTable
+  },
   layout: 'head',
   data() {
     return {}

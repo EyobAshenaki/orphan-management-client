@@ -15,7 +15,7 @@
       <search-field @onSearch="handleSearch($event)" />
     </template>
 
-    <template #village-social-worker="{ item: { villageSocialWorker } }">
+    <template #villageSocialWorker="{ item: { villageSocialWorker } }">
       <v-tooltip top>
         <template #activator="{ on, attrs }">
           <v-avatar
