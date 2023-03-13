@@ -81,12 +81,7 @@
 </template>
 
 <script>
-import moment from 'moment'
-function calculateAge(dateOfBirth) {
-  const ageInYears = moment().diff(dateOfBirth, `years`)
-  if (ageInYears > 0) return ageInYears
-  return `< 1`
-}
+import { calculateAge } from '~/helpers/app.helpers'
 export default {
   name: 'UserProfileCard',
   props: {

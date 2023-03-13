@@ -1,6 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  ignore: ['.git/'],
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - omp',
@@ -21,7 +22,10 @@ export default {
   css: ['@/assets/css/main.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '~/plugins/toaster' }, { src: '~/plugins/vuex-persist', ssr: false }],
+  plugins: [
+    { src: '~/plugins/toaster' },
+    { src: '~/plugins/vuex-persist', ssr: false },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

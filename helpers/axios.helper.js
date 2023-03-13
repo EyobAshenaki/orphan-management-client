@@ -11,5 +11,5 @@ export const graphqlInstance = axios.create({
 // todo: use this for file upload
 // eslint-disable-next-line no-unused-vars
 export const fileUploadInstance = axios.create({
-  baseURL: `${process.env.API_URL}/upload`,
+  baseURL: `${process.env.NUXT_API_URL}/upload/`,
 })

@@ -37,6 +37,11 @@ export default {
           title: 'Projects',
           to: '/head/projects',
         },
+        {
+          icon: ['fas', 'people-roof'],
+          title: 'Coordinators',
+          to: '/head/coordinators',
+        },
       ],
     }
   },

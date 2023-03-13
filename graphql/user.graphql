@@ -40,3 +40,32 @@ fragment PersonalInfoData on PersonalInfo {
   gender
   phoneNumber
 }
+
+query FetchCoordinators {
+  coordinators {
+    id
+    zones {
+      id
+      name
+      districts {
+        id
+        name
+        projects {
+          id
+          number
+        }
+        villages {
+          id
+          name
+          orphans {
+            id
+            name
+          }
+        }
+      }
+    }
+    user {
+      ...UserData
+    }
+  }
+}
