@@ -1,6 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  ignore: ['.git'],
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - omp',
