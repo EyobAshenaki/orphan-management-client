@@ -1,21 +1,11 @@
 <template>
   <v-data-table
-    :headers="headers"
-    :items="items"
-    :item-key="itemsKey"
-    :items-per-page="itemsPerPage"
-    :search="search"
+:headers="headers" :loading="loading" :items="items" :item-key="itemsKey" :items-per-page="itemsPerPage" :search="search"
     :footer-props="{
       itemsPerPageOptions: [5, 10, 15, 20],
-    }"
-    :single-select="singleSelect"
-    :show-select="showSelect"
-    checkbox-color="teal darken-1"
-    class="hover:tw-cursor-pointer px-6"
-    @dblclick:row="handleDoubleClickRow"
-    @update:items-per-page="handleItemsPerPage"
-    @item-selected="handleSelectedItemChange"
-  >
+    }" :single-select="singleSelect" :show-select="showSelect" checkbox-color="teal darken-1"
+    class="hover:tw-cursor-pointer px-6" @dblclick:row="handleDoubleClickRow" @update:items-per-page="handleItemsPerPage"
+    @item-selected="handleSelectedItemChange">
     <template #top>
       <div class="tw-w-full tw-flex tw-justify-between tw-py-5 tw-px-2">
         <header>
@@ -27,21 +17,15 @@
         <slot name="top-right"></slot>
       </div>
     </template>
+    <slot />
 
-    <template #[`item.districtProjects`]="{ item }">
-      <slot name="district-projects" :item="item"></slot>
-    </template>
-
-    <template #[`item.districtSocialWorkers`]="{ item }">
-      <slot name="district-social-workers" :item="item"></slot>
-    </template>
-
-    <template #[`item.villageSocialWorker`]="{ item }">
-      <slot name="village-social-worker" :item="item"></slot>
-    </template>
-
-    <template #:no-data>
+    <template #no-data>
       <slot name="no-data"></slot>
+    </template>
+    <template v-for="header in headers" #[`item.${header.value}`]="{ item }">
+      <slot :name="header.value" :item="item">
+        {{ item[header.value] }}
+      </slot>
     </template>
   </v-data-table>
 </template>
@@ -83,6 +67,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    loading: {
+      type: Boolean,
+      default: false
+    }
   },
 
   methods: {

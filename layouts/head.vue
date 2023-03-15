@@ -27,11 +27,21 @@ export default {
           title: 'Home',
           to: '/head',
         },
-          {
-            icon: ['fas', 'map'],
-            title: 'Locations',
-            to: '/head/locations',
-          },
+        {
+          icon: ['fas', 'map'],
+          title: 'Locations',
+          to: '/head/locations',
+        },
+        {
+          icon: ['fas', 'diagram-project'],
+          title: 'Projects',
+          to: '/head/projects',
+        },
+        {
+          icon: ['fas', 'people-roof'],
+          title: 'Coordinators',
+          to: '/head/coordinators',
+        },
       ],
     }
   },

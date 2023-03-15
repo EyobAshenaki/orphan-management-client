@@ -1,7 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  ignore: ['.git'],
+  ignore: ['.git/'],
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - omp',
@@ -22,7 +22,10 @@ export default {
   css: ['@/assets/css/main.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '~/plugins/toaster' }],
+  plugins: [
+    { src: '~/plugins/toaster' },
+    { src: '~/plugins/vuex-persist', ssr: false },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -49,7 +52,7 @@ export default {
   },
 
   env: {
-    NUXT_API_URL: process.env.NUXT_API_URL || 'http://localhost:3300',
+    NUXT_API_URL: process.env.NUXT_API_URL || 'http://localhost:3002',
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -96,6 +99,14 @@ export default {
         exclude: /node_modules/,
         loader: 'graphql-tag/loader',
       })
+    },
+  },
+  watchers: {
+    webpack: {
+      ignored: ['**/.git/**/*'],
+    },
+    chokidar: {
+      ignored: ['**/.git/**/*'],
     },
   },
 }

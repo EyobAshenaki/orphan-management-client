@@ -15,7 +15,7 @@
       <search-field @onSearch="handleSearch($event)" />
     </template>
 
-    <template #village-social-worker="{ item: { villageSocialWorker } }">
+    <template #villageSocialWorker="{ item: { villageSocialWorker } }">
       <v-tooltip top>
         <template #activator="{ on, attrs }">
           <v-avatar
@@ -34,6 +34,15 @@
           {{ socialWorkerFullName(villageSocialWorker) }}
         </span>
       </v-tooltip>
+    </template>
+
+    <template v-if="isOnHeadLocationsDistrict" #title-button>
+      <button-light to="/head/locations/village/add-village">
+        <span>Add Village</span>
+        <fa-layers class="tw-ml-2">
+          <fa :icon="['fa', 'plus']" />
+        </fa-layers>
+      </button-light>
     </template>
 
     <template #no-data>
@@ -58,7 +67,25 @@ export default {
     }
   },
   computed: {
+    isOnHeadLocationsDistrict() {
+      return this.$route.name === 'head-locations-district'
+    },
     headers() {
+      if (this.isOnHeadLocationsDistrict) {
+        return [
+          {
+            text: 'Village Name',
+            align: 'start',
+            value: 'name',
+          },
+          { text: 'Orphan count', value: 'noOfOrphans' },
+          // {
+          //   text: 'Social Worker',
+          //   value: 'villageSocialWorker',
+          // },
+          // { text: 'Projects', value: 'districtProjects' },
+        ]
+      }
       return [
         {
           text: 'Village Name',
@@ -75,6 +102,29 @@ export default {
     },
 
     villages() {
+      if (this.isOnHeadLocationsDistrict) {
+        return Array.from(
+          this.$store.state.location.selectedDistrict?.villages
+        ).map((village) => {
+          const noOfOrphans = village?.orphans?.length
+          const villageSocialWorkers = Array.from(
+            this.$store.state.location.selectedDistrict?.socialWorkers
+          ).map((socialWorker) => ({
+            firstName: socialWorker.user.personalInfo.firstName,
+            lastName: socialWorker.user.personalInfo.lastName,
+          }))
+          return {
+            ...village,
+            id: village.id,
+            name: village.name,
+            noOfOrphans: noOfOrphans ?? 0,
+            villageSocialWorker: villageSocialWorkers[0] ?? {
+              firstName: 'John',
+              lastName: 'Doe',
+            },
+          }
+        })
+      }
       return [
         {
           id: 1,

@@ -1,7 +1,7 @@
 import { print } from 'graphql'
 import { graphqlInstance } from '~/helpers/axios.helper'
 import { Login, Logout, Signup } from '~/graphql/auth.graphql'
-import { FetchUsers } from '~/graphql/user.graphql'
+import { FetchUsers, FetchCoordinators } from '~/graphql/user.graphql'
 import { handleGQL } from '~/helpers/graphql.helper'
 
 export default {
@@ -59,4 +59,17 @@ export default {
     const { data } = await handleGQL(fetchUsers)
     return data.users
   },
+}
+
+export async function fetchCoordinators() {
+  const fetchCoordinators = async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: 'FetchCoordinators',
+      query: print(FetchCoordinators),
+    })
+    return response
+  }
+  const { data, errors } = await handleGQL(fetchCoordinators)
+  if (data) return data.coordinators
+  throw errors
 }

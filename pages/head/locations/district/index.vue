@@ -14,24 +14,24 @@
             v-if="version > 1"
             class="tw-absolute tw-top-6 tw-right-6 tw-flex tw-flex-col tw-gap-3"
           >
-            <button-dark to="/head/locations/zone/statistics">
+            <button-dark to="/head/locations/district/statistics">
               <fa-layers class="tw-mr-2">
                 <fa :icon="['fa', 'pen']" />
               </fa-layers>
               <span>Edit</span>
             </button-dark>
-            <button-light to="/head/locations/zone/statistics">
+            <button-light to="/head/locations/district/statistics">
               <fa-layers class="tw-mr-2">
                 <fa :icon="['fa', 'chart-line']" />
               </fa-layers>
               <span>Statistics</span>
             </button-light>
           </div>
-          <h1 class="tw-font-bold tw-text-3xl mb-5">{{ zone.name }}</h1>
+          <h1 class="tw-font-bold tw-text-3xl mb-5">{{ district.name }}</h1>
           <v-spacer></v-spacer>
         </header>
         <div class="tw-gb-gray-100 tw-border-gray-100 tw-pt-5">
-          <districts-table @onDistrictClick="navigateToVillagesTab($event)" />
+          <villages-table @onDistrictClick="navigateToVillagesTab($event)" />
         </div>
       </section>
     </div>
@@ -41,24 +41,19 @@
 <script>
 import ButtonDark from '~/components/global/ButtonDark.vue'
 import ButtonLight from '~/components/global/ButtonLight.vue'
-import DistrictsTable from '~/components/tables/DistrictsTable.vue'
+import VillagesTable from '~/components/tables/VillagesTable.vue'
 export default {
-  name: 'ZonePage',
+  name: 'DistrictPage',
   components: {
     ButtonDark,
     ButtonLight,
-    DistrictsTable,
+    VillagesTable,
   },
   layout: 'head',
   data() {
     return {
       version: 1,
       statItems: [
-        {
-          icon: ['fas', 'building-circle-arrow-right'],
-          title: 'Total Districts',
-          value: 1,
-        },
         {
           icon: ['fas', 'tents'],
           title: 'Total Villages',
@@ -73,8 +68,8 @@ export default {
     }
   },
   computed: {
-    zone() {
-      return this.$store.state.location.selectedZone
+    district() {
+      return this.$store.state.location.selectedDistrict
     },
   },
 }

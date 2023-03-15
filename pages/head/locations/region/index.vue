@@ -29,49 +29,7 @@
           </div>
           <h1 class="tw-font-bold tw-text-3xl mb-5">{{ region.name }}</h1>
           <v-spacer></v-spacer>
-
-          <!-- <v-tabs
-            v-model="tab"
-            height="35"
-            slider-size="3"
-            class="pb-7 mt-3"
-            active-class="tw-text-emerald-800"
-          >
-            <v-tabs-slider
-              class="tw-w-[65%] tw-absolute tw-top-1/2 tw-left-1/2 tw--translate-x-1/2 tw--translate-y-1/2"
-              color="tw-bg-emerald-800"
-            ></v-tabs-slider>
-            <v-tab
-              v-for="(item, idx) in items"
-              :key="idx"
-              class="tw-capitalize hover:tw-text-emerald-800 hover:tw-bg-emerald-800/5 tw-rounded-[4px] tw-mx-2 tw-px-2"
-            >
-              {{ item }}
-            </v-tab>
-          </v-tabs> -->
         </header>
-
-        <!-- <v-tabs-items v-model="tab">
-          <v-tab-item v-for="(item, idx) in items" :key="idx">
-            <div
-              v-if="tab === 0"
-              class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5"
-            >
-              <villages-table @onVillageClick="navigateToOrphansTab($event)" />
-            </div>
-
-            <div
-            v-if="tab === 1"
-              class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5"
-            >
-              <orphans-table
-                button-label="Add Orphan in village"
-                route-to="/coordinator/districts/district/add-orphan"
-                @onOrphanDetailClick="handleOrphanDetailClick($event)"
-                />
-              </div>
-          </v-tab-item>
-        </v-tabs-items> -->
         <div class="tw-gb-gray-100 tw-border-gray-100 tw-pt-5">
           <zones-table @onZoneClick="navigateToDistrictsTab($event)" />
         </div>
@@ -95,8 +53,6 @@ export default {
   data() {
     return {
       version: 1,
-      // tab: 0,
-      // items: ['Zones', 'Districts', 'Villages', 'Orphans'],
       statItems: [
         {
           icon: ['fas', 'border-none'],

@@ -7,7 +7,7 @@
           <div class="form-control">
             <label class="form-label">Region Name</label>
             <v-text-field
-              v-model="name"
+              v-model.trim="name"
               :rules="[rules.required]"
               outlined
               filled
