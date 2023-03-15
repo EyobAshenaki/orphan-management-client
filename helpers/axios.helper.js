@@ -5,6 +5,7 @@ export const graphqlInstance = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    'apollo-require-preflight': true,
   },
 })
 
