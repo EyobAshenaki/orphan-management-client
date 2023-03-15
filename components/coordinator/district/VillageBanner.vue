@@ -28,7 +28,10 @@
 
     <div v-else class="tw-flex tw-items-center tw-gap-3">
       <v-select
+        v-model="selectedVillageId"
         :items="villages"
+        item-text="name"
+        item-value="id"
         item-color="teal darken-3"
         color="teal darken-3"
         dense
@@ -57,13 +60,18 @@ export default {
   data() {
     return {
       villageSelected: true,
+      selectedVillageId: null,
     }
   },
 
   computed: {
     villages() {
-      return ['Village 1', 'Village 2', 'Village 3']
+      return this.$store.state.location.villages
     },
+  },
+
+  created() {
+    this.$store.dispatch('location/fetchAllVillages')
   },
 
   methods: {
@@ -74,6 +82,8 @@ export default {
 
     saveVillage() {
       console.log('Save Village')
+      this.$store.dispatch('addOrphan/setVillageId', this.selectedVillageId)
+
       this.villageSelected = true
     },
   },

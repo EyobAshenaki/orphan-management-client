@@ -4,6 +4,7 @@ import {
   createRegion,
   fetchZones,
   createZone,
+  fetchVillages,
 } from '~/services/location.service'
 
 export const state = () => ({
@@ -48,7 +49,12 @@ export const mutations = {
     if (typeof payload !== 'object' && !Array.isArray(payload))
       throw new TypeError('Payload must be an an array')
     state.districts = payload
-  }
+  },
+  SET_VILLAGES(state, payload) {
+    if (typeof payload !== 'object' && !Array.isArray(payload))
+      throw new TypeError('Payload must be an an array')
+    state.villages = payload
+  },
 }
 
 export const actions = {
@@ -105,5 +111,15 @@ export const actions = {
       } else console.error(error)
       throw error
     }
-  }
+  },
+
+  async fetchAllVillages({ commit, state }) {
+    try {
+      const villages = await fetchVillages()
+      commit('SET_VILLAGES', villages)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error({ error })
+    }
+  },
 }
