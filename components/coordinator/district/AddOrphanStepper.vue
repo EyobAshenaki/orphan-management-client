@@ -28,11 +28,5 @@ export default {
       return this.$store.getters['addOrphan/registrationSteps']
     },
   },
-
-  methods: {
-    setActiveStep(step) {
-      this.$store.dispatch('addOrphan/setActiveStep', step)
-    },
-  },
 }
 </script>

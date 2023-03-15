@@ -11,6 +11,7 @@
       <v-text-field
         v-model="date"
         :label="label"
+        :rules="rules"
         color="teal darken-2"
         dense
         filled
@@ -52,6 +53,10 @@ export default {
     label: {
       type: String,
       default: '',
+    },
+    rules: {
+      type: Array,
+      default: () => [],
     },
   },
 
