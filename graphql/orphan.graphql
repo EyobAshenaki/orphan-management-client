@@ -1,0 +1,5 @@
+mutation CreateOrphanWithNestedCreate($input: CreateOrphanNestedCreateInput!) {
+  createOrphanWithNestedCreate(input: $input) {
+    id
+  }
+}

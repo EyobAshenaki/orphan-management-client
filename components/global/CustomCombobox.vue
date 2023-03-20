@@ -59,15 +59,25 @@ export default {
   data() {
     return {
       search: '',
-      selectedItems: this.multiple ? [] : null,
     }
+  },
+
+  computed: {
+    selectedItems: {
+      get() {
+        return this.$vmodel
+      },
+      set(value) {
+        this.$emit('input', value)
+      },
+    },
   },
 }
 </script>
 
 <style scoped>
 .combo-chip {
-  @apply tw-text-sm tw-text-emerald-800 tw-font-normal tw-border tw-border-emerald-800;
+  @apply tw-text-sm tw-text-emerald-800 tw-font-normal tw-border tw-border-emerald-800 tw-my-2 tw-mr-1;
 }
 
 .combo-chip-avatar {

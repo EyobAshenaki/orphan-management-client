@@ -4,6 +4,7 @@
     depressed
     :ripple="false"
     :to="to"
+    :disabled="disabled"
     @click="$emit('click')"
   >
     <slot> Click Me </slot>
@@ -17,6 +18,10 @@ export default {
     to: {
       type: String,
       default: '',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
 }
