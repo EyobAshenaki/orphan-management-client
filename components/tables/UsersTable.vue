@@ -14,7 +14,10 @@
       <search-field @onSearch="handleSearch($event)" />
     </template>
     <template #title-button>
-      <button-light to="/admin/users/add-user" class="tw-border tw-border-emerald-600">
+      <button-light
+        to="/admin/users/add-user"
+        class="tw-border tw-border-emerald-600"
+      >
         <span>Add User</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
@@ -59,10 +62,11 @@ export default {
         {
           text: 'Role',
           value: 'role',
-        }, {
+        },
+        {
           text: 'Phone Number',
-          value: 'personalInfo.phoneNumber'
-        }
+          value: 'personalInfo.phoneNumber',
+        },
       ],
       searchValue: '',
       itemsPerPage: 5,

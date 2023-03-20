@@ -200,4 +200,6 @@ export const actions = {
       throw error
     }
   },
+  // todo: update Village
+  // todo: delete Village
 }

@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql'
 
-export const handleGQL = async (handler, params) => {
+export async function handleGQL(handler, params) {
   try {
     const response = await handler(params)
     if (response) {
@@ -22,8 +22,6 @@ export const handleGQL = async (handler, params) => {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error)
-    // todo: handle error
-    // todo: display error if needed
     return { errors: error, data: null }
   }
 }

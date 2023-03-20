@@ -1,75 +1,87 @@
 import { print } from 'graphql'
 import { graphqlInstance } from '~/helpers/axios.helper'
 import { Login, Logout, Signup } from '~/graphql/auth.graphql'
-import { FetchUsers, FetchCoordinators } from '~/graphql/user.graphql'
+import {
+  FetchUsers,
+  FetchCoordinators,
+  FetchSimpleCoordinatorNames,
+} from '~/graphql/user.graphql'
 import { handleGQL } from '~/helpers/graphql.helper'
 
-export default {
-  async createUser(userInput) {
-    const signup = async () => {
-      const response = await graphqlInstance.post('', {
-        operationName: 'Signup',
-        query: print(Signup),
-        variables: {
-          input: userInput,
-        },
-      })
-      return response
-    }
-    const { data } = await handleGQL(signup)
-    return data.signup.user
-  },
-  async login(email, password) {
-    const login = async () => {
-      const response = await graphqlInstance.post('', {
-        operationName: 'Login',
-        query: print(Login),
-        variables: {
-          input: {
-            email,
-            password,
-          },
-        },
-      })
-      return response
-    }
-    const { data } = await handleGQL(login)
-    return data.login.user
-  },
-  // todo:  implement full logout
-  async logout() {
-    const logout = async () => {
-      const response = await graphqlInstance.post('', {
-        operationName: 'Logout',
-        query: print(Logout),
-      })
-      return response
-    }
-    const { data } = await handleGQL(logout)
-    return data.logout
-  },
-  async fetchUsers() {
-    const fetchUsers = async () => {
-      const response = await graphqlInstance.post('', {
-        operationName: 'FetchUsers',
-        query: print(FetchUsers),
-      })
-      return response
-    }
-    const { data } = await handleGQL(fetchUsers)
-    return data.users
-  },
-}
-
-export async function fetchCoordinators() {
-  const fetchCoordinators = async () => {
+export async function createUser(userInput) {
+  const signup = async () => {
     const response = await graphqlInstance.post('', {
-      operationName: 'FetchCoordinators',
-      query: print(FetchCoordinators),
+      operationName: 'Signup',
+      query: print(Signup),
+      variables: {
+        input: userInput,
+      },
     })
     return response
   }
-  const { data, errors } = await handleGQL(fetchCoordinators)
+  const { data, errors } = await handleGQL(signup)
+  if (data) return data.signup.user
+  throw errors
+}
+
+export async function login(email, password) {
+  const login = async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: 'Login',
+      query: print(Login),
+      variables: {
+        input: {
+          email,
+          password,
+        },
+      },
+    })
+    return response
+  }
+  const { data, errors } = await handleGQL(login)
+  if (data) return data.login.user
+  throw errors
+}
+
+// todo:  implement full logout
+export async function logout() {
+  const logout = async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: 'Logout',
+      query: print(Logout),
+    })
+    return response
+  }
+  const { data, errors } = await handleGQL(logout)
+  if (data) return data.logout
+  throw errors
+}
+
+export async function fetchUsers() {
+  const fetchUsers = async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: 'FetchUsers',
+      query: print(FetchUsers),
+    })
+    return response
+  }
+  const { data, errors } = await handleGQL(fetchUsers)
+  if (data) return data.users
+  throw errors
+}
+
+export async function fetchCoordinators(simple = false) {
+  const { data, errors } = await handleGQL(async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: simple
+        ? 'FetchSimpleCoordinatorNames'
+        : 'FetchCoordinators',
+      query: simple
+        ? print(FetchSimpleCoordinatorNames)
+        : print(FetchCoordinators),
+    })
+    return response
+  })
   if (data) return data.coordinators
   throw errors
 }

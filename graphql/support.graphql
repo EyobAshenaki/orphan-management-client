@@ -1,0 +1,51 @@
+fragment SupportPlanFragment on SupportPlan {
+  id
+  name
+  startDate
+  endDate
+  totalFund
+  adminFeePercentage
+  paymentInterval
+}
+
+fragment PaymentFragment on Payment {
+  id
+  startDate
+  endDate
+  grossPaymentInPrimaryForeignCurrency
+  primaryForeignCurrency
+  primaryExchangeRate
+  grossPaymentInSecondaryForeignCurrency
+  secondaryForeignCurrency
+  secondaryExchangeRate
+  grossPaymentInDomesticCurrency
+  adminFeeInDomesticCurrency
+  netPaymentInDomesticCurrency
+  paymentPeriodInMonths
+}
+
+fragment IndividualPaymentFragment on IndividualPayment {
+  id
+  grossDepositInPrimaryForeignCurrency
+  grossDepositInSecondaryForeignCurrency
+  grossDepositInDomesticCurrency
+  adminFeeInDomesticCurrency
+  netDepositInDomesticCurrency
+}
+
+query SupportPlansByProjectId($projectId: ID!) {
+  supportPlans(projectId: $projectId) {
+    ...SupportPlanFragment
+    payments {
+      ...PaymentFragment
+      individualPayments {
+        ...IndividualPaymentFragment
+      }
+    }
+    orphans {
+      id
+      code
+      name
+    }
+  }
+}

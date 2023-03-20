@@ -1,17 +1,34 @@
 <template>
   <section>
     <header class="tw-w-full tw-relative tw-bg-white tw-px-8 tw-pt-8">
-      <button-dark
-        class="tw-absolute tw-top-6 tw-right-6"
-        to="/coordinator/project/statistics"
+      <div
+        v-if="version > 1"
+        class="tw-absolute tw-top-6 tw-right-6 tw-flex tw-flex-col tw-gap-3"
       >
-        <fa-layers class="tw-mr-2">
-          <fa :icon="['fa', 'chart-line']" />
-        </fa-layers>
-        <span>Statistics</span>
-      </button-dark>
+        <button-dark
+          to="/head/project/statistics"
+        >
+          <fa-layers class="tw-mr-2">
+            <fa :icon="['fa', 'chart-line']" />
+          </fa-layers>
+          <span>Statistics</span>
+        </button-dark>
+        <button-dark to="/head/locations/zone/statistics">
+          <fa-layers class="tw-mr-2">
+            <fa :icon="['fa', 'pen']" />
+          </fa-layers>
+          <span>Edit</span>
+        </button-dark>
+      </div>
 
-      <h1 class="tw-font-bold tw-text-3xl mb-3">Project-x</h1>
+      <h1 class="tw-font-bold tw-text-3xl mb-3">Project-{{ project.number }}</h1>
+
+      <!-- <button-light to="/coordinator/projects/add-project">
+          <span>Add Project</span>
+          <fa-layers class="tw-ml-2">
+            <fa :icon="['fa', 'plus']" />
+          </fa-layers>
+        </button-light> -->
 
       <v-spacer></v-spacer>
 
@@ -19,7 +36,7 @@
         v-model="tab"
         height="35"
         slider-size="3"
-        class="pb-7 mt-3"
+        class="pb-7 mt-7"
         active-class="tw-text-emerald-800"
       >
         <v-tabs-slider
@@ -89,6 +106,7 @@ export default {
 
   data() {
     return {
+      version: 1,
       tab: null,
       items: [
         'Support Plans',
@@ -99,6 +117,11 @@ export default {
         // 'Documents',
       ],
     }
+    },
+  computed: {
+    project() {
+      return this.$store.state.head.selectedProject
+    },
   },
   methods: {
     navigateToPaymentsTab(item) {

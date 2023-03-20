@@ -28,6 +28,11 @@ export default {
           to: '/head',
         },
         {
+          icon: ['fas', 'hand-holding-dollar'],
+          title: 'Donors',
+          to: '/head/donors',
+        },
+        {
           icon: ['fas', 'map'],
           title: 'Locations',
           to: '/head/locations',

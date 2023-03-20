@@ -1,4 +1,5 @@
-import axiosService from '~/services/user.service'
+import { GraphQLError } from 'graphql'
+import { fetchUsers, createUser } from '~/services/user.service'
 
 export const state = () => ({
   users: [],
@@ -24,7 +25,7 @@ export const actions = {
   },
   async fetchUsers({ commit }) {
     try {
-      const users = await axiosService.fetchUsers()
+      const users = await fetchUsers()
       commit('SET_USERS', users)
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -33,11 +34,19 @@ export const actions = {
   },
   async createUser({ commit, state }) {
     try {
-      const user = await axiosService.createUser(state.userInput)
+      const user = await createUser(state.userInput)
       commit('SET_USERS', [...state.users, user])
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error({ error })
+      if (Array.from(error)[0] instanceof GraphQLError) {
+        error.forEach((e) => {
+          this.$toaster.showToast({
+            content: e.message,
+            state: 'error',
+          })
+        })
+        // eslint-disable-next-line no-console
+      } else console.error(error)
+      throw error
     }
   },
 }

@@ -47,22 +47,37 @@ export default {
           value: 'name',
         },
         {
-          text: 'Period of Support',
-          value: 'periodOfSupport',
+          text: 'Payment Interval',
+          value: 'paymentInterval',
         },
-        { text: 'Donor', value: 'donor' },
-        { text: 'Normal of Orphans', value: 'normalOfOrphans' },
         { text: 'Total Fund', value: 'totalFund' },
-        { text: 'Admin Fee %', value: 'adminFreePercentage' },
+        { text: 'Admin Fee %', value: 'adminFeePercentage' },
+        { text: 'Donor', value: 'donor' },
+        { text: 'Orphans Count', value: 'orphansCount' },
       ]
     },
+    isOnHeadProjectsPage() {
+      return this.$route.path === '/head/projects/project'
+    },
     supportPlans() {
+      if (this.isOnHeadProjectsPage) {
+        return Array.from(
+          this.$store.state.head.selectedProject.supportPlans
+        ).map((supportPlan) => {
+          return {
+            ...supportPlan,
+            paymentInterval: `Every ${supportPlan.paymentInterval} Months`,
+            donor: supportPlan.donor,
+            orphansCount: Array.from(supportPlan.orphans).length,
+          }
+        })
+      }
       return [
         {
           name: 'QC-1',
           periodOfSupport: '5 years',
           donor: 'QC',
-          normalOfOrphans: 6,
+          orphansCount: 6,
           totalFund: 200000,
           adminFreePercentage: 5,
         },
@@ -70,7 +85,7 @@ export default {
           name: 'QC-2',
           periodOfSupport: '3 years',
           donor: 'QC',
-          normalOfOrphans: 3,
+          orphansCount: 3,
           totalFund: 500000,
           adminFreePercentage: 3,
         },
@@ -78,7 +93,7 @@ export default {
           name: 'QC-3',
           periodOfSupport: '6 years',
           donor: 'QC',
-          normalOfOrphans: 7,
+          orphansCount: 7,
           totalFund: 300000,
           adminFreePercentage: 5,
         },
@@ -86,7 +101,7 @@ export default {
           name: 'QC-4',
           periodOfSupport: '8 years',
           donor: 'QC',
-          normalOfOrphans: 9,
+          orphansCount: 9,
           totalFund: 900000,
           adminFreePercentage: 7,
         },
@@ -94,7 +109,7 @@ export default {
           name: 'QC-5',
           periodOfSupport: '5 years',
           donor: 'QC',
-          normalOfOrphans: 6,
+          orphansCount: 6,
           totalFund: 700000,
           adminFreePercentage: 5,
         },
@@ -102,7 +117,7 @@ export default {
           name: 'QC-6',
           periodOfSupport: '3 years',
           donor: 'QC',
-          normalOfOrphans: 3,
+          orphansCount: 3,
           totalFund: 500000,
           adminFreePercentage: 3,
         },
@@ -110,7 +125,7 @@ export default {
           name: 'QC-7',
           periodOfSupport: '6 years',
           donor: 'QC',
-          normalOfOrphans: 7,
+          orphansCount: 7,
           totalFund: 800000,
           adminFreePercentage: 5,
         },
@@ -118,7 +133,7 @@ export default {
           name: 'QC-8',
           periodOfSupport: '8 years',
           donor: 'QC',
-          normalOfOrphans: 9,
+          orphansCount: 9,
           totalFund: 300000,
           adminFreePercentage: 7,
         },

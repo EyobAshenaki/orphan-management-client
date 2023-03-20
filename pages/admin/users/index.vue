@@ -45,33 +45,35 @@ export default {
   },
 
   computed: {
-    // todo: get this from the backend
     items() {
       return [
         {
           icon: ['fas', 'user-group'],
           title: 'Total Users',
-          value: 57,
+          value: this.users.length,
         },
         {
           icon: ['fas', 'user-tie'],
           title: 'One Department Head',
-          value: 1,
+          // eslint-disable-next-line eqeqeq
+          value: this.users.filter((user) => user.userRole == 'HEAD').length,
         },
         {
           icon: ['fas', 'city'],
           title: 'Total Donors',
-          value: 6,
+          value: this.users.filter((user) => user.userRole === 'DONOR').length,
         },
         {
           icon: ['fas', 'tents'],
           title: 'Total Social Workers ',
-          value: 30,
+          value: this.users.filter((user) => user.userRole === 'SOCIAL_WORKER')
+            .length,
         },
         {
           icon: ['fas', 'list-check'],
           title: 'Total Coordinators',
-          value: 12,
+          value: this.users.filter((user) => user.userRole === 'COORDINATOR')
+            .length,
         },
       ]
     },
@@ -97,6 +99,7 @@ export default {
         ...user,
         name: this.fullName(user),
         role: role(user.role),
+        userRole: user.role,
         personalInfo: {
           ...user.personalInfo,
           phoneNumber: user.personalInfo.phoneNumber ?? 'N/A',

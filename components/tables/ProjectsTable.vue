@@ -10,17 +10,21 @@
     @onDoubleClickRow="navigateToProject($event)"
     @onItemsPerPage="handleItemsPerPage"
   >
-  <template #[`startDate`]="{item}">
-    {{ Intl.DateTimeFormat().format(new Date(item.startDate)) }}
-  </template>
-  <template #grandTotalBudget="{item}">
-    {{ Intl.NumberFormat({style: 'currency', currency: 'ETB'}).format(item.grandTotalBudget) }}
-  </template>
+    <template #[`startDate`]="{ item }">
+      {{ Intl.DateTimeFormat().format(new Date(item.startDate)) }}
+    </template>
+    <template #grandTotalBudget="{ item }">
+      {{
+        Intl.NumberFormat({ style: 'currency', currency: 'ETB' }).format(
+          item.grandTotalBudget
+        )
+      }}
+    </template>
     <!-- The code should be active for the head account -->
-    <template #title-button>
-      <button-light to="/coordinator/projects/add-project">
+    <template v-if="isOnHeadProjectsPage" #title-button>
+      <button-light to="/head/projects/project/add-project">
         <span>Add Project</span>
-        <fa-layers class="tw-ml-2"> 
+        <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
         </fa-layers>
       </button-light>
@@ -37,7 +41,6 @@
 </template>
 
 <script>
-import { fetchProjects } from '~/services/project.service'
 export default {
   name: 'ProjectsTable',
 
@@ -46,10 +49,13 @@ export default {
       searchValue: '',
       itemsPerPage: 5,
       projects: [],
-      loading: false
+      loading: false,
     }
   },
   computed: {
+    isOnHeadProjectsPage() {
+      return this.$route.path === '/head/projects'
+    },
     headers() {
       return [
         {
@@ -67,25 +73,39 @@ export default {
       ]
     },
   },
-  mounted(){
+  async mounted() {
+    await this.$store.dispatch('head/fetchProjects')
     this.initialize()
   },
   methods: {
-    async initialize() {
-      this.loading = true;
-      this.projects = await fetchProjects()
-      this.loading = false;
+    initialize() {
+      this.loading = true
+      this.projects = Array.from(this.$store.state.head.projects).map(
+        (project) => {
+          return {
+            ...project,
+            coordinatorFullName: `${
+              Array.from(project?.coordinators)[0].user.personalInfo.firstName
+            } ${
+              Array.from(project?.coordinators)[0].user.personalInfo.lastName
+            }`,
+          }
+        }
+      )
+      this.loading = false
     },
 
     handleSearch(value) {
       this.searchValue = value
     },
 
-    navigateToProject(item) {
-      this.$router.push({
-        name: 'coordinator-projects-project',
-        // change selected project state using the item argument
-      })
+    navigateToProject(selectedProject) {
+      this.$store.dispatch('head/setSelectedProject', selectedProject)
+      this.$router.push(
+        `/${
+          this.isOnHeadProjectsPage ? 'head' : 'coordinator'
+        }/projects/project`
+      )
     },
 
     handleItemsPerPage(value) {

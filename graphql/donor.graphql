@@ -1,0 +1,48 @@
+fragment DonorDataFragment on Donor {
+  id
+  companyName
+  nameInitials
+  user {
+    id
+    email
+    role
+    personalInfo {
+      id
+      firstName
+      middleName
+      lastName
+      dateOfBirth
+      phoneNumber
+    }
+  }
+}
+
+query FetchDonors {
+  donors {
+    ...DonorDataFragment
+  }
+}
+
+query Donor($id: ID!) {
+  donor(id: $id) {
+    ...DonorDataFragment
+  }
+}
+
+mutation CreateDonor($input: CreateDonorInput!) {
+  createDonor(input: $input) {
+    ...DonorDataFragment
+  }
+}
+
+mutation CreateDonorWithUser($input: CreateDonorWithUserInput!) {
+  createDonorWithUser(input: $input) {
+    ...DonorDataFragment
+  }
+}
+
+mutation UpdateDonor($input: UpdateDonorInput!) {
+  updateDonor(input: $input) {
+    ...DonorDataFragment
+  }
+}

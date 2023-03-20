@@ -10,6 +10,8 @@
     outlined
     :show-size="1000"
     :placeholder="placeholder"
+    :accept="accept"
+    :rules="rules"
   >
     <template v-if="multiple" #selection="{ index, text }">
       <v-chip v-if="index < 2" color="teal darken-2" dark label small>
@@ -31,13 +33,21 @@ export default {
   name: 'CustomFileInput',
 
   props: {
+    rules: {
+      type: Array,
+      default: () => [],
+    },
+    accept: {
+      type: String,
+      default: '*',
+    },
     multiple: {
       type: Boolean,
       default: false,
     },
     placeholder: {
       type: String,
-      default: 'Select your files',
+      default: 'Select your file(s)',
     },
   },
 
@@ -47,7 +57,6 @@ export default {
 
   watch: {
     files() {
-      console.log('files', this.files)
       this.$emit('fileChange', this.files)
     },
   },

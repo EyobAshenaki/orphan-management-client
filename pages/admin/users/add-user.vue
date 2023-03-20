@@ -4,100 +4,140 @@
     <v-card-text class="tw-p-5">
       <v-form ref="userForm">
         <div class="tw-flex tw-flex-row tw-gap-6">
-          <v-text-field
-            v-model.trim="firstName"
-            label="First Name"
-            :rules="[rules.required]"
-          ></v-text-field>
-          <v-text-field
-            v-model.trim="middleName"
-            label="Middle Name"
-            :rules="[rules.required]"
-          ></v-text-field>
-          <v-text-field
-            v-model.trim="lastName"
-            label="Last Name"
-            :rules="[rules.required]"
-          ></v-text-field>
+          <div class="form-control">
+            <label class="form-label">First Name</label>
+            <v-text-field
+              v-model.trim="firstName"
+              :rules="[rules.required]"
+              outlined
+              filled
+              dense
+              color="teal darken-2"
+            ></v-text-field>
+          </div>
+          <div class="form-control">
+            <label class="form-label">Middle Name</label>
+            <v-text-field
+              v-model.trim="middleName"
+              :rules="[rules.required]"
+              outlined
+              filled
+              dense
+              color="teal darken-2"
+            ></v-text-field>
+          </div>
+          <div class="form-control">
+            <label class="form-label">Last Name</label>
+            <v-text-field
+              v-model.trim="lastName"
+              :rules="[rules.required]"
+              outlined
+              filled
+              dense
+              color="teal darken-2"
+            ></v-text-field>
+          </div>
         </div>
         <div class="tw-flex tw-flex-row tw-gap-6">
-          <v-menu
-            v-model="dateOfBirthMenu"
-            :close-on-content-click="false"
-            transition="scale-transition"
-            offset-y
-            max-width="290px"
-            min-width="auto"
-          >
-            <template #activator="{ on, attrs }">
-              <v-text-field
-                v-model="dateOfBirth"
-                label="Date of Birth"
-                :rules="[rules.required]"
-                prepend-icon="mdi-calendar"
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="dateOfBirth"
+          <div class="form-control">
+            <label class="form-label">Date of Birth</label>
+            <custom-date-picker v-model="dateOfBirth" />
+          </div>
+
+          <div class="form-control">
+            <label class="form-label">Gender</label>
+            <v-select
+              v-model="gender"
               :rules="[rules.required]"
-              no-title
-              @input="dateOfBirthMenu = false"
-            ></v-date-picker>
-          </v-menu>
-          <v-select
-            v-model="gender"
-            label="Gender"
-            :rules="[rules.required]"
-            :items="genderOptions"
-          ></v-select>
-          <v-text-field
-            v-model="phoneNumber"
-            label="Phone Number"
-            :rules="[rules.required]"
-          ></v-text-field>
+              :items="genderOptions"
+              outlined
+              filled
+              dense
+              item-color="teal darken-2"
+              color="teal darken-2"
+            ></v-select>
+          </div>
+          <div class="form-control">
+            <label class="form-label"> Phone Number </label>
+            <v-text-field
+              v-model.trim="phoneNumber"
+              :rules="[rules.required]"
+              outlined
+              filled
+              dense
+              color="teal darken-2"
+            ></v-text-field>
+          </div>
         </div>
         <div class="tw-flex tw-flex-row tw-gap-6 tw-mt-3">
-          <v-select
-            v-model="role"
-            class="tw-max-w-xs"
-            :items="roleOptions"
-            label="Role"
-            :rules="[rules.required]"
-            required
-          ></v-select>
-          <v-text-field
-            v-model.trim="email"
-            class="tw-shrink-0"
-            label="Email"
-            :rules="[rules.required, rules.email]"
-            type="email"
-            required
-            autocomplete="email"
-          ></v-text-field>
-          <v-text-field
-            v-model="password"
-            class="tw-shrink-0"
-            label="Password"
-            type="password"
-            :rules="[rules.required]"
-            required
-            autocomplete="new-password"
-            readonly
-            placeholder="Generate Password ➡️"
-          >
-          </v-text-field>
-          <v-btn icon dense class="mt-3" @click="generatePassword">
-            <v-tooltip bottom>
-              <template #activator="{ on }">
-                <fa-layers v-on="on">
-                  <fa :icon="['fa', 'key']" />
-                </fa-layers>
+          <div class="form-control">
+            <label class="form-label">Role</label>
+            <v-select
+              v-model="role"
+              class="tw-max-w-xs"
+              :items="roleOptions"
+              label="Role"
+              :rules="[rules.required]"
+              required
+              outlined
+              filled
+              dense
+              item-color="teal darken-2"
+              color="teal darken-2"
+            ></v-select>
+          </div>
+
+          <div class="form-control">
+            <label class="form-label">Email</label>
+            <v-text-field
+              v-model.trim="email"
+              class="tw-shrink-0"
+              :rules="[rules.required, rules.email]"
+              type="email"
+              required
+              autocomplete="email"
+              outlined
+              filled
+              dense
+              color="teal darken-2"
+            ></v-text-field>
+          </div>
+          <div class="form-control">
+            <label class="form-label">Password</label>
+            <v-text-field
+              v-model="password"
+              class="tw-shrink-0"
+              type="password"
+              :rules="[rules.required]"
+              required
+              autocomplete="new-password"
+              readonly
+              placeholder="⬅️ Generate Password"
+              outlined
+              filled
+              dense
+              color="teal darken-2"
+            >
+              <template #prepend-inner>
+                <v-btn
+                  icon
+                  dense
+                  class="tw-mt-[-0.375rem] tw-ml-[-0.375rem]"
+                  color="teal darken-2"
+                  @click="generatePassword"
+                >
+                  <v-tooltip bottom>
+                    <template #activator="{ on }">
+                      <fa-layers v-on="on">
+                        <fa :icon="['fa', 'key']" />
+                      </fa-layers>
+                    </template>
+                    <span>Generate Password</span>
+                  </v-tooltip>
+                </v-btn>
               </template>
-              <span>Generate Password</span>
-            </v-tooltip>
-          </v-btn>
+            </v-text-field>
+          </div>
         </div>
         <div class="tw-flex tw-flex-row tw-gap-6 tw-mt-3">
           <v-btn class="tw-place-self-end" @click.prevent="saveUser"
@@ -120,6 +160,7 @@ export default {
         { text: 'Head', value: 'HEAD' },
         { text: 'Coordinator', value: 'COORDINATOR' },
         { text: 'Social Worker', value: 'SOCIAL_WORKER' },
+        { text: 'Donor', value: 'DONOR' },
       ],
       genderOptions: [
         {
@@ -134,7 +175,6 @@ export default {
       firstName: '',
       middleName: '',
       lastName: '',
-      dateOfBirthMenu: false,
       dateOfBirth: null,
       gender: '',
       phoneNumber: '',
@@ -171,7 +211,7 @@ export default {
           middleName: this.middleName,
           lastName: this.lastName,
           phoneNumber: this.phoneNumber,
-          dateOfBirth: this.dateOfBirth,
+          dateOfBirth: new Date(this.dateOfBirth),
           gender: this.gender,
         },
       }
@@ -181,3 +221,11 @@ export default {
   },
 }
 </script>
+<style scoped>
+.form-control {
+  @apply tw-w-full tw-flex tw-flex-col tw-gap-1;
+}
+.form-label {
+  @apply tw-text-sm tw-text-gray-800 tw-font-light;
+}
+</style>

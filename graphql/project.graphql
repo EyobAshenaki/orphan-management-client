@@ -10,4 +10,33 @@ fragment ProjectFragment on Project {
   startDate
   grandTotalBudget
   maximumNumberOfBeneficiaries
+  coordinators {
+    id
+    user {
+      id
+      personalInfo {
+        firstName
+        lastName
+      }
+    }
+  }
 }
+
+mutation CreateProject($input: CreateProjectInput!) {
+  createProject(input: $input) {
+    ...ProjectFragment
+  }
+}
+
+# query FindZoneCoordinatorByProjectId($projectId: ID!) {
+#   coordinator: findZoneCoordinatorByProjectId(projectId: $projectId) {
+#     id
+#     user {
+#       id
+#       personalInfo {
+#         firstName
+#         lastName
+#       }
+#     }
+#   }
+# }
