@@ -71,7 +71,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('location/fetchAllVillages')
+    this.$store.dispatch('location/fetchVillages')
   },
 
   methods: {

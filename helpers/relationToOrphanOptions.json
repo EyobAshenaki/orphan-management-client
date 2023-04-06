@@ -1,16 +1,16 @@
 {
   "relationOptions": [
-    "Mother",
-    "Grandfather",
-    "Grandmother",
-    "Sister",
-    "Brother",
-    "Uncle",
-    "Aunt",
-    "Cousin",
-    "Niece",
-    "Nephew",
-    "Legal Guardian",
-    "Other"
+    { "text": "Mother", "value": "MOTHER" },
+    { "text": "Grandfather", "value": "GRANDFATHER" },
+    { "text": "Grandmother", "value": "GRANDMOTHER" },
+    { "text": "Sister", "value": "SISTER" },
+    { "text": "Brother", "value": "BROTHER" },
+    { "text": "Uncle", "value": "UNCLE" },
+    { "text": "Aunt", "value": "AUNT" },
+    { "text": "Cousin", "value": "COUSIN" },
+    { "text": "Niece", "value": "NIECE" },
+    { "text": "Nephew", "value": "NEPHEW" },
+    { "text": "Legal Guardian", "value": "LEGAL_GUARDIAN" },
+    { "text": "Other", "value": "OTHER" }
   ]
 }

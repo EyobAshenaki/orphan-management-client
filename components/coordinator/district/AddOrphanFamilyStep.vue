@@ -98,12 +98,12 @@
           <custom-radio
             :class="[isAlive ? 'tw-border-emerald-800' : '']"
             label="Alive"
-            value="alive"
+            value="ALIVE"
           />
           <custom-radio
             :class="[isDeceased ? 'tw-border-emerald-800' : '']"
             label="Deceased"
-            value="deceased"
+            value="PASSED_AWAY"
           />
         </v-radio-group>
       </div>
@@ -114,12 +114,12 @@
           <custom-radio
             :class="[isMarried ? 'tw-border-emerald-800' : '']"
             label="Married"
-            value="married"
+            value="MARRIED"
           />
           <custom-radio
             :class="[isWidow ? 'tw-border-emerald-800' : '']"
             label="Widow"
-            value="widow"
+            value="WIDOWED"
           />
         </v-radio-group>
       </div>
@@ -203,19 +203,19 @@ export default {
 
   computed: {
     isAlive() {
-      return this.motherVitalStatus === 'alive'
+      return this.motherVitalStatus === 'ALIVE'
     },
 
     isDeceased() {
-      return this.motherVitalStatus === 'deceased'
+      return this.motherVitalStatus === 'PASSED_AWAY'
     },
 
     isMarried() {
-      return this.motherMaritalStatus === 'married'
+      return this.motherMaritalStatus === 'MARRIED'
     },
 
     isWidow() {
-      return this.motherMaritalStatus === 'widow'
+      return this.motherMaritalStatus === 'WIDOWED'
     },
 
     fatherDateOfBirth: {

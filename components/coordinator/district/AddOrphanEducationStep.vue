@@ -17,22 +17,22 @@
           <custom-radio
             :class="[isEnrolled ? 'tw-border-emerald-800' : '']"
             label="Enrolled"
-            value="enrolled"
+            value="ENROLLED"
           />
           <custom-radio
-            :class="[isDropout ? 'tw-border-emerald-800' : '']"
+            :class="[isDroppedOut ? 'tw-border-emerald-800' : '']"
             label="Drop-out"
-            value="dropout"
+            value="DROPPED_OUT"
           />
           <custom-radio
-            :class="[isUnenrolled ? 'tw-border-emerald-800' : '']"
+            :class="[isNotEnrolled ? 'tw-border-emerald-800' : '']"
             label="Unenrolled"
-            value="unenrolled"
+            value="NOT_ENROLLED"
           />
         </v-radio-group>
       </div>
 
-      <div v-if="isEnrolled || isDropout">
+      <div v-if="isEnrolled || isDroppedOut">
         <div class="form-control">
           <label class="form-label"> School Level </label>
           <v-radio-group
@@ -43,24 +43,24 @@
           >
             <custom-radio
               :class="[
-                schoolLevel === 'religious' ? 'tw-border-emerald-800' : '',
+                isReligiousSchool ? 'tw-border-emerald-800' : '',
               ]"
               label="Religious"
-              value="religious"
+              value="RELIGIOUS_EDUCATION"
             />
             <custom-radio
               :class="[
-                schoolLevel === 'preschool' ? 'tw-border-emerald-800' : '',
+                isPreschool ? 'tw-border-emerald-800' : '',
               ]"
               label="Pre-School"
-              value="preschool"
+              value="PRE_SCHOOL"
             />
             <custom-radio
               :class="[
-                schoolLevel === 'primary' ? 'tw-border-emerald-800' : '',
+                isElementary ? 'tw-border-emerald-800' : '',
               ]"
               label="Primary/Elementary"
-              value="primary"
+              value="PRIMARY_ELEMENTARY"
             />
           </v-radio-group>
         </div>
@@ -158,19 +158,19 @@
             <custom-radio
               :class="[schoolType === 'public' ? 'tw-border-emerald-800' : '']"
               label="Public"
-              value="public"
+              value="PUBLIC"
             />
             <custom-radio
               :class="[schoolType === 'private' ? 'tw-border-emerald-800' : '']"
               label="Private"
-              value="private"
+              value="PRIVATE"
             />
           </v-radio-group>
         </div>
       </div>
 
       <div class="form-control-group">
-        <div v-if="isEnrolled || isDropout" class="form-control">
+        <div v-if="isEnrolled || isDroppedOut" class="form-control">
           <label class="form-label"> School Name </label>
           <v-text-field
             v-model="schoolName"
@@ -184,13 +184,13 @@
           ></v-text-field>
         </div>
 
-        <div v-if="isUnenrolled || isDropout" class="form-control">
+        <div v-if="isNotEnrolled || isDroppedOut" class="form-control">
           <label class="form-label"> {{ reasonLabel }} </label>
           <v-text-field
             v-model="reason"
             :rules="[rules.required, rules.textWithSpaces]"
             required
-            :class="[isUnenrolled ? 'tw-w-1/2' : '']"
+            :class="[isNotEnrolled ? 'tw-w-1/2' : '']"
             color="teal darken-2"
             dense
             filled
@@ -291,27 +291,27 @@ export default {
     },
 
     isReligiousSchool() {
-      return this.schoolLevel === 'religious'
+      return this.schoolLevel === 'RELIGIOUS_EDUCATION'
     },
 
     isPreschool() {
-      return this.schoolLevel === 'preschool'
+      return this.schoolLevel === 'PRE_SCHOOL'
     },
 
     isElementary() {
-      return this.schoolLevel === 'elementary'
+      return this.schoolLevel === 'PRIMARY_ELEMENTARY'
     },
 
     isEnrolled() {
-      return this.enrollmentStatus === 'enrolled'
+      return this.enrollmentStatus === 'ENROLLED'
     },
 
-    isDropout() {
-      return this.enrollmentStatus === 'dropout'
+    isDroppedOut() {
+      return this.enrollmentStatus === 'DROPPED_OUT'
     },
 
-    isUnenrolled() {
-      return this.enrollmentStatus === 'unenrolled'
+    isNotEnrolled() {
+      return this.enrollmentStatus === 'NOT_ENROLLED' 
     },
 
     hasGradeAgeMismatch() {

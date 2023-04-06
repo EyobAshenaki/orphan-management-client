@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql'
+import { toEnumString } from '~/helpers/app.helpers'
 import { createOrphanWithNestedCreate } from '~/services/orphan.service'
 
 export const state = () => ({
@@ -446,7 +447,7 @@ export const actions = {
   },
 
   setGender({ commit }, payload) {
-    commit('MODIFY_ORPHAN_INPUT', { gender: payload })
+    commit('MODIFY_ORPHAN_INPUT', { gender: toEnumString(payload) })
   },
 
   setOrphanName({ commit }, payload) {
@@ -490,12 +491,12 @@ export const actions = {
 
   setEnrollmentStatus({ commit }, payload) {
     commit('MODIFY_EDUCATIONAL_RECORD_INPUT', {
-      enrollmentStatus: payload,
+      enrollmentStatus: toEnumString(payload),
     })
   },
 
   setSchoolLevel({ commit }, payload) {
-    commit('MODIFY_EDUCATIONAL_RECORD_INPUT', { level: payload })
+    commit('MODIFY_EDUCATIONAL_RECORD_INPUT', { level: toEnumString(payload) })
   },
 
   setSchoolYear({ commit }, payload) {
@@ -504,7 +505,9 @@ export const actions = {
   },
 
   setSchoolType({ commit }, payload) {
-    commit('MODIFY_EDUCATIONAL_RECORD_INPUT', { typeOfSchool: payload })
+    commit('MODIFY_EDUCATIONAL_RECORD_INPUT', {
+      typeOfSchool: toEnumString(payload),
+    })
   },
 
   setSchoolName({ commit }, payload) {
@@ -548,11 +551,11 @@ export const actions = {
   },
 
   setMotherVitalStatus({ commit }, payload) {
-    commit('MODIFY_CREATE_MOTHER_INPUT', { vitalStatus: payload })
+    commit('MODIFY_CREATE_MOTHER_INPUT', { vitalStatus: toEnumString(payload) })
   },
 
   setMotherMaritalStatus({ commit }, payload) {
-    commit('MODIFY_CREATE_MOTHER_INPUT', { maritalStatus: payload })
+    commit('MODIFY_CREATE_MOTHER_INPUT', { maritalStatus: toEnumString(payload) })
   },
 
   setMotherDateOfBirth({ commit }, payload) {
@@ -582,7 +585,7 @@ export const actions = {
   },
 
   setGuardianGender({ commit }, payload) {
-    commit('MODIFY_CREATE_GUARDIAN_INPUT', { gender: payload })
+    commit('MODIFY_CREATE_GUARDIAN_INPUT', { gender: toEnumString(payload) })
   },
 
   setGuardianDateOfBirth({ commit }, payload) {
@@ -590,7 +593,9 @@ export const actions = {
   },
 
   setGuardianRelationToOrphan({ commit }, payload) {
-    commit('MODIFY_CREATE_GUARDIAN_INPUT', { relationToOrphan: payload })
+    commit('MODIFY_CREATE_GUARDIAN_INPUT', {
+      relationToOrphan: toEnumString(payload),
+    })
   },
 
   setGuardianNationality({ commit }, payload) {
@@ -598,7 +603,7 @@ export const actions = {
   },
 
   setGuardianMonthlyExpense({ commit }, payload) {
-    commit('MODIFY_CREATE_GUARDIAN_INPUT', { monthlyExpense: payload })
+    commit('MODIFY_CREATE_GUARDIAN_INPUT', { monthlyExpense: +payload })
   },
 
   setGuardianMobileNumber({ commit }, payload) {
@@ -613,7 +618,7 @@ export const actions = {
 
   setPsychologicalStatus({ commit }, payload) {
     commit('MODIFY_CREATE_HEALTH_STATUS_INPUT', {
-      psychologicalStatus: payload,
+      psychologicalStatus: toEnumString(payload),
     })
   },
 
@@ -669,7 +674,7 @@ export const actions = {
   },
 
   setOrphanPhoto({ commit }, payload) {
-    commit('SET_CREATE_ORPHAN_PHOTO_INPUT', { photoPortraitUrl: payload })
+    commit('SET_CREATE_ORPHAN_PHOTO_INPUT', { photoPortraitUrl: payload, photoLongUrl: payload })
   },
 
   setFatherDeathCertificate({ commit }, payload) {

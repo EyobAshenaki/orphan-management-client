@@ -276,7 +276,6 @@ export default {
         status: 'PENDING',
       }
       this.projectNumber = this.number
-      // eslint-disable-next-line no-useless-catch
       try {
         await this.$store.dispatch('head/createProject', createProjectInput)
         this.reset()

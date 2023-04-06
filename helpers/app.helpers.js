@@ -1,3 +1,4 @@
+import { toUpper, snakeCase } from 'lodash'
 import moment from 'moment'
 export function calculateAge(dateOfBirth) {
   const ageInYears = moment().diff(dateOfBirth, `years`)
@@ -25,4 +26,8 @@ export function generatePassword() {
     return password
   }
   return generatePassword()
+}
+
+export function toEnumString(text) {
+  return toUpper(snakeCase(text))
 }
