@@ -6,9 +6,12 @@ import {
   CreateRegion,
   Zones,
   CreateZone,
-  Districts,
+  FetchDistricts,
+  FetchDistrict,
+  CountDistricts,
   CreateDistrict,
-  Villages,
+  FetchVillages,
+  CountVillages,
   CreateVillage,
 } from '~/graphql/location.graphql'
 
@@ -89,20 +92,50 @@ export async function createZone(zoneInput) {
  * @throws `GraphQLError[]`
  * @throws `Error`
  */
-export async function fetchDistricts(zoneId = undefined) {
-  const fetchDistrictsByZone = async (zoneId = undefined) => {
-    const response = await graphqlInstance.post('', {
-      operationName: 'Districts',
-      query: print(Districts),
+export async function fetchDistricts(
+  zoneId = undefined,
+  projectId = undefined
+) {
+  const { data, errors } = await handleGQL(() => {
+    return graphqlInstance.post('', {
+      operationName: 'FetchDistricts',
+      query: print(FetchDistricts),
+      variables: {
+        zoneId,
+        projectId,
+      },
+    })
+  })
+  if (data) return data.districts
+  throw errors
+}
+
+export async function countDistricts(zoneId = undefined) {
+  const { data, errors } = await handleGQL(() => {
+    return graphqlInstance.post('', {
+      operationName: 'CountDistricts',
+      query: print(CountDistricts),
       variables: {
         zoneId,
       },
     })
-    return response
-  }
+  })
+  if (data) return data._count_districts
+  throw errors
+}
 
-  const { data, errors } = await handleGQL(fetchDistrictsByZone, zoneId)
-  if (data) return data.districts
+export async function fetchDistrict(id, withVillages = false) {
+  const { data, errors } = await handleGQL(() => {
+    return graphqlInstance.post('', {
+      operationName: 'FetchDistrict',
+      query: print(FetchDistrict),
+      variables: {
+        id,
+        withVillages,
+      },
+    })
+  })
+  if (data) return data.district
   throw errors
 }
 
@@ -129,20 +162,35 @@ export async function createDistrict(districtInput) {
  * @throws `GraphQLError[]`
  * @throws `Error`
  */
-export async function fetchVillages(districtId = undefined) {
-  const fetchVillagesByDistrict = async (districtId = undefined) => {
-    const response = await graphqlInstance.post('', {
-      operationName: 'Villages',
-      query: print(Villages),
+export async function fetchVillages(
+  districtId = undefined,
+  withSocialWorkers = false
+) {
+  const { data, errors } = await handleGQL(() => {
+    return graphqlInstance.post('', {
+      operationName: 'FetchVillages',
+      query: print(FetchVillages),
+      variables: {
+        districtId,
+        withSocialWorkers,
+      },
+    })
+  })
+  if (data) return data.villages
+  throw errors
+}
+
+export async function countVillages(districtId = undefined) {
+  const { data, errors } = await handleGQL(() => {
+    return graphqlInstance.post('', {
+      operationName: 'CountVillages',
+      query: print(CountVillages),
       variables: {
         districtId,
       },
     })
-    return response
-  }
-
-  const { data, errors } = await handleGQL(fetchVillagesByDistrict, districtId)
-  if (data) return data.villages
+  })
+  if (data) return data._count_villages
   throw errors
 }
 

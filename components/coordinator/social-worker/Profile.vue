@@ -1,6 +1,6 @@
 <template>
   <section class="tw-flex tw-gap-2">
-    <profile-card />
+    <profile-card :social-worker="socialWorker" />
 
     <div class="tw-flex tw-flex-col tw-gap-2">
       <div class="tw-flex tw-justify-between">
@@ -12,7 +12,7 @@
           x-small
           @click="handleDistrictsViewAll"
         >
-          <span> View all </span>
+          <span class="tw-capitalize"> View all </span>
         </v-btn>
       </div>
 
@@ -31,7 +31,7 @@
           x-small
           @click="handleVillagesViewAll"
         >
-          <span> View all </span>
+          <span class="tw-capitalize"> View all </span>
         </v-btn>
       </div>
 
@@ -56,82 +56,38 @@ export default {
     VillageList,
   },
 
-  computed: {
-    // socialWorker() {
-    //   return this.$store.getters['socialWorker/getSocialWorker']
-    // },
+  props: {
+    socialWorker: {
+      type: Object,
+      default: null,
+    },
+  },
 
+  computed: {
     villages() {
-      return [
-        {
-          id: 1,
-          name: 'village 1',
-          districtName: 'district 2',
-          noOfOrphans: 100,
-          noOfProjects: 5,
-        },
-        {
-          id: 2,
-          name: 'village 2',
-          districtName: 'district 1',
-          noOfOrphans: 60,
-          noOfProjects: 5,
-        },
-        {
-          id: 3,
-          name: 'village 3',
-          districtName: 'district 3',
-          noOfOrphans: 100,
-          noOfProjects: 5,
-        },
-        {
-          id: 4,
-          name: 'village 4',
-          districtName: 'district 1',
-          noOfOrphans: 60,
-          noOfProjects: 5,
-        },
-        {
-          id: 5,
-          name: 'village 5',
-          districtName: 'district 2',
-          noOfOrphans: 100,
-          noOfProjects: 5,
-        },
-        {
-          id: 6,
-          name: 'village 6',
-          districtName: 'district 3',
-          noOfOrphans: 60,
-          noOfProjects: 5,
-        },
-      ]
+      const villages = this.socialWorker?.districts.reduce((acc, district) => {
+        const villages = district.villages.map((village) => {
+          return {
+            ...village,
+            districtName: district.name,
+            noOfOrphans: village._count_orphans,
+            noOfProjects: village._count_projects,
+          }
+        })
+        return [...acc, ...villages]
+      }, [])
+      return villages
     },
 
     districts() {
-      return [
-        {
-          id: 1,
-          name: 'district 1',
-          zoneName: 'zone 2',
-          noOfVillages: 100,
-          noOfSocialWorkers: 5,
-        },
-        {
-          id: 2,
-          name: 'district 2',
-          zoneName: 'zone 2',
-          noOfVillages: 60,
-          noOfSocialWorkers: 5,
-        },
-        {
-          id: 3,
-          name: 'district 3',
-          zoneName: 'zone 2',
-          noOfVillages: 100,
-          noOfSocialWorkers: 5,
-        },
-      ]
+      const districts = this.socialWorker?.districts.map((district) => {
+        return {
+          ...district,
+          noOfVillages: district._count_villages,
+          noOfSocialWorkers: district._count_socialWorkers,
+        }
+      })
+      return districts
     },
   },
 

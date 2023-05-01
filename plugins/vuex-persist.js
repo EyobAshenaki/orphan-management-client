@@ -2,7 +2,7 @@ import { VuexPersistence } from 'vuex-persist'
 
 export default ({ store }) => {
   new VuexPersistence({
-    key: 'vuex',
+    key: 'cache',
     storage: window.localStorage,
   }).plugin(store)
 }

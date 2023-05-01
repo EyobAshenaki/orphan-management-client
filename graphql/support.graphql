@@ -33,8 +33,209 @@ fragment IndividualPaymentFragment on IndividualPayment {
   netDepositInDomesticCurrency
 }
 
+fragment OrphanFragment on Orphan {
+  ...SiblingFragment
+  father {
+    ...FatherFragment
+  }
+  village {
+    id
+    name
+    district {
+      id
+      name
+      zone {
+        id
+        name
+      }
+    }
+  }
+}
+
+fragment SiblingFragment on Orphan {
+  id
+  name
+  gender
+  dateOfBirth
+  placeOfBirth
+  placeOfBirth
+  spokenLanguages
+  religion
+  hobbies
+  accountNumber
+}
+
+fragment FatherFragment on Father {
+  id
+  firstName
+  middleName
+  lastName
+  dateOfDeath
+  causeOfDeath
+  deathCertificateUrl
+  dateOfBirth
+}
+
+fragment MotherFragment on Mother {
+  id
+  firstName
+  middleName
+  lastName
+  dateOfBirth
+  dateOfDeath
+  causeOfDeath
+  mobileNumber
+  vitalStatus
+  maritalStatus
+}
+
+fragment GuardianFragment on Guardian {
+  id
+  firstName
+  middleName
+  lastName
+  gender
+  relationToOrphan
+  dateOfBirth
+  mobileNumber
+  telephoneNumber
+  email
+  nationality
+  idCardUrl
+  adoptionCertificateUrl
+  memorandumOfUnderstandingUrl
+}
+
+fragment SupportPlanFragment on SupportPlan {
+  id
+  name
+  startDate
+  endDate
+  totalFund
+  adminFeePercentage
+  paymentInterval
+}
+
+fragment PaymentFragment on Payment {
+  id
+  startDate
+  endDate
+  grossPaymentInPrimaryForeignCurrency
+  primaryForeignCurrency
+  primaryExchangeRate
+  grossPaymentInSecondaryForeignCurrency
+  secondaryForeignCurrency
+  secondaryExchangeRate
+  grossPaymentInDomesticCurrency
+  adminFeeInDomesticCurrency
+  netPaymentInDomesticCurrency
+  paymentPeriodInMonths
+}
+
+fragment IndividualPaymentFragment on IndividualPayment {
+  id
+  grossDepositInPrimaryForeignCurrency
+  grossDepositInSecondaryForeignCurrency
+  grossDepositInDomesticCurrency
+  adminFeeInDomesticCurrency
+  netDepositInDomesticCurrency
+}
+
+query ProjectOrphans($filter: ProjectOrphanArgs!) {
+  projectOrphans(filter: $filter) {
+    ...OrphanFragment
+  }
+}
+
 query SupportPlansByProjectId($projectId: ID!) {
   supportPlans(projectId: $projectId) {
+    ...SupportPlanFragment
+    _count_orphans
+    donor {
+      nameInitials
+    }
+  }
+}
+
+query SupportPlan($id: ID!) {
+  supportPlan(id: $id) {
+    ...SupportPlanFragment
+    _count_orphans
+    orphans {
+      id
+      name
+      code
+      gender
+      dateOfBirth
+      accountNumber
+      father {
+        id
+        firstName
+        middleName
+        lastName
+      }
+      guardian {
+        id
+        firstName
+        middleName
+        lastName
+      }
+    }
+    payments {
+      ...PaymentFragment
+      individualPayments {
+        ...IndividualPaymentFragment
+      }
+    }
+  }
+}
+
+query Payments($supportPlanId: ID) {
+  payments(supportPlanId: $supportPlanId) {
+    ...PaymentFragment
+  }
+}
+
+query IndividualPayments($paymentId: ID) {
+  individualPayments(paymentId: $paymentId) {
+    ...IndividualPaymentFragment
+    payment {
+      paymentPeriodInMonths
+    }
+    orphan {
+      id
+      name
+      code
+      gender
+      dateOfBirth
+      accountNumber
+      father {
+        id
+        firstName
+        middleName
+        lastName
+      }
+      guardian {
+        id
+        firstName
+        middleName
+        lastName
+      }
+      village {
+        name
+        district {
+          name
+          zone {
+            name
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation CreateSupportPlan($input: CreateSupportPlanInput!) {
+  createSupportPlan(input: $input) {
     ...SupportPlanFragment
     payments {
       ...PaymentFragment
@@ -42,10 +243,22 @@ query SupportPlansByProjectId($projectId: ID!) {
         ...IndividualPaymentFragment
       }
     }
-    orphans {
-      id
-      code
-      name
+  }
+}
+
+mutation CreatePayment($input: CreatePaymentInput!) {
+  createPayment(input: $input) {
+    ...PaymentFragment
+    individualPayments {
+      ...IndividualPaymentFragment
     }
+  }
+}
+
+mutation CreateManyIndividualPayments(
+  $input: [CreateIndividualPaymentInput!]!
+) {
+  createManyIndividualPayments(input: { individualPaymentsInputs: $input }) {
+    ...IndividualPaymentFragment
   }
 }

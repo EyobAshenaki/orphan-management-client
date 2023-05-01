@@ -1,6 +1,11 @@
 import { print } from 'graphql'
 import { graphqlInstance } from '~/helpers/axios.helper'
-import { CreateOrphanWithNestedCreate } from '~/graphql/orphan.graphql'
+import {
+  CreateOrphanWithNestedCreate,
+  FetchOrphans,
+  CountOrphans,
+  CountGuardians,
+} from '~/graphql/orphan.graphql'
 import { handleGQL } from '~/helpers/graphql.helper'
 
 export async function createOrphanWithNestedCreate(
@@ -18,4 +23,54 @@ export async function createOrphanWithNestedCreate(
   }
   const { data } = await handleGQL(create)
   return data.create.user
+}
+
+export async function fetchOrphans(
+  status = null,
+  villageId = null,
+  districtId = null,
+  projectId = null
+) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphans',
+      query: print(FetchOrphans),
+      variables: {
+        status,
+        villageId,
+        districtId,
+        projectId,
+      },
+    })
+  )
+  if (data) return data.orphans
+
+  throw errors
+}
+
+export async function countOrphans(status = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'CountOrphans',
+      query: print(CountOrphans),
+      variables: {
+        status,
+      },
+    })
+  )
+  if (data) return data._count_orphans
+
+  throw errors
+}
+
+export async function countGuardians() {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'CountGuardians',
+      query: print(CountGuardians),
+    })
+  )
+  if (data) return data._count_guardians
+
+  throw errors
 }

@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { countProjects } from '~/services/project.service'
+import { countOrphans } from '~/services/orphan.service'
 import ProjectsTable from '~/components/tables/ProjectsTable.vue'
 export default {
   name: 'ProjectsPage',
@@ -20,30 +22,39 @@ export default {
 
   layout: 'coordinator',
 
-  computed: {
-    items() {
-      return [
-        {
-          icon: ['fas', 'timeline'],
-          title: 'In-progress Projects',
-          value: 10,
-        },
-        {
-          icon: ['fas', 'list-check'],
-          title: 'Total Projects',
-          value: 10,
-        },
-        {
-          icon: ['fas', 'hands-holding-child'],
-          title: 'Active Orphans ',
-          value: 10,
-        },
-        {
-          icon: ['fas', 'people-roof'],
-          title: 'Total Orphans',
-          value: 10,
-        },
-      ]
+  data() {
+    return {
+      items: [],
+    }
+  },
+
+  async mounted() {
+    this.items = [
+      {
+        icon: ['fas', 'timeline'],
+        title: 'In-progress Projects',
+        value: await this.countProjects('in-progress'),
+      },
+      {
+        icon: ['fas', 'list-check'],
+        title: 'Total Projects',
+        value: await this.countProjects(),
+      },
+      {
+        icon: ['fas', 'hands-holding-child'],
+        title: 'Active Orphans ',
+        value: await countOrphans('ACTIVE'),
+      },
+      {
+        icon: ['fas', 'people-roof'],
+        title: 'Total Orphans',
+        value: await countOrphans(),
+      },
+    ]
+  },
+  methods: {
+    async countProjects(status) {
+      return await countProjects(status)
     },
   },
 }

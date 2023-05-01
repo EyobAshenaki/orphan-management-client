@@ -3,10 +3,11 @@
     <h1 class="tw-text-center tw-text-4xl tw-font-bold tw-mt-10 tw-mb-4">
       Welcome to CDA's Orphan Management Portal
     </h1>
-    <p class="tw-text-center tw-text-xl tw-mb-4">
-      Please login to continue
-    </p>
-    <v-form ref="loginForm" class="tw-mx-auto tw-max-w-lg tw-border tw-rounded tw-p-5 tw-bg-white">
+    <p class="tw-text-center tw-text-xl tw-mb-4">Please login to continue</p>
+    <v-form
+      ref="loginForm"
+      class="tw-mx-auto tw-max-w-lg tw-border tw-rounded tw-p-5 tw-bg-white"
+    >
       <v-text-field
         id="email"
         v-model="email"
@@ -25,7 +26,7 @@
         autocomplete="current-password"
         :rules="[rules.required]"
       ></v-text-field>
-      <v-btn color="primary" @click="login">Login</v-btn>
+      <button-dark @click="login">Login</button-dark>
     </v-form>
   </div>
 </template>

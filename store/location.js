@@ -4,7 +4,6 @@ import {
   createRegion,
   fetchZones,
   createZone,
-  fetchDistricts,
   createDistrict,
   fetchVillages,
   createVillage,
@@ -146,15 +145,6 @@ export const actions = {
   },
   // todo: update Zone
   // todo: delete Zone
-  async fetchDistricts({ commit, state }) {
-    try {
-      const districts = await fetchDistricts(state.selectedZone.id)
-      commit('SET_DISTRICTS', districts)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error({ error })
-    }
-  },
   async createDistrict({ commit, state }) {
     try {
       const district = await createDistrict(state.districtInput)

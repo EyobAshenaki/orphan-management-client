@@ -1,9 +1,14 @@
 import { print } from 'graphql'
-import { Projects, CreateProject } from '~/graphql/project.graphql'
+import {
+  Projects,
+  CountProjects,
+  Project,
+  CreateProject,
+} from '~/graphql/project.graphql'
 import { graphqlInstance } from '~/helpers/axios.helper'
 import { handleGQL } from '~/helpers/graphql.helper'
 import { SupportPlansByProjectId } from '~/graphql/support.graphql'
-  
+
 export async function fetchProjects() {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
@@ -12,6 +17,36 @@ export async function fetchProjects() {
     })
   )
   if (data) return data.projects
+
+  throw errors
+}
+
+export async function countProjects(status = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'CountProjects',
+      query: print(CountProjects),
+      variables: {
+        status,
+      },
+    })
+  )
+  if (data) return data._count_projects
+
+  throw errors
+}
+
+export async function fetchProject(projectId) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'Project',
+      query: print(Project),
+      variables: {
+        id: projectId,
+      },
+    })
+  )
+  if (data) return data.project
 
   throw errors
 }

@@ -15,16 +15,22 @@
       <search-field @onSearch="handleSearch($event)" />
     </template>
 
+    <template #phoneNumber="{ item }">
+      {{ item.user.personalInfo.phoneNumber }}
+    </template>
+
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="initialize"> Reset </button-dark>
     </template>
   </table-component>
 </template>
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
+import { calculateAge, fullName } from '~/helpers/app.helpers'
+import { fetchSocialWorkers } from '~/services/social-worker.service'
 export default {
-  name: 'DistrictsTable',
+  name: 'SocialWorkersTable',
 
   components: {
     TableComponent,
@@ -34,6 +40,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      socialWorkers: [],
     }
   },
   computed: {
@@ -49,78 +56,31 @@ export default {
           text: 'Age',
           value: 'age',
         },
-        { text: 'Mobile Number', value: 'mobileNumber' },
+        { text: 'Mobile Number', value: 'phoneNumber' },
         {
           text: 'District count',
 
-          value: 'noOfDistricts',
+          value: '_count_districts',
         },
-        { text: 'Orphan count', value: 'noOfOrphans' },
-      ]
-    },
-
-    socialWorkers() {
-      return [
-        {
-          id: 1,
-          fullName: 'John Doe',
-          gender: 'Male',
-          age: 27,
-          mobileNumber: '0912345678',
-          noOfDistricts: 10,
-          noOfOrphans: 100,
-        },
-        {
-          id: 2,
-          fullName: 'Bob Do',
-          gender: 'Male',
-          age: 32,
-          mobileNumber: '0953456789',
-          noOfDistricts: 10,
-          noOfOrphans: 200,
-        },
-        {
-          id: 3,
-          fullName: 'Jane Doe',
-          gender: 'Female',
-          age: 24,
-          mobileNumber: '0967347348',
-          noOfDistricts: 10,
-          noOfOrphans: 80,
-        },
-        {
-          id: 4,
-          fullName: 'John Doe',
-          gender: 'Male',
-          age: 27,
-          mobileNumber: '0912345678',
-          noOfDistricts: 10,
-          noOfOrphans: 100,
-        },
-        {
-          id: 5,
-          fullName: 'Bob Do',
-          gender: 'Male',
-          age: 32,
-          mobileNumber: '0953456789',
-          noOfDistricts: 10,
-          noOfOrphans: 200,
-        },
-        {
-          id: 6,
-          fullName: 'Jane Doe',
-          gender: 'Female',
-          age: 24,
-          mobileNumber: '0967347348',
-          noOfDistricts: 10,
-          noOfOrphans: 80,
-        },
+        { text: 'Orphan count', value: '_count_orphans' },
       ]
     },
   },
+  mounted() {
+    this.initialize()
+  },
   methods: {
-    initialize() {
-      console.log('Initialize')
+    async initialize() {
+      console.log(`Initialize ${this._name}`)
+      try {
+        this.socialWorkers = (await fetchSocialWorkers()).map((sw) => ({
+          ...sw,
+          phoneNumber: sw.user.personalInfo.phoneNumber,
+          age: calculateAge(sw.user.personalInfo.dateOfBirth),
+          gender: sw.user.personalInfo.gender,
+          fullName: fullName(sw.user.personalInfo),
+        }))
+      } catch (error) {}
     },
 
     handleSearch(value) {

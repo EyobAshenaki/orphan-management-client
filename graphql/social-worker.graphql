@@ -1,0 +1,59 @@
+query FetchSocialWorkers {
+  socialWorkers {
+    id
+    user {
+      personalInfo {
+        firstName
+        middleName
+        lastName
+        gender
+        dateOfBirth
+        phoneNumber
+      }
+    }
+    _count_districts
+    _count_orphans
+  }
+}
+
+query CountSocialWorkers {
+  _count_socialWorkers
+}
+
+query FetchSocialWorker($id: ID!) {
+  socialWorker(id: $id) {
+    id
+    user {
+      email
+      personalInfo {
+        firstName
+        middleName
+        lastName
+        gender
+        dateOfBirth
+        phoneNumber
+      }
+    }
+    districts {
+      id
+      name
+      _count_orphans
+      _count_villages
+      _count_socialWorkers
+      projects {
+        id
+        number
+      }
+      villages {
+        id
+        name
+        _count_orphans
+        _count_projects
+      }
+      zone {
+        id
+        name
+      }
+    }
+  }
+}

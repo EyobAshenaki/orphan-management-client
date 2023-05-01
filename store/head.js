@@ -20,7 +20,7 @@ export const state = () => ({
   coordinators: [],
   selectedCoordinator: {},
   socialWorkers: [],
-  selectedSocialWorker: {},
+  selectedSocialWorkerId: '',
 })
 
 export const mutations = {
@@ -44,6 +44,9 @@ export const mutations = {
   },
   SET_SELECTED_COORDINATOR(state, coordinator) {
     state.selectedCoordinator = coordinator
+  },
+  SET_SOCIAL_WORKER_ID(state, socialWorkerId) {
+    state.selectedSocialWorkerId = socialWorkerId
   },
 }
 
@@ -163,5 +166,9 @@ export const actions = {
       } else console.error(error)
       throw error
     }
+  },
+
+  setSelectedSocialWorkerId({ commit }, socialWorkerId) {
+    commit('SET_SOCIAL_WORKER_ID', socialWorkerId)
   },
 }

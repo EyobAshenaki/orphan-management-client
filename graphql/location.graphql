@@ -52,19 +52,24 @@ query Zone($id: ID!) {
   }
 }
 
-query Districts($zoneId: ID) {
-  districts(zoneId: $zoneId) {
+query FetchDistricts($zoneId: ID, $projectId: ID) {
+  districts(zoneId: $zoneId, projectId: $projectId) {
     ...DistrictFragment
+    _count_orphans
+    _count_villages
     villages {
       ...VillageFragment
-      orphans {
-        id
-        name
-      }
+      _count_orphans
     }
     projects {
       id
       number
+    }
+    zone {
+      ...ZoneFragment
+      region {
+        ...RegionFragment
+      }
     }
     socialWorkers {
       id
@@ -80,22 +85,45 @@ query Districts($zoneId: ID) {
   }
 }
 
-query District($id: ID!) {
+query CountDistricts($zoneId: ID) {
+  _count_districts(zoneId: $zoneId)
+}
+
+query FetchDistrict($id: ID!, $withVillages: Boolean!) {
   district(id: $id) {
     ...DistrictFragment
-    villages {
+    villages @include(if: $withVillages) {
       ...VillageFragment
     }
   }
 }
 
-query Villages($districtId: ID) {
+query FetchVillages($districtId: ID, $withSocialWorkers: Boolean!) {
   villages(districtId: $districtId) {
     ...VillageFragment
+    _count_orphans
+    district {
+      ...DistrictFragment
+    }
+    socialWorkers @include(if: $withSocialWorkers) {
+      id
+      user {
+        id
+        personalInfo {
+          firstName
+          middleName
+          lastName
+        }
+      }
+    }
   }
 }
 
-query Village($id: ID!) {
+query CountVillages($districtId: ID) {
+  _count_villages(districtId: $districtId)
+}
+
+query FetchVillage($id: ID!) {
   village(id: $id) {
     ...VillageFragment
   }

@@ -26,12 +26,20 @@
             @click="handleSocialWorkerClick(villageSocialWorker)"
           >
             <span class="tw-text-white tw-text-xs">
-              {{ socialWorkerAcronym(villageSocialWorker) }}
+              {{
+                villageSocialWorker
+                  ? socialWorkerAcronym(villageSocialWorker?.user?.personalInfo)
+                  : 'N/A'
+              }}
             </span>
           </v-avatar>
         </template>
         <span>
-          {{ socialWorkerFullName(villageSocialWorker) }}
+          {{
+            villageSocialWorker
+              ? socialWorkerAcronym(villageSocialWorker?.user?.personalInfo)
+              : 'N/A'
+          }}
         </span>
       </v-tooltip>
     </template>
@@ -46,13 +54,14 @@
     </template>
 
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="initialize">Reset</button-dark>
     </template>
   </table-component>
 </template>
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
+import { fetchVillages } from '~/services/location.service'
 export default {
   name: 'VillagesTable',
 
@@ -64,6 +73,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      villages: [],
     }
   },
   computed: {
@@ -100,13 +110,18 @@ export default {
         },
       ]
     },
-
-    villages() {
+  },
+  async mounted() {
+    await this.initialize()
+  },
+  methods: {
+    async initialize() {
+      console.log(`Initialize ${this._name}`)
       if (this.isOnHeadLocationsDistrict) {
-        return Array.from(
+        this.villages = Array.from(
           this.$store.state.location.selectedDistrict?.villages
         ).map((village) => {
-          const noOfOrphans = village?.orphans?.length
+          const noOfOrphans = village?._count_orphans
           const villageSocialWorkers = Array.from(
             this.$store.state.location.selectedDistrict?.socialWorkers
           ).map((socialWorker) => ({
@@ -124,74 +139,19 @@ export default {
             },
           }
         })
-      }
-      return [
-        {
-          id: 1,
-          name: 'village 1',
-          districtName: 'Akaki Kaliti',
-          noOfOrphans: 100,
-          villageSocialWorker: {
-            firstName: 'John',
-            lastName: 'Doe',
-          },
-        },
-        {
-          id: 2,
-          name: 'village 2',
-          districtName: 'Bole',
-          noOfOrphans: 60,
-          villageSocialWorker: {
-            firstName: 'John',
-            lastName: 'Doe',
-          },
-        },
-        {
-          id: 3,
-          name: 'village 3',
-          districtName: 'Akaki Kaliti',
-          noOfOrphans: 100,
-          villageSocialWorker: {
-            firstName: 'John',
-            lastName: 'Doe',
-          },
-        },
-        {
-          id: 4,
-          name: 'village 4',
-          districtName: 'Bole',
-          noOfOrphans: 60,
-          villageSocialWorker: {
-            firstName: 'John',
-            lastName: 'Doe',
-          },
-        },
-        {
-          id: 5,
-          name: 'village 5',
-          districtName: 'Akaki Kaliti',
-          noOfOrphans: 100,
-          villageSocialWorker: {
-            firstName: 'John',
-            lastName: 'Doe',
-          },
-        },
-        {
-          id: 6,
-          name: 'village 6',
-          districtName: 'Bole',
-          noOfOrphans: 60,
-          villageSocialWorker: {
-            firstName: 'John',
-            lastName: 'Doe',
-          },
-        },
-      ]
-    },
-  },
-  methods: {
-    initialize() {
-      console.log('Initialize')
+      } else
+        this.villages = (
+          await fetchVillages(
+            this.$store.state.coordinator.selectedDistrictId,
+            true
+          )
+        ).map((village) => ({
+          ...village,
+          noOfOrphans: village._count_orphans,
+          villageSocialWorker: village.socialWorkers[0],
+          districtName: village.district.name,
+        }))
+      console.log('Villages', this.villages)
     },
 
     handleSearch(value) {

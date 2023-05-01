@@ -2,6 +2,7 @@
   <section>
     <header class="tw-w-full tw-relative tw-bg-white tw-px-8 tw-pt-8">
       <button-dark
+        v-if="false"
         class="tw-absolute tw-top-6 tw-right-6"
         to="/coordinator/districts/district/statistics"
       >
@@ -11,7 +12,7 @@
         <span>Statistics</span>
       </button-dark>
 
-      <h1 class="tw-font-bold tw-text-3xl mb-5">District Name</h1>
+      <h1 class="tw-font-bold tw-text-3xl mb-5">{{ district?.name }}</h1>
 
       <v-spacer></v-spacer>
 
@@ -44,6 +45,7 @@
 
         <div v-if="tab === 1" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
           <orphans-table
+            :is-on-district="isOrphansTableOnDistrict"
             button-label="Add Orphan in village"
             route-to="/coordinator/districts/district/add-orphan"
             @onOrphanDetailClick="handleOrphanDetailClick($event)"
@@ -57,6 +59,7 @@
 <script>
 import VillagesTable from '~/components/tables/VillagesTable.vue'
 import OrphansTable from '~/components/tables/OrphansTable.vue'
+import { fetchDistrict } from '~/services/location.service'
 export default {
   name: 'DistrictPage',
 
@@ -71,12 +74,27 @@ export default {
     return {
       tab: null,
       items: ['Villages', 'Orphans'],
+      district: null,
+      isOrphansTableOnDistrict: true,
     }
   },
 
+  mounted() {
+    this.initialize()
+  },
+
   methods: {
+    async initialize() {
+      console.log(`Initialize ${this._name}`)
+      this.district = await fetchDistrict(
+        this.$store.state.coordinator.selectedDistrictId
+      )
+    },
     navigateToOrphansTab(village) {
       console.log('Go to orphans tab ', village)
+      this.$store.dispatch('coordinator/setSelectedVillageId', village.id)
+      this.$store.dispatch('coordinator/unsetSelectedDistrictId')
+      this.isOrphansTableOnDistrict = false
       this.tab = 1
     },
 

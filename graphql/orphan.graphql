@@ -3,3 +3,51 @@ mutation CreateOrphanWithNestedCreate($input: CreateOrphanNestedCreateInput!) {
     id
   }
 }
+
+query FetchOrphans(
+  $status: SponsorshipStatusEnum
+  $villageId: ID
+  $districtId: ID
+  $projectId: ID
+) {
+  orphans(
+    status: $status
+    villageId: $villageId
+    districtId: $districtId
+    projectId: $projectId
+  ) {
+    id
+    createdAt
+    name
+    father {
+      firstName
+      middleName
+      lastName
+    }
+    dateOfBirth
+    gender
+    currentOrphanData {
+      sponsorshipStatus {
+        status
+      }
+    }
+  }
+}
+
+query CountOrphans(
+  $status: SponsorshipStatusEnum
+  $villageId: ID
+  $districtId: ID
+  $projectId: ID
+) {
+  _count_orphans(
+    status: $status
+    villageId: $villageId
+    districtId: $districtId
+    projectId: $projectId
+  )
+}
+
+query CountGuardians {
+  _count_guardians
+}

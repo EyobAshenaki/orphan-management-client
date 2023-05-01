@@ -11,7 +11,9 @@
         <span>Statistics</span>
       </button-dark>
 
-      <h1 class="tw-font-bold tw-text-3xl mb-3">Project-x</h1>
+      <h1 class="tw-font-bold tw-text-3xl mb-3">
+        Project-{{ project?.number }}
+      </h1>
 
       <v-spacer></v-spacer>
 
@@ -40,26 +42,36 @@
       <v-tab-item v-for="(item, idx) in items" :key="idx">
         <div v-if="tab === 0" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
           <support-plans-table
-            @onSupportPlanClick="navigateToPaymentsTab($event)"
+            @onSupportPlanClick="navigateToSupportPlanPage($event)"
           />
         </div>
 
-        <div v-if="tab === 1" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div
+          v-if="
+            tab === -1 &&
+            $store.state.coordinator.selectedSupportPlan.id.length > 0
+          "
+          class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5"
+        >
           <payments-table
             @onPaymentClick="navigateToIndividualPaymentsTab($event)"
           />
         </div>
 
-        <div v-if="tab === 2" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div
+          v-if="tab === -2"
+          class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5"
+        >
           <individual-payments-table />
         </div>
 
-        <div v-if="tab === 3" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
-          <districts-table />
+        <div v-if="tab === 1" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+          <districts-table :is-on-project="true" />
         </div>
 
-        <div v-if="tab === 4" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div v-if="tab === 2" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
           <orphans-table
+            :is-on-project="true"
             @onOrphanDetailClick="handleOrphanDetailClick($event)"
           />
         </div>
@@ -74,6 +86,8 @@ import PaymentsTable from '~/components/tables/PaymentsTable.vue'
 import IndividualPaymentsTable from '~/components/tables/IndividualPaymentsTable.vue'
 import DistrictsTable from '~/components/tables/DistrictsTable.vue'
 import OrphansTable from '~/components/tables/OrphansTable.vue'
+import { fetchProject } from '~/services/project.service'
+
 export default {
   name: 'ProjectPage',
 
@@ -92,22 +106,36 @@ export default {
       tab: null,
       items: [
         'Support Plans',
-        'Payments',
-        'Individual Payments',
         'Districts',
         'Orphans',
         // 'Documents',
       ],
+      project: null,
     }
   },
+  async mounted() {
+    this.project = await fetchProject(
+      this.$store.state.coordinator.selectedProjectId
+    )
+    this.$store.dispatch(
+      'coordinator/setSelectedProjectNumber',
+      this.project.number
+    )
+  },
   methods: {
-    navigateToPaymentsTab(item) {
-      console.log('Go to payments tab', item)
-      this.tab = 1
+    navigateToSupportPlanPage(item) {
+      this.$store.dispatch('coordinator/setSelectedSupportPlan', {
+        ...item,
+        id: item.id,
+        name: item.name,
+        adminFeePercentage: item.adminFeePercentage,
+      })
+      this.$router.push('project/support-plan')
     },
 
     navigateToIndividualPaymentsTab(item) {
       console.log('Generate Individual Payment: ', item)
+      this.$store.dispatch('coordinator/setSelectedPayment', item)
       this.tab = 2
     },
 

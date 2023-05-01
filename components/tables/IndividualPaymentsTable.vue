@@ -22,7 +22,7 @@
 
     <template #top-right>
       <search-field @onSearch="handleSearch($event)" />
-      <button-dark @click="editIndividualPayment">
+      <button-dark v-if="false" @click="editIndividualPayment">
         <fa-layers class="tw-mr-2">
           <fa :icon="showButtonContent.icon" />
         </fa-layers>
@@ -30,14 +30,37 @@
       </button-dark>
     </template>
 
+    <template #age="{ item }">
+      {{ item ? calculateAge(item.orphan.dateOfBirth) : '' }}
+    </template>
+    <template #gender="{ item }">
+      {{ item ? item.orphan.gender : '' }}
+    </template>
+
+    <template #accountNumber="{ item }">
+      {{ item ? item.orphan.accountNumber : '' }}
+    </template>
+
+    <template #period="{ item }">
+      {{ item ? item.payment.paymentPeriodInMonths : '' }} months
+    </template>
+
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="distribute"> Distribute </button-dark>
     </template>
   </table-component>
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import { utils, writeFile } from 'xlsx'
 import TableComponent from '../global/TableComponent.vue'
+import {
+  fetchIndividualPayments,
+  fetchSupportPlan,
+  createManyIndividualPayments,
+} from '~/services/support.service'
+import { calculateAge, fullName, orphanFullName } from '~/helpers/app.helpers'
 export default {
   name: 'IndividualPaymentTable',
 
@@ -52,6 +75,7 @@ export default {
       singleSelect: true,
       showSelect: false,
       selectedIndividualPayment: null,
+      individualPayments: [],
     }
   },
   computed: {
@@ -73,99 +97,20 @@ export default {
           value: 'accountNumber',
         },
         { text: 'Period', value: 'period' },
-        { text: 'Deposit in Primary FC', value: 'depositInPrimaryFC' },
-        { text: 'Deposit in Secondary FC', value: 'depositInSecondaryFC' },
-        { text: 'Gross Deposit in Birr', value: 'grossDepositInBirr' },
-        { text: 'Admin Fee in Birr', value: 'adminFreeInBirr' },
-        { text: 'Net Payment in Birr', value: 'netPaymentInBirr' },
-      ]
-    },
-    individualPayments() {
-      return [
         {
-          id: 1,
-          orphanName: 'John Doe',
-          age: 5,
-          gender: 'M',
-          guardianName: 'Hambise Gabrasillase Zeleke',
-          accountNumber: '100035087534',
-          period: 4,
-          depositInPrimaryFC: 20000,
-          depositInSecondaryFC: 1000,
-          grossDepositInBirr: 60000,
-          adminFreeInBirr: 3000,
-          netPaymentInBirr: 50000,
+          text: `Total in ${this.$store.state.coordinator.selectedPayment?.primaryForeignCurrency}`,
+          value: 'grossDepositInPrimaryForeignCurrency',
         },
         {
-          id: 2,
-          orphanName: 'Abinet Kifle Mosha',
-          age: 6,
-          gender: 'M',
-          guardianName: 'Hambise Gabrasillase Zeleke',
-          accountNumber: '1000302719582',
-          period: 4,
-          depositInPrimaryFC: 20000,
-          depositInSecondaryFC: 1000,
-          grossDepositInBirr: 60000,
-          adminFreeInBirr: 3000,
-          netPaymentInBirr: 50000,
+          text: `Total in ${this.$store.state.coordinator.selectedPayment?.secondaryForeignCurrency}`,
+          value: 'grossDepositInSecondaryForeignCurrency',
         },
         {
-          id: 3,
-          orphanName: 'Alamnesh Kifle Mosha',
-          age: 10,
-          gender: 'F',
-          guardianName: 'Hambise Gabrasillase Zeleke',
-          accountNumber: '1000302719582',
-          period: 4,
-          depositInPrimaryFC: 20000,
-          depositInSecondaryFC: 1000,
-          grossDepositInBirr: 60000,
-          adminFreeInBirr: 3000,
-          netPaymentInBirr: 50000,
+          text: 'Total in ETB',
+          value: 'grossDepositInDomesticCurrency',
         },
-        {
-          id: 4,
-          orphanName: 'Jane Doe',
-          age: 13,
-          gender: 'F',
-          guardianName: 'Hambise Gabrasillase Zeleke',
-          accountNumber: '100035087534',
-          period: 4,
-          depositInPrimaryFC: 20000,
-          depositInSecondaryFC: 1000,
-          grossDepositInBirr: 60000,
-          adminFreeInBirr: 3000,
-          netPaymentInBirr: 50000,
-        },
-        {
-          id: 5,
-          orphanName: 'Abinet Kifle Mosha',
-          age: 6,
-          gender: 'M',
-          guardianName: 'Hambise Gabrasillase Zeleke',
-          accountNumber: '1000302719582',
-          period: 4,
-          depositInPrimaryFC: 20000,
-          depositInSecondaryFC: 1000,
-          grossDepositInBirr: 60000,
-          adminFreeInBirr: 3000,
-          netPaymentInBirr: 50000,
-        },
-        {
-          id: 6,
-          orphanName: 'Alamnesh Kifle Mosha',
-          age: 10,
-          gender: 'F',
-          guardianName: 'Hambise Gabrasillase Zeleke',
-          accountNumber: '1000302719582',
-          period: 4,
-          depositInPrimaryFC: 20000,
-          depositInSecondaryFC: 1000,
-          grossDepositInBirr: 60000,
-          adminFreeInBirr: 3000,
-          netPaymentInBirr: 50000,
-        },
+        { text: 'Admin Fee in ETB', value: 'adminFeeInDomesticCurrency' },
+        { text: 'Net Payment in ETB', value: 'netDepositInDomesticCurrency' },
       ]
     },
 
@@ -178,9 +123,138 @@ export default {
       }
     },
   },
+  mounted() {
+    this.initialize()
+  },
   methods: {
-    initialize() {
-      console.log('Initialize')
+    calculateAge,
+    orphanFullName,
+    fullName,
+    async initialize() {
+      console.log(`Initialize ${this._name}`)
+      try {
+        this.individualPayments = (
+          await fetchIndividualPayments(
+            this.$store.state.coordinator.selectedPayment?.id
+          )
+        ).map((idp) => ({
+          ...idp,
+          orphanName: orphanFullName(idp.orphan),
+          guardianName: fullName(idp.orphan.guardian),
+        }))
+      } catch (error) {}
+    },
+    async distribute() {
+      const supportPlan = await fetchSupportPlan(
+        this.$store.state.coordinator.selectedSupportPlan.id
+      )
+      const payment = this.$store.state.coordinator.selectedPayment
+
+      const { _count_orphans: countOrphans, orphans } = supportPlan
+      const newIndividualPaymentsTabularData = orphans.map((orphan) => {
+        const {
+          paymentPeriodInMonths,
+          adminFeeInDomesticCurrency,
+          grossPaymentInDomesticCurrency,
+          grossPaymentInPrimaryForeignCurrency,
+          grossPaymentInSecondaryForeignCurrency,
+          netPaymentInDomesticCurrency,
+          id: paymentId,
+        } = payment
+        const {
+          name,
+          father,
+          dateOfBirth,
+          gender,
+          guardian,
+          accountNumber,
+          id: orphanId,
+        } = orphan
+        return {
+          orphanId,
+          orphan: {
+            name,
+            father,
+            gender,
+            dateOfBirth,
+            guardian,
+            accountNumber,
+          },
+          payment: { paymentPeriodInMonths },
+          adminFeeInDomesticCurrency: adminFeeInDomesticCurrency / countOrphans,
+          grossDepositInDomesticCurrency:
+            grossPaymentInDomesticCurrency / countOrphans,
+          grossDepositInPrimaryForeignCurrency:
+            grossPaymentInPrimaryForeignCurrency / countOrphans,
+          grossDepositInSecondaryForeignCurrency:
+            grossPaymentInSecondaryForeignCurrency / countOrphans,
+          netDepositInDomesticCurrency:
+            netPaymentInDomesticCurrency / countOrphans,
+          paymentId,
+        }
+      })
+      console.log({ newIndividualPayments: newIndividualPaymentsTabularData })
+
+      // sub-todo: show the individual payments in a table
+      this.individualPayments = newIndividualPaymentsTabularData
+      // todo: enable customizing the individual payments
+      // |--   beyond equal distribution of the payment
+      // |--   and show details of the payment,
+      // |--   like the gross payment, the admin fee, etc.
+      // |--   and show the net payment
+      // |--   and show the total amount of the payment
+      // |--   when the user deducts a certain amount from a specific orphan's either
+      // |--   gross payment (primary or secondary foreign currency or domestic currency)
+      // |--   since only one of the gross payments can be deducted based on the payment type
+
+      // todo: save the individual payments
+      // sub-todo: save the individual payments to the database
+      // <--|_|-->
+      const newIndividualPaymentsCreateInput =
+        newIndividualPaymentsTabularData.map((individualPayment) => {
+          const {
+            orphanId,
+            paymentId,
+            adminFeeInDomesticCurrency,
+            grossDepositInDomesticCurrency,
+            grossDepositInPrimaryForeignCurrency,
+            grossDepositInSecondaryForeignCurrency,
+            netDepositInDomesticCurrency,
+          } = individualPayment
+          return {
+            orphanId,
+            paymentId,
+            adminFeeInDomesticCurrency,
+            grossDepositInDomesticCurrency,
+            grossDepositInPrimaryForeignCurrency,
+            grossDepositInSecondaryForeignCurrency,
+            netDepositInDomesticCurrency,
+          }
+        })
+      this.saveIndividualPayments(newIndividualPaymentsCreateInput)
+      // sub-todo: show a success message
+      // sub-todo: show a failure message
+    },
+    async saveIndividualPayments(individualPayments) {
+      try {
+        const response = await createManyIndividualPayments(individualPayments)
+        if (Array.isArray(response)) {
+          this.$toaster.showToast({
+            content: 'Individual payments saved successfully',
+            state: 'success',
+          })
+        } else {
+          this.$toaster.showToast({
+            content: 'Failed to save individual payments',
+            state: 'error',
+          })
+        }
+      } catch (error) {
+        this.$toaster.showToast({
+          content: 'Failed to save individual payments',
+          state: 'error',
+        })
+      }
     },
 
     handleSearch(value) {
@@ -189,6 +263,185 @@ export default {
 
     exportToExcel() {
       console.log('Export to excel')
+      const workbook = utils.book_new()
+      const projectNumber = this.$store.state.coordinator.selectedProjectNumber
+      const startDate = new Date(
+        this.$store.state.coordinator.selectedPayment.startDate
+      ).toDateString()
+      const endDate = new Date(
+        this.$store.state.coordinator.selectedPayment.endDate
+      ).toDateString()
+      const exportHeading = [
+        ['Charity and Development Association (CDA)'],
+        [`Payment Sheet For Orphans Project #${projectNumber}`],
+        [
+          `Donor: ${this.$store.state.coordinator.selectedSupportPlan.donor.nameInitials}`,
+        ],
+        [this.bankName ?? 'Cooperative Bank of Oromia (CBO)'],
+        [`Payment from ${startDate} to ${endDate}`],
+      ]
+      const allDistrictsArray = this.individualPayments
+        .map((idp) => {
+          return idp.orphan
+        })
+        .reduce(
+          (acc, orphan) =>
+            acc.includes(orphan.village.district.name)
+              ? acc
+              : [...acc, orphan.village.district.name],
+          []
+        )
+      console.log(allDistrictsArray)
+      // eslint-disable-next-line no-unused-vars
+      const allSheets = allDistrictsArray.map((districtName) => {
+        // get zoneName for each district
+        const zonesAggregate = this.individualPayments
+          .map((idp) => {
+            return idp.orphan
+          })
+          .map((orphan) =>
+            orphan.village.district.name === districtName
+              ? orphan.village.district.zone.name
+              : ''
+          )
+        // eslint-disable-next-line no-unused-vars
+        const zoneName = Array.from(new Set(zonesAggregate).values()).find(
+          (x) => x !== ''
+        )
+        const villageNames = this.individualPayments
+          .map((idp) => {
+            return idp.orphan
+          })
+          .reduce(
+            (acc, orphan) =>
+              acc.includes(orphan.village.name) ||
+              orphan.village.district.name !== districtName
+                ? acc
+                : `${acc}${acc === '' ? '' : ','} ${orphan.village.name}`,
+            ''
+          )
+        // eslint-disable-next-line no-unused-vars
+        const exportHeader = [
+          `Zone: ${zoneName}`,
+          null,
+          `District: ${districtName}`,
+          null,
+          `Village: ${villageNames}`,
+          null,
+          'Date___________',
+          null,
+        ]
+        const idpsInDistrict = this.individualPayments.filter((idp) => {
+          return idp.orphan.village.district.name === districtName
+        })
+        const exportBody = idpsInDistrict.map((idp) => [
+          idp.orphanName,
+          idp.guardianName,
+          idp.orphan.accountNumber,
+          idp.payment.paymentPeriodInMonths,
+          idp.grossDepositInPrimaryForeignCurrency,
+          idp.grossDepositInSecondaryForeignCurrency,
+          idp.grossDepositInDomesticCurrency,
+          idp.adminFeeInDomesticCurrency,
+          idp.netDepositInDomesticCurrency,
+        ])
+        const exportFull = [
+          ...exportHeading,
+          exportHeader,
+          this.headers
+            .map((header) => header.text)
+            .filter((header) => !['Age', 'Gender'].includes(header)),
+          ...exportBody,
+          [
+            'Total',
+            null,
+            null,
+            null,
+            idpsInDistrict.reduce(
+              (sum, val) => sum + val.grossDepositInPrimaryForeignCurrency,
+              0
+            ),
+            idpsInDistrict.reduce(
+              (sum, val) => sum + val.grossDepositInSecondaryForeignCurrency,
+              0
+            ),
+            idpsInDistrict.reduce(
+              (sum, val) => sum + val.grossDepositInDomesticCurrency,
+              0
+            ),
+            idpsInDistrict.reduce(
+              (sum, val) => sum + val.adminFeeInDomesticCurrency,
+              0
+            ),
+            idpsInDistrict.reduce(
+              (sum, val) => sum + val.netDepositInDomesticCurrency,
+              0
+            ),
+          ],
+        ]
+
+        const worksheet = utils.aoa_to_sheet(exportFull)
+        // handle merge
+        worksheet['!merges'] = [
+          { s: { r: 0, c: 0 }, e: { r: 0, c: 8 } },
+          { s: { r: 1, c: 0 }, e: { r: 1, c: 8 } },
+          { s: { r: 2, c: 0 }, e: { r: 2, c: 8 } },
+          { s: { r: 3, c: 0 }, e: { r: 3, c: 8 } },
+          { s: { r: 4, c: 0 }, e: { r: 4, c: 8 } },
+          { s: { r: 5, c: 0 }, e: { r: 5, c: 1 } },
+          { s: { r: 5, c: 2 }, e: { r: 5, c: 3 } },
+          { s: { r: 5, c: 4 }, e: { r: 5, c: 5 } },
+          { s: { r: 5, c: 6 }, e: { r: 5, c: 8 } },
+          {
+            s: { r: exportFull.length - 1, c: 0 },
+            e: { r: exportFull.length - 1, c: 3 },
+          },
+        ]
+
+        // sets the width of colns
+        worksheet['!cols'] = [
+          { wpx: 150 }, // A
+          { wpx: 150 }, // B
+          { wpx: 100 }, // C
+          { wpx: 40 }, // D
+          { wpx: 100 }, // E
+          { wpx: 100 }, // F
+          { wpx: 100 }, // G
+          { wpx: 100 }, // H
+          { wpx: 100 }, // I
+        ]
+
+        utils.book_append_sheet(workbook, worksheet, districtName)
+        return {}
+      })
+
+      const allZonesString = this.individualPayments
+        .map((idp) => idp.orphan)
+        .reduce(
+          (acc, orphan) =>
+            acc.includes(orphan.village.district.zone.name)
+              ? acc
+              : [...acc, orphan.village.district.zone.name],
+          []
+        )
+        .join(', ')
+
+      writeFile(
+        workbook,
+        `OPS - ${
+          this.$store.state.coordinator.selectedSupportPlan.name
+        } - ${allZonesString} Zone - ${Intl.DateTimeFormat('en-US', {
+          dateStyle: 'short',
+        })
+          .format(
+            new Date(this.$store.state.coordinator.selectedPayment.startDate)
+          )
+          .replaceAll('/', '-')}.xlsx`,
+        {
+          cellStyles: true,
+          bookType: 'xlsx',
+        }
+      )
     },
 
     editIndividualPayment() {

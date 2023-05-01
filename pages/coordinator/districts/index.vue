@@ -11,6 +11,9 @@
 
 <script>
 import DistrictsTable from '~/components/tables/DistrictsTable.vue'
+import { countOrphans } from '~/services/orphan.service';
+import { countProjects } from '~/services/project.service';
+import { countDistricts, countVillages } from '~/services/location.service';
 export default {
   name: 'DistrictsPage',
 
@@ -20,31 +23,35 @@ export default {
 
   layout: 'coordinator',
 
-  computed: {
-    items() {
-      return [
+  data() {
+    return {
+      items: [],
+    }
+  },
+
+  async mounted() {
+    this.items = [
         {
           icon: ['fas', 'city'],
           title: 'Total Districts',
-          value: 10,
+          value: await countDistricts(),
         },
         {
           icon: ['fas', 'tents'],
           title: 'Total Villages ',
-          value: 10,
+          value: await countVillages(),
         },
         {
           icon: ['fas', 'list-check'],
           title: 'Total Projects',
-          value: 10,
+          value: await countProjects(),
         },
         {
           icon: ['fas', 'people-roof'],
           title: 'Total Orphans',
-          value: 10,
+          value: await countOrphans(),
         },
       ]
-    },
   },
 }
 </script>

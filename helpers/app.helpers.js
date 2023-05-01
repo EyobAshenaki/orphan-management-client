@@ -6,6 +6,14 @@ export function calculateAge(dateOfBirth) {
   return `< 1`
 }
 
+export function orphanFullName(orphan) {
+  return `${orphan.name} ${orphan.father.firstName} ${orphan.father.middleName}`
+}
+
+export function fullName(person) {
+  return `${person?.firstName} ${person?.middleName} ${person?.lastName}`
+}
+
 export function generatePassword() {
   const regex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/

@@ -11,6 +11,8 @@
 
 <script>
 import SocialWorkersTable from '~/components/tables/SocialWorkersTable.vue'
+import { countSocialWorkers } from '~/services/social-worker.service'
+import { countOrphans, countGuardians } from '~/services/orphan.service'
 export default {
   name: 'SocialWorkersPage',
 
@@ -20,28 +22,40 @@ export default {
 
   layout: 'coordinator',
 
-  computed: {
-    items() {
-      return [
+  data() {
+    return {
+      items: [],
+    }
+  },
+
+  mounted() {
+    this.initialize()
+  },
+
+  methods: {
+    async initialize() {
+      this.items = [
         {
           icon: ['fas', 'people-group'],
           title: 'Total Social Workers',
-          value: 10,
+          value: await countSocialWorkers(),
         },
+        /* todo: add this when zone social workers are added
         {
           icon: ['fas', 'people-line'],
           title: 'Zone Social Workers',
           value: 10,
         },
+         */
         {
           icon: ['fas', 'people-arrows'],
           title: 'Total Families',
-          value: 10,
+          value: await countGuardians(),
         },
         {
           icon: ['fas', 'people-roof'],
           title: 'Total Orphans',
-          value: 10,
+          value: await countOrphans(),
         },
       ]
     },

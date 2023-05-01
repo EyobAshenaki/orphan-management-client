@@ -35,12 +35,15 @@
     </template>
 
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="initialize"> Reset </button-dark>
     </template>
   </table-component>
 </template>
 
 <script>
+import { GraphQLError } from 'graphql'
+import { fetchProjects } from '~/services/project.service'
+
 export default {
   name: 'ProjectsTable',
 
@@ -55,6 +58,9 @@ export default {
   computed: {
     isOnHeadProjectsPage() {
       return this.$route.path === '/head/projects'
+    },
+    userRole() {
+      return this.$store.getters['auth/userRole']
     },
     headers() {
       return [
@@ -74,24 +80,38 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch('head/fetchProjects')
-    this.initialize()
+    await this.initialize()
   },
   methods: {
-    initialize() {
+    async initialize() {
       this.loading = true
-      this.projects = Array.from(this.$store.state.head.projects).map(
-        (project) => {
-          return {
-            ...project,
-            coordinatorFullName: `${
-              Array.from(project?.coordinators)[0].user.personalInfo.firstName
-            } ${
-              Array.from(project?.coordinators)[0].user.personalInfo.lastName
-            }`,
-          }
+
+      let projects = {}
+      try {
+        projects = await fetchProjects()
+      } catch (error) {
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.error(error)
+        throw error
+      }
+
+      this.projects = Array.from(
+        projects
+      ).map((project) => {
+        return {
+          ...project,
+          coordinatorFullName: `${
+            Array.from(project?.coordinators)[0].user.personalInfo.firstName
+          } ${Array.from(project?.coordinators)[0].user.personalInfo.lastName}`,
         }
-      )
+      })
       this.loading = false
     },
 
@@ -100,12 +120,11 @@ export default {
     },
 
     navigateToProject(selectedProject) {
-      this.$store.dispatch('head/setSelectedProject', selectedProject)
-      this.$router.push(
-        `/${
-          this.isOnHeadProjectsPage ? 'head' : 'coordinator'
-        }/projects/project`
+      this.$store.dispatch(
+        `${this.userRole}/setSelectedProjectId`,
+        selectedProject.id
       )
+      this.$router.push(`/${this.userRole}/projects/project`)
     },
 
     handleItemsPerPage(value) {

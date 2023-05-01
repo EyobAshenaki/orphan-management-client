@@ -42,13 +42,15 @@
     </template>
 
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="initialize">Reset</button-dark>
     </template>
   </table-component>
 </template>
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
+import { fetchOrphans } from '~/services/orphan.service'
+import { orphanFullName, calculateAge } from '~/helpers/app.helpers'
 export default {
   name: 'OrphansTable',
 
@@ -69,12 +71,21 @@ export default {
       type: Array,
       default: () => ['fas', 'plus'],
     },
+    isOnProject: {
+      type: Boolean,
+      default: false,
+    },
+    isOnDistrict: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
     return {
       searchValue: '',
-      itemsPerPage: 5,
+      itemsPerPage: 10,
+      orphans: [],
     }
   },
   computed: {
@@ -97,47 +108,36 @@ export default {
         },
       ]
     },
-
-    orphans() {
-      return [
-        {
-          id: 1,
-          orphanName: 'Eyob Alemu',
-          age: 4,
-          gender: 'Male',
-          sponsorshipStatus: 'New',
-          registrationDate: '2021-01-01',
-        },
-        {
-          id: 2,
-          orphanName: 'Belaynesh Alemu',
-          age: 7,
-          gender: 'Female',
-          sponsorshipStatus: 'Active',
-          registrationDate: '2019-03-08',
-        },
-        {
-          id: 3,
-          orphanName: 'Eyob Alemu',
-          age: 4,
-          gender: 'Male',
-          sponsorshipStatus: 'Pending',
-          registrationDate: '2021-01-01',
-        },
-        {
-          id: 4,
-          orphanName: 'Belaynesh Alemu',
-          age: 7,
-          gender: 'Female',
-          sponsorshipStatus: 'Processing',
-          registrationDate: '2019-03-08',
-        },
-      ]
-    },
+  },
+  async mounted() {
+    await this.initialize()
   },
   methods: {
-    initialize() {
-      console.log('Initialize')
+    async initialize() {
+      console.log(`Initialize ${this._name}`)
+      if (this.isOnDistrict)
+        this.$store.dispatch('coordinator/unsetSelectedVillageId')
+      this.orphans = (
+        await fetchOrphans(
+          undefined,
+          !this.isOnProject && !this.isOnDistrict
+            ? this.$store.state.coordinator.selectedVillageId ?? undefined
+            : undefined,
+          !this.isOnProject && this.isOnDistrict
+            ? this.$store.state.coordinator.selectedDistrictId
+            : undefined,
+          this.isOnProject
+            ? this.$store.state.coordinator.selectedProjectId
+            : undefined
+        )
+      ).map((orphan) => ({
+        ...orphan,
+        orphanName: orphanFullName(orphan),
+        age: calculateAge(orphan.dateOfBirth),
+        gender: orphan.gender === 'M' ? 'Male' : 'Female',
+        sponsorshipStatus: orphan.currentOrphanData.sponsorshipStatus.status,
+        registrationDate: new Date(orphan.createdAt).toLocaleDateString(),
+      }))
     },
 
     handleSearch(value) {

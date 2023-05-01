@@ -16,22 +16,25 @@
     </template>
 
     <template #districtProjects="{ item }">
-      <div class="tw-flex">
+      <div v-if="item.districtProjects.length > 0" class="tw-flex">
         <v-avatar
           v-for="(project, idx) in item.districtProjects"
-          :key="idx"
+          :key="project.id"
           size="28"
           class="tw-bg-indigo-500 tw-ring-1 tw-ring-white tw-ring-opacity-90"
           :class="idx === 0 ? '-tw-ml-0' : '-tw-ml-1'"
           @click="handleProjectClick(project)"
         >
-          <span class="tw-text-white tw-text-xs">{{ project }}</span>
+          <span class="tw-text-white tw-text-xs">{{ project.number }}</span>
         </v-avatar>
+      </div>
+      <div v-else class="tw-flex">
+        <span class="tw-text-xs">N/A</span>
       </div>
     </template>
 
     <template #districtSocialWorkers="{ item }">
-      <div class="tw-flex">
+      <div v-if="item.districtSocialWorkers.length > 0" class="tw-flex">
         <v-avatar
           v-for="(socialWorker, idx) in item.districtSocialWorkers"
           :key="idx"
@@ -45,6 +48,9 @@
           </span>
         </v-avatar>
       </div>
+      <div v-else class="tw-flex">
+        <span class="tw-text-xs">N/A</span>
+      </div>
     </template>
 
     <template v-if="isOnHeadLocationsZone" #title-button>
@@ -57,52 +63,39 @@
     </template>
 
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="initialize">Reset</button-dark>
     </template>
   </table-component>
 </template>
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
+import { fetchDistricts } from '~/services/location.service'
 export default {
   name: 'DistrictsTable',
 
   components: {
     TableComponent,
   },
+  props: {
+    isOnProject: {
+      type: Boolean,
+      default: false,
+    },
+  },
 
   data() {
     return {
       searchValue: '',
-      itemsPerPage: 5,
+      itemsPerPage: 10,
+      districts: [],
     }
   },
   computed: {
+    userRole() {
+      return this.$store.getters['auth/userRole']
+    },
     headers() {
-      if (!this.isOnHeadLocationsZone)
-        return [
-          {
-            text: 'District Name',
-            align: 'start',
-            value: 'name',
-          },
-          { text: 'Projects', value: 'districtProjects' },
-          {
-            text: 'Zone',
-            value: 'zoneName',
-          },
-          { text: 'Region', value: 'regionName' },
-          {
-            text: 'Village count',
-
-            value: 'noOfVillages',
-          },
-          { text: 'Orphan count', value: 'noOfOrphans' },
-          {
-            text: 'Social Workers',
-            value: 'districtSocialWorkers',
-          },
-        ]
       return [
         {
           text: 'District Name',
@@ -110,6 +103,15 @@ export default {
           value: 'name',
         },
         { text: 'Projects', value: 'districtProjects' },
+        !this.isOnHeadLocationsZone
+          ? {
+              text: 'Zone',
+              value: 'zoneName',
+            }
+          : {},
+        !this.isOnHeadLocationsZone
+          ? { text: 'Region', value: 'regionName' }
+          : {},
         {
           text: 'Village count',
 
@@ -120,165 +122,49 @@ export default {
           text: 'Social Workers',
           value: 'districtSocialWorkers',
         },
-      ]
+      ].filter((header) => Object.keys(header).length !== 0)
     },
-
-    districts() {
-      if (!this.isOnHeadLocationsZone)
-        return [
-          {
-            id: 1,
-            name: 'Akaki Kaliti',
-            zoneName: 'Zone 1',
-            regionName: 'Addis Ababa',
-            noOfVillages: 10,
-            noOfOrphans: 100,
-            districtProjects: [1, 4, 2],
-            districtSocialWorkers: [
-              {
-                firstName: 'John',
-                lastName: 'Doe',
-              },
-              {
-                firstName: 'Bob',
-                lastName: 'Do',
-              },
-            ],
-          },
-          {
-            id: 2,
-            name: 'Bole',
-            zoneName: 'Zone 2',
-            regionName: 'Addis Ababa',
-            noOfVillages: 6,
-            noOfOrphans: 60,
-            districtProjects: [2, 4, 2],
-            districtSocialWorkers: [
-              {
-                firstName: 'John',
-                lastName: 'Doe',
-              },
-              {
-                firstName: 'Bob',
-                lastName: 'Do',
-              },
-            ],
-          },
-          {
-            id: 3,
-            name: 'Akaki Kaliti',
-            zoneName: 'Zone 1',
-            regionName: 'Addis Ababa',
-            noOfVillages: 10,
-            noOfOrphans: 100,
-            districtProjects: [1, 4, 2],
-            districtSocialWorkers: [
-              {
-                firstName: 'John',
-                lastName: 'Doe',
-              },
-              {
-                firstName: 'Bob',
-                lastName: 'Do',
-              },
-            ],
-          },
-          {
-            id: 4,
-            name: 'Bole',
-            zoneName: 'Zone 2',
-            regionName: 'Addis Ababa',
-            noOfVillages: 6,
-            noOfOrphans: 60,
-            districtProjects: [2, 4, 2],
-            districtSocialWorkers: [
-              {
-                firstName: 'John',
-                lastName: 'Doe',
-              },
-              {
-                firstName: 'Bob',
-                lastName: 'Do',
-              },
-            ],
-          },
-          {
-            id: 5,
-            name: 'Akaki Kaliti',
-            zoneName: 'Zone 1',
-            regionName: 'Addis Ababa',
-            noOfVillages: 10,
-            noOfOrphans: 100,
-            districtProjects: [1, 4, 2],
-            districtSocialWorkers: [
-              {
-                firstName: 'John',
-                lastName: 'Doe',
-              },
-              {
-                firstName: 'Bob',
-                lastName: 'Do',
-              },
-            ],
-          },
-          {
-            id: 6,
-            name: 'Bole',
-            zoneName: 'Zone 2',
-            regionName: 'Addis Ababa',
-            noOfVillages: 6,
-            noOfOrphans: 60,
-            districtProjects: [2, 4, 2],
-            districtSocialWorkers: [
-              {
-                firstName: 'John',
-                lastName: 'Doe',
-              },
-              {
-                firstName: 'Bob',
-                lastName: 'Do',
-              },
-            ],
-          },
-        ]
-      return Array.from(this.$store.state.location.districts).map(
-        (district) => {
-          const noOfOrphans = Array.from(district?.villages).reduce(
-            (acc, village) => acc + village.orphans.length,
-            0
+    isOnHeadLocationsZone() {
+      return this.$route.name === 'head-locations-zone'
+    },
+  },
+  async mounted() {
+    await this.initialize()
+  },
+  methods: {
+    async initialize() {
+      console.log(`Initialize ${this._name}`)
+      try {
+        this.districts = (
+          await fetchDistricts(
+            this.isOnHeadLocationsZone
+              ? this.$store.state.location.selectedZone.id
+              : undefined,
+            this.isOnProject
+              ? this.$store.state[`${this.userRole}`].selectedProjectId
+              : undefined
           )
-          const districtProjects = Array.from(district?.projects).map(
-            (project) => +project.number
-          )
+        ).map((district) => {
           const districtSocialWorkers = Array.from(district?.socialWorkers).map(
             (socialWorker) => ({
+              ...socialWorker,
               firstName: socialWorker.user.personalInfo.firstName,
               lastName: socialWorker.user.personalInfo.lastName,
             })
           )
           return {
             ...district,
-            noOfVillages: district?.villages?.length,
-            noOfOrphans: noOfOrphans ?? 0,
-            districtProjects: districtProjects ?? 'N/A',
+            noOfOrphans: district?._count_orphans ?? 0,
+            noOfVillages: district?._count_villages ?? 0,
+            zoneName: district?.zone?.name ?? 'N/A',
+            regionName: district?.zone?.region?.name ?? 'N/A',
+            districtProjects: district?.projects ?? 'N/A',
             districtSocialWorkers: districtSocialWorkers ?? 'N/A',
           }
-        }
-      )
-    },
-    isOnHeadLocationsZone() {
-      return this.$route.name === 'head-locations-zone'
-    },
-  },
-  mounted() {
-    this.initialize()
-  },
-  methods: {
-    initialize() {
-      if (this.isOnHeadLocationsZone)
-        this.$store.dispatch('location/fetchDistricts', {
-          zoneId: this.$store.state.location.selectedZone.id,
         })
+      } catch (error) {
+        console.error(error)
+      }
     },
 
     handleSearch(value) {
@@ -286,10 +172,14 @@ export default {
     },
 
     navigateToDistrict(selectedDistrict) {
-      if (this.isOnHeadLocationsZone) {
+      if (this.isOnHeadLocationsZone) { // todo: refactor this
         this.$store.commit('location/SET_SELECTED_DISTRICT', selectedDistrict)
         this.$router.push('/head/locations/district')
       } else {
+        this.$store.dispatch(
+          'coordinator/setSelectedDistrictId',
+          selectedDistrict.id
+        )
         this.$router.push({
           name: 'coordinator-districts-district',
           // change selected project state using the item argument
@@ -309,11 +199,28 @@ export default {
     },
 
     handleProjectClick(project) {
-      console.log('Project clicked', project)
+      this.$store.dispatch(
+        `${this.userRole}/setSelectedProjectNumber`,
+        project.number
+      )
+      this.$router.push(`/${this.userRole}/projects/project`)
+      if (
+        this.isOnProject &&
+        !this.isOnHeadLocationsZone &&
+        this.$store.state.coordinator.selectedProjectId !== project.id
+      ) {
+        window.location.reload()
+      }
+      this.$store.dispatch(`${this.userRole}/setSelectedProjectId`, project.id)
     },
 
     handleSocialWorkerClick(socialWorker) {
       console.log('Social worker clicked', socialWorker)
+      this.$store.dispatch(
+        `${this.userRole}/setSelectedSocialWorkerId`,
+        socialWorker.id
+      )
+      this.$router.push(`/${this.userRole}/social-workers/social-worker`)
     },
   },
 }

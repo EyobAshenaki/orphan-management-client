@@ -278,9 +278,17 @@ export default {
       this.projectNumber = this.number
       try {
         await this.$store.dispatch('head/createProject', createProjectInput)
+        this.$toaster.showToast({
+          content: 'Project created successfully',
+          state: 'success',
+        })
+        this.$toaster.showToast({
+          content: 'Project created successfully',
+          state: 'success',
+        })
         this.reset()
         this.$router.push('/head/projects')
-      } catch(e) {
+      } catch (e) {
         /* empty */
       } // grounding the error
     },

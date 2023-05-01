@@ -16,7 +16,7 @@
     </template>
 
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="initialize">Reset</button-dark>
     </template>
   </table-component>
 </template>

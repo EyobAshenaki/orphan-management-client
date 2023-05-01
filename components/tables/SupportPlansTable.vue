@@ -22,13 +22,26 @@
       <search-field @onSearch="handleSearch($event)" />
     </template>
 
+    <template #paymentInterval="{ item }">
+      Every {{ item.paymentInterval }} Months
+    </template>
+
+    <template #donor="{ item }">
+      {{ item.donor.nameInitials }}
+    </template>
+
+    <template #orphansCount="{ item }"> {{ item._count_orphans }} </template>
+
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="initialize"> Reset </button-dark>
     </template>
   </table-component>
 </template>
 
 <script>
+import { GraphQLError } from 'graphql'
+import { fetchSupportPlansByProjectId } from '~/services/project.service'
+
 export default {
   name: 'SupportPlanTable',
 
@@ -36,6 +49,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      supportPlans: [],
     }
   },
   computed: {
@@ -59,90 +73,31 @@ export default {
     isOnHeadProjectsPage() {
       return this.$route.path === '/head/projects/project'
     },
-    supportPlans() {
-      if (this.isOnHeadProjectsPage) {
-        return Array.from(
-          this.$store.state.head.selectedProject.supportPlans
-        ).map((supportPlan) => {
-          return {
-            ...supportPlan,
-            paymentInterval: `Every ${supportPlan.paymentInterval} Months`,
-            donor: supportPlan.donor,
-            orphansCount: Array.from(supportPlan.orphans).length,
-          }
-        })
-      }
-      return [
-        {
-          name: 'QC-1',
-          periodOfSupport: '5 years',
-          donor: 'QC',
-          orphansCount: 6,
-          totalFund: 200000,
-          adminFreePercentage: 5,
-        },
-        {
-          name: 'QC-2',
-          periodOfSupport: '3 years',
-          donor: 'QC',
-          orphansCount: 3,
-          totalFund: 500000,
-          adminFreePercentage: 3,
-        },
-        {
-          name: 'QC-3',
-          periodOfSupport: '6 years',
-          donor: 'QC',
-          orphansCount: 7,
-          totalFund: 300000,
-          adminFreePercentage: 5,
-        },
-        {
-          name: 'QC-4',
-          periodOfSupport: '8 years',
-          donor: 'QC',
-          orphansCount: 9,
-          totalFund: 900000,
-          adminFreePercentage: 7,
-        },
-        {
-          name: 'QC-5',
-          periodOfSupport: '5 years',
-          donor: 'QC',
-          orphansCount: 6,
-          totalFund: 700000,
-          adminFreePercentage: 5,
-        },
-        {
-          name: 'QC-6',
-          periodOfSupport: '3 years',
-          donor: 'QC',
-          orphansCount: 3,
-          totalFund: 500000,
-          adminFreePercentage: 3,
-        },
-        {
-          name: 'QC-7',
-          periodOfSupport: '6 years',
-          donor: 'QC',
-          orphansCount: 7,
-          totalFund: 800000,
-          adminFreePercentage: 5,
-        },
-        {
-          name: 'QC-8',
-          periodOfSupport: '8 years',
-          donor: 'QC',
-          orphansCount: 9,
-          totalFund: 300000,
-          adminFreePercentage: 7,
-        },
-      ]
-    },
+  },
+  mounted() {
+    this.initialize()
   },
   methods: {
-    initialize() {
-      console.log('Initialize')
+    async initialize() {
+      let rawSupportPlans = []
+
+      try {
+        rawSupportPlans = await fetchSupportPlansByProjectId(
+          this.$store.state.coordinator.selectedProjectId
+        )
+      } catch (error) {
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.error(error)
+        throw error
+      }
+      this.supportPlans = rawSupportPlans ? Array.from(rawSupportPlans) : []
     },
 
     handleSearch(value) {

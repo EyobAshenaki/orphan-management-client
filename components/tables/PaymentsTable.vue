@@ -22,14 +22,35 @@
       <search-field @onSearch="handleSearch($event)" />
     </template>
 
+    <template #actions="{ item }">
+      <v-tooltip top>
+        <template #activator="{ on, attrs }">
+          <fa-layers
+            class="tw-mx-auto tw-text-emerald-800"
+            v-bind="attrs"
+            v-on="on"
+            @click="generateIndividualPayments(item)"
+          >
+            <fa :icon="['fa', 'money-bill-transfer']" transform="grow-8" />
+          </fa-layers>
+        </template>
+        <span>Individual Payments</span>
+      </v-tooltip>
+    </template>
+
+    <template #paymentPeriodInMonths="{ item }">
+      {{ item.paymentPeriodInMonths }} months
+    </template>
+
     <template #no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <button-dark @click="initialize"> Reset </button-dark>
     </template>
   </table-component>
 </template>
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
+import { fetchPayments } from '~/services/support.service'
 export default {
   name: 'PaymentTable',
 
@@ -41,6 +62,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      payments: [],
     }
   },
   computed: {
@@ -49,129 +71,44 @@ export default {
         {
           text: 'Payment Period',
           align: 'start',
-          value: 'paymentPeriod',
+          value: 'paymentPeriodInMonths',
         },
         {
           text: 'Primary FC',
           value: 'primaryForeignCurrency',
         },
-        { text: 'Payment in Primary FC', value: 'paymentInPrimaryFC' },
+        {
+          text: 'Payment in Primary FC',
+          value: 'grossPaymentInPrimaryForeignCurrency',
+        },
         { text: 'Primary Exchange Rate', value: 'primaryExchangeRate' },
         {
           text: 'Secondary FC',
           value: 'secondaryForeignCurrency',
         },
-        { text: 'Payment in Secondary FC', value: 'paymentInSecondaryFC' },
+        {
+          text: 'Payment in Secondary FC',
+          value: 'grossPaymentInSecondaryForeignCurrency',
+        },
         { text: 'Secondary Exchange Rate', value: 'secondaryExchangeRate' },
-        { text: 'Gross Payment in Birr', value: 'grossPaymentInBirr' },
-        { text: 'Admin Fee in Birr', value: 'adminFreeInBirr' },
-        { text: 'Net Payment in Birr', value: 'netPaymentInBirr' },
-      ]
-    },
-    payments() {
-      return [
         {
-          paymentPeriod: '5 years',
-          primaryForeignCurrency: 'Japanese Yen',
-          paymentInPrimaryFC: 200000,
-          primaryExchangeRate: 6,
-          secondaryForeignCurrency: 'United States dollar',
-          paymentInSecondaryFC: 5000,
-          secondaryExchangeRate: 53,
-          grossPaymentInBirr: 200000,
-          adminFreeInBirr: 10000,
-          netPaymentInBirr: 200000,
+          text: 'Gross Payment in ETB',
+          value: 'grossPaymentInDomesticCurrency',
         },
-        {
-          paymentPeriod: '5 years',
-          primaryForeignCurrency: 'Japanese Yen',
-          paymentInPrimaryFC: 200000,
-          primaryExchangeRate: 6,
-          secondaryForeignCurrency: 'United States dollar',
-          paymentInSecondaryFC: 5000,
-          secondaryExchangeRate: 53,
-          grossPaymentInBirr: 200000,
-          adminFreeInBirr: 10000,
-          netPaymentInBirr: 200000,
-        },
-        {
-          paymentPeriod: '5 years',
-          primaryForeignCurrency: 'Japanese Yen',
-          paymentInPrimaryFC: 200000,
-          primaryExchangeRate: 6,
-          secondaryForeignCurrency: 'United States dollar',
-          paymentInSecondaryFC: 5000,
-          secondaryExchangeRate: 53,
-          grossPaymentInBirr: 200000,
-          adminFreeInBirr: 10000,
-          netPaymentInBirr: 200000,
-        },
-        {
-          paymentPeriod: '5 years',
-          primaryForeignCurrency: 'Japanese Yen',
-          paymentInPrimaryFC: 200000,
-          primaryExchangeRate: 6,
-          secondaryForeignCurrency: 'United States dollar',
-          paymentInSecondaryFC: 5000,
-          secondaryExchangeRate: 53,
-          grossPaymentInBirr: 200000,
-          adminFreeInBirr: 10000,
-          netPaymentInBirr: 200000,
-        },
-        {
-          paymentPeriod: '5 years',
-          primaryForeignCurrency: 'Japanese Yen',
-          paymentInPrimaryFC: 200000,
-          primaryExchangeRate: 6,
-          secondaryForeignCurrency: 'United States dollar',
-          paymentInSecondaryFC: 5000,
-          secondaryExchangeRate: 53,
-          grossPaymentInBirr: 200000,
-          adminFreeInBirr: 10000,
-          netPaymentInBirr: 200000,
-        },
-        {
-          paymentPeriod: '5 years',
-          primaryForeignCurrency: 'Japanese Yen',
-          paymentInPrimaryFC: 200000,
-          primaryExchangeRate: 6,
-          secondaryForeignCurrency: 'United States dollar',
-          paymentInSecondaryFC: 5000,
-          secondaryExchangeRate: 53,
-          grossPaymentInBirr: 200000,
-          adminFreeInBirr: 10000,
-          netPaymentInBirr: 200000,
-        },
-        {
-          paymentPeriod: '5 years',
-          primaryForeignCurrency: 'Japanese Yen',
-          paymentInPrimaryFC: 200000,
-          primaryExchangeRate: 6,
-          secondaryForeignCurrency: 'United States dollar',
-          paymentInSecondaryFC: 5000,
-          secondaryExchangeRate: 53,
-          grossPaymentInBirr: 200000,
-          adminFreeInBirr: 10000,
-          netPaymentInBirr: 200000,
-        },
-        {
-          paymentPeriod: '5 years',
-          primaryForeignCurrency: 'Japanese Yen',
-          paymentInPrimaryFC: 200000,
-          primaryExchangeRate: 6,
-          secondaryForeignCurrency: 'United States dollar',
-          paymentInSecondaryFC: 5000,
-          secondaryExchangeRate: 53,
-          grossPaymentInBirr: 200000,
-          adminFreeInBirr: 10000,
-          netPaymentInBirr: 200000,
-        },
+        { text: 'Admin Fee in ETB', value: 'adminFeeInDomesticCurrency' },
+        { text: 'Net Payment in ETB', value: 'netPaymentInDomesticCurrency' },
+        { text: 'Actions', value: 'actions' },
       ]
     },
   },
+  async mounted() {
+    await this.initialize()
+  },
   methods: {
-    initialize() {
-      console.log('Initialize')
+    async initialize() {
+      this.payments = await fetchPayments(
+        this.$store.state.coordinator.selectedSupportPlan.id
+      )
     },
 
     handleSearch(value) {

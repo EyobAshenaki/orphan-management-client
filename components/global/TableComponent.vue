@@ -1,11 +1,22 @@
 <template>
   <v-data-table
-:headers="headers" :loading="loading" :items="items" :item-key="itemsKey" :items-per-page="itemsPerPage" :search="search"
+    :headers="headers"
+    :loading="loading"
+    :items="items"
+    :item-key="itemsKey"
+    :items-per-page="itemsPerPage"
+    :search="search"
     :footer-props="{
       itemsPerPageOptions: [5, 10, 15, 20],
-    }" :single-select="singleSelect" :show-select="showSelect" checkbox-color="teal darken-1"
-    class="hover:tw-cursor-pointer px-6" @dblclick:row="handleDoubleClickRow" @update:items-per-page="handleItemsPerPage"
-    @item-selected="handleSelectedItemChange">
+    }"
+    :single-select="singleSelect"
+    :show-select="showSelect"
+    checkbox-color="teal darken-1"
+    class="hover:tw-cursor-pointer px-6"
+    @dblclick:row="handleDoubleClickRow"
+    @update:items-per-page="handleItemsPerPage"
+    @item-selected="handleSelectedItemChange"
+  >
     <template #top>
       <div class="tw-w-full tw-flex tw-justify-between tw-py-5 tw-px-2">
         <header>
@@ -69,8 +80,8 @@ export default {
     },
     loading: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   methods: {

@@ -4,6 +4,16 @@ query Projects {
   }
 }
 
+query Project($id: ID!) {
+  project(id: $id) {
+    ...ProjectFragment
+  }
+}
+
+query CountProjects($status: String, $number: String) {
+  _count_projects(status: $status, number: $number)
+}
+
 fragment ProjectFragment on Project {
   id
   number
@@ -18,6 +28,37 @@ fragment ProjectFragment on Project {
         firstName
         lastName
       }
+    }
+  }
+}
+
+fragment SupportPlanFragment on SupportPlan {
+  id
+  name
+  startDate
+  endDate
+  totalFund
+  adminFeePercentage
+  paymentInterval
+}
+
+fragment ProjectDetailFragment on Project {
+  id
+  number
+  startDate
+  grandTotalBudget
+  maximumNumberOfBeneficiaries
+  supportPlans {
+    ...SupportPlanFragment
+    donor {
+      id
+      companyName
+      nameInitials
+    }
+    orphans {
+      id
+      code
+      name
     }
   }
 }

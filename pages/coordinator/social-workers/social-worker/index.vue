@@ -2,6 +2,7 @@
   <section>
     <header class="tw-w-full tw-relative tw-bg-white tw-px-8 tw-pt-8">
       <button-dark
+        v-if="false"
         class="tw-absolute tw-top-6 tw-right-6"
         to="/coordinator/social-workers/social-worker/statistics"
       >
@@ -11,7 +12,9 @@
         <span>Statistics</span>
       </button-dark>
 
-      <h1 class="tw-font-bold tw-text-3xl mb-5">Social Worker Name</h1>
+      <h1 class="tw-font-bold tw-text-3xl mb-5">
+        {{ fullName(socialWorker?.user?.personalInfo) }}
+      </h1>
 
       <v-spacer></v-spacer>
 
@@ -39,7 +42,7 @@
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="(item, idx) in items" :key="idx">
         <div v-if="tab === 0" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
-          <profile @onVillagesViewAllClick="navigateToVillagesTab" />
+          <profile :social-worker="socialWorker" @onVillagesViewAllClick="navigateToVillagesTab" />
         </div>
 
         <div v-if="tab === 1" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
@@ -66,6 +69,8 @@
 import VillagesTable from '~/components/tables/VillagesTable.vue'
 import OrphansTable from '~/components/tables/OrphansTable.vue'
 import Profile from '~/components/coordinator/social-worker/Profile.vue'
+import { fetchSocialWorker } from '~/services/social-worker.service'
+import { fullName } from '~/helpers/app.helpers'
 export default {
   name: 'DistrictPage',
 
@@ -81,10 +86,29 @@ export default {
     return {
       tab: null,
       items: ['Profile', 'Villages', 'Orphans'],
+      socialWorker: null,
     }
   },
 
+  computed: {
+    userRole() {
+      return this.$store.getters['auth/userRole']
+    },
+  },
+
+  async mounted() {
+    await this.initialize()
+  },
+
   methods: {
+    fullName,
+    async initialize() {
+      console.log(`Initialize ${this._name}`)
+      this.socialWorker = await fetchSocialWorker(
+        this.$store.state[`${this.userRole}`].selectedSocialWorkerId
+      )
+      console.log('Social worker: ', this.socialWorker)
+    },
     navigateToVillagesTab() {
       console.log('Go to villages tab ')
       this.tab = 1

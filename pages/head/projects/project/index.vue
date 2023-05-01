@@ -5,9 +5,7 @@
         v-if="version > 1"
         class="tw-absolute tw-top-6 tw-right-6 tw-flex tw-flex-col tw-gap-3"
       >
-        <button-dark
-          to="/head/project/statistics"
-        >
+        <button-dark to="/head/project/statistics">
           <fa-layers class="tw-mr-2">
             <fa :icon="['fa', 'chart-line']" />
           </fa-layers>
@@ -21,7 +19,9 @@
         </button-dark>
       </div>
 
-      <h1 class="tw-font-bold tw-text-3xl mb-3">Project-{{ project.number }}</h1>
+      <h1 class="tw-font-bold tw-text-3xl mb-3">
+        Project-{{ project.number }}
+      </h1>
 
       <!-- <button-light to="/coordinator/projects/add-project">
           <span>Add Project</span>
@@ -72,11 +72,12 @@
         </div>
 
         <div v-if="tab === 3" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
-          <districts-table />
+          <districts-table :is-on-project="true" />
         </div>
 
         <div v-if="tab === 4" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
           <orphans-table
+            :is-on-project="true"
             @onOrphanDetailClick="handleOrphanDetailClick($event)"
           />
         </div>
@@ -117,7 +118,7 @@ export default {
         // 'Documents',
       ],
     }
-    },
+  },
   computed: {
     project() {
       return this.$store.state.head.selectedProject
