@@ -143,6 +143,7 @@ export default {
         this.villages = (
           await fetchVillages(
             this.$store.state.coordinator.selectedDistrictId,
+            this.$store.state.coordinator.selectedSocialWorkerId,
             true
           )
         ).map((village) => ({

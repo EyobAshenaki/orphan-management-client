@@ -88,10 +88,8 @@ export default {
     },
 
     navigateToSocialWorker(item) {
-      this.$router.push({
-        name: 'coordinator-social-workers-social-worker',
-        // change selected project state using the item argument
-      })
+      this.$store.dispatch('coordinator/setSelectedSocialWorkerId', item.id)
+      this.$router.push('/coordinator/social-workers/social-worker')
     },
 
     handleItemsPerPage(value) {

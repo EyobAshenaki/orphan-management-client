@@ -164,6 +164,7 @@ export async function createDistrict(districtInput) {
  */
 export async function fetchVillages(
   districtId = undefined,
+  socialWorkerId = undefined,
   withSocialWorkers = false
 ) {
   const { data, errors } = await handleGQL(() => {
@@ -172,6 +173,7 @@ export async function fetchVillages(
       query: print(FetchVillages),
       variables: {
         districtId,
+        socialWorkerId,
         withSocialWorkers,
       },
     })

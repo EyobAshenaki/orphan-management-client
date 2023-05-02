@@ -113,9 +113,10 @@ export default {
       console.log('Go to villages tab ')
       this.tab = 1
     },
-
+    
     navigateToOrphansTab(village) {
       console.log('Go to orphans tab ', village)
+      this.$store.dispatch('coordinator/setSelectedVillageId', village.id)
       this.tab = 2
     },
 

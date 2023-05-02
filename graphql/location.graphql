@@ -98,8 +98,12 @@ query FetchDistrict($id: ID!, $withVillages: Boolean!) {
   }
 }
 
-query FetchVillages($districtId: ID, $withSocialWorkers: Boolean!) {
-  villages(districtId: $districtId) {
+query FetchVillages(
+  $districtId: ID
+  $socialWorkerId: ID
+  $withSocialWorkers: Boolean!
+) {
+  villages(districtId: $districtId, socialWorkerId: $socialWorkerId) {
     ...VillageFragment
     _count_orphans
     district {
