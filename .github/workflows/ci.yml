@@ -83,10 +83,16 @@ jobs:
         run: |
           docker pull abulhuman/omp-client:${{ needs.environment.outputs.target }}
 
+      - name: Compose down 📦 and remove volumes
+        run: |
+          docker compose --project-name="${{ needs.environment.outputs.project_name }}" down
+          docker volume remove ${{ needs.environment.outputs.project_name }}_yarn
+          docker volume remove ${{ needs.environment.outputs.project_name }}_nuxt
+
       - name: $ Deploying to Production
         if: ${{ needs.environment.outputs.target == 'production' }}
         run: PORT=80 IMAGE_TAG=${{ needs.environment.outputs.target }} docker compose --project-name="${{ needs.environment.outputs.project_name }}" up -d
 
-      - name: $ Deploying to Production
+      - name: $ Deploying to Staging
         if: ${{ needs.environment.outputs.target == 'staging' }}
         run: PORT=${{ secrets.CLIENT_STAGING_EXTERNAL_PORT }} IMAGE_TAG=${{ needs.environment.outputs.target }} docker compose --project-name="${{ needs.environment.outputs.project_name }}" up -d
