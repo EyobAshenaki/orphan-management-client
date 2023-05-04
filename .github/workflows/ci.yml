@@ -45,11 +45,27 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and export
+      - name: Build and export for production
         uses: docker/build-push-action@v3
+        if: ${{ needs.environment.outputs.target == 'production' }}
         with:
           build-args: |
-            NUXT_API_URL=${{ vars.NUXT_API_URL }}
+            NUXT_API_URL=${{ vars.NUXT_API_URL }}:${{ secrets.API_PRODUCTION_EXTERNAL_PORT }}
+          context: .
+          push: true
+          tags: |
+            abulhuman/omp-client:${{ needs.environment.outputs.target }}
+            abulhuman/omp-client:latest
+          cache-from: type=registry,ref=abulhuman/omp-client:${{ needs.environment.outputs.target }}-buildcache
+          cache-to: type=registry,ref=abulhuman/omp-client:${{ needs.environment.outputs.target }}-buildcache,mode=max
+          target: ${{ needs.environment.outputs.target }}
+
+      - name: Build and export for staging
+        uses: docker/build-push-action@v3
+        if: ${{ needs.environment.outputs.target == 'staging' }}
+        with:
+          build-args: |
+            NUXT_API_URL=${{ vars.NUXT_API_URL }}:${{ secrets.API_STAGING_EXTERNAL_PORT }}
           context: .
           push: true
           tags: |
