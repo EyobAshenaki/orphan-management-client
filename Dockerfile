@@ -13,15 +13,7 @@ RUN yarn install \
   --immutable \
   --inline-builds
 
-FROM node:16-alpine AS base-builder
-
-WORKDIR /app
-
-COPY --from=dependencies /app/node_modules node_modules
-
-COPY . .
-
-FROM base-builder AS staging
+FROM dependencies AS staging
 
 WORKDIR /app
 
@@ -29,11 +21,17 @@ ENV NODE_ENV=staging
 ARG NUXT_API_URL
 
 COPY --from=dependencies /app/node_modules node_modules
+COPY . .
 
 RUN npm install -g nuxt@2.16.1
 ENV PATH="/app/node_modules/.bin:${PATH}"
 
+RUN echo "#DEBUG"
+RUN ls -lah
+
 RUN yarn build
+
+RUN echo "#DEBUG_END"
 
 # Delete the source code
 RUN find . -maxdepth 1 ! -name 'node_modules' ! -name 'static' \
@@ -45,9 +43,10 @@ EXPOSE 3001
 
 CMD ["yarn", "start"]
 
-FROM base-builder AS production
+FROM dependencies AS production
 
 WORKDIR /app
+COPY . .
 
 ENV NODE_ENV=production
 ARG NUXT_API_URL
