@@ -26,7 +26,7 @@ FROM base-builder AS staging
 ENV NODE_ENV=staging
 ARG NUXT_API_URL
 
-RUN npm install -g nuxt
+RUN npm install -g nuxt@2.16.1
 ENV PATH="/app/node_modules/.bin:${PATH}"
 
 RUN yarn build
@@ -46,7 +46,7 @@ FROM base-builder AS production
 ENV NODE_ENV=production
 ARG NUXT_API_URL
 
-RUN npm install -g nuxt
+RUN npm install -g nuxt@2.16.1
 ENV PATH="/app/node_modules/.bin:${PATH}"
 
 RUN yarn build
