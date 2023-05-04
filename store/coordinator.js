@@ -7,19 +7,19 @@ import {
 } from '~/services/support.service'
 
 export const state = () => ({
-  selectedProjectId: '',
+  selectedProjectId: null,
   selectedProjectNumber: '',
   selectedSupportPlan: {
-    id: '',
+    id: null,
     name: '',
     adminFeePercentage: 0.0,
   },
   selectedPayment: {},
   donors: [],
   projectOrphans: [],
-  selectedSocialWorkerId: '',
-  selectedDistrictId: '',
-  selectedVillageId: '',
+  selectedSocialWorkerId: null,
+  selectedDistrictId: null,
+  selectedVillageId: null,
 })
 
 export const getters = {
