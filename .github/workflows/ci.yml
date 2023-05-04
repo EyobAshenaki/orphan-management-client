@@ -13,7 +13,6 @@ jobs:
       api_base_url: ${{ steps.prod.outputs.api_base_url || steps.staging.outputs.api_base_url }}
       project_name: ${{ steps.prod.outputs.project_name || steps.staging.outputs.project_name }}
       port: ${{ steps.prod.outputs.port  || steps.staging.outputs.port }}
-      external_port: ${{ steps.prod.outputs.external_port  || steps.staging.outputs.external_port }}
     steps:
       - name: Set Production Environment
         id: prod
@@ -23,7 +22,6 @@ jobs:
           echo "api_base_url=${{ vars.NUXT_API_URL }}" >> $GITHUB_OUTPUT
           echo "project_name=omp-client" >> $GITHUB_OUTPUT
           echo "port=3000" >> $GITHUB_OUTPUT
-          echo "external_port=80" >> $GITHUB_OUTPUT
       - name: Set Staging Environment
         id: staging
         if: ${{github.ref_name == 'staging'}}
@@ -32,7 +30,6 @@ jobs:
           echo "api_base_url=${{ vars.NUXT_API_URL }}" >> $GITHUB_OUTPUT
           echo "project_name=omp-client-staging" >> $GITHUB_OUTPUT
           echo "port=3001" >> $GITHUB_OUTPUT
-          echo "external_port=${{ secrets.CLIENT_STAGING_EXTERNAL_PORT }}" >> $GITHUB_OUTPUT
 
   build:
     name: CI Build
@@ -86,5 +83,10 @@ jobs:
         run: |
           docker pull abulhuman/omp-client:${{ needs.environment.outputs.target }}
 
-      - name: $ Deploying to ${{ needs.environment.outputs.target }}
-        run: PORT=${{ needs.environment.outputs.external_port }} IMAGE_TAG=${{ needs.environment.outputs.target }} docker compose --project-name="${{ needs.environment.outputs.project_name }}" up -d
+      - name: $ Deploying to Production
+        if: ${{ needs.environment.outputs.target == 'production' }}
+        run: PORT=80 IMAGE_TAG=${{ needs.environment.outputs.target }} docker compose --project-name="${{ needs.environment.outputs.project_name }}" up -d
+
+      - name: $ Deploying to Production
+        if: ${{ needs.environment.outputs.target == 'staging' }}
+        run: PORT=${{ secrets.CLIENT_STAGING_EXTERNAL_PORT }} IMAGE_TAG=${{ needs.environment.outputs.target }} docker compose --project-name="${{ needs.environment.outputs.project_name }}" up -d
