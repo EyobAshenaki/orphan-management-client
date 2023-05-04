@@ -23,6 +23,8 @@ COPY . .
 
 FROM base-builder AS staging
 
+WORKDIR /app
+
 ENV NODE_ENV=staging
 ARG NUXT_API_URL
 
@@ -44,6 +46,8 @@ EXPOSE 3001
 CMD ["yarn", "start"]
 
 FROM base-builder AS production
+
+WORKDIR /app
 
 ENV NODE_ENV=production
 ARG NUXT_API_URL
