@@ -50,7 +50,7 @@ jobs:
         if: ${{ needs.environment.outputs.target == 'production' }}
         with:
           build-args: |
-            NUXT_API_URL=${{ vars.NUXT_API_URL }}:${{ secrets.API_PRODUCTION_EXTERNAL_PORT }}
+            NUXT_API_URL=${{ vars.NUXT_API_URL }}:${{ vars.API_PRODUCTION_EXTERNAL_PORT }}
           context: .
           push: true
           tags: |
@@ -65,7 +65,7 @@ jobs:
         if: ${{ needs.environment.outputs.target == 'staging' }}
         with:
           build-args: |
-            NUXT_API_URL=${{ vars.NUXT_API_URL }}:${{ secrets.API_STAGING_EXTERNAL_PORT }}
+            NUXT_API_URL=${{ vars.NUXT_API_URL }}:${{ vars.API_STAGING_EXTERNAL_PORT }}
           context: .
           push: true
           tags: |
