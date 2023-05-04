@@ -49,7 +49,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           build-args: |
-            NUXT_API_URL="${{ vars.NUXT_API_URL }}"
+            NUXT_API_URL=${{ vars.NUXT_API_URL }}
           context: .
           push: true
           tags: |
