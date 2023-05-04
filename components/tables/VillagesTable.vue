@@ -61,7 +61,10 @@
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
-import { fetchVillages } from '~/services/location.service'
+import {
+  fetchVillages,
+  shouldBeCalledWithStringAndNull,
+} from '~/services/location.service'
 export default {
   name: 'VillagesTable',
 
@@ -117,6 +120,23 @@ export default {
   methods: {
     async initialize() {
       console.log(`Initialize ${this._name}`)
+      console.log(
+        'Should be null(direct): ',
+        this.$store.state.coordinator.shouldBeNullValue
+      )
+      console.log(
+        'Should be null(getter): ',
+        this.$store.getters['coordinator/shouldGetNullValue']
+      )
+      console.log(
+        'Selected SW Id: ',
+        this.$store.getters['coordinator/shouldGetNullValue']
+      )
+      console.log('store: ', { $_store: this.$store })
+      shouldBeCalledWithStringAndNull(
+        `${this.$store.state.coordinator.shouldBeNullValue}`,
+        this.$store.state.coordinator.shouldBeNullValue
+      )
       if (this.isOnHeadLocationsDistrict) {
         this.villages = Array.from(
           this.$store.state.location.selectedDistrict?.villages

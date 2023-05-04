@@ -20,9 +20,11 @@ export const state = () => ({
   selectedSocialWorkerId: null,
   selectedDistrictId: null,
   selectedVillageId: null,
+  shouldBeNullValue: null,
 })
 
 export const getters = {
+  shouldGetNullValue: (state) => state.shouldBeNullValue,
   donorOptions: (state) =>
     Array.from(state?.donors).map((donor) => ({
       value: donor.id,

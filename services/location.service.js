@@ -210,3 +210,8 @@ export async function createVillage(villageInput) {
   if (data) return data.createVillage
   throw errors
 }
+
+export function shouldBeCalledWithStringAndNull(string, nullValue) {
+  console.log('String Value: ', string)
+  console.log('Null Value: ', nullValue)
+}
