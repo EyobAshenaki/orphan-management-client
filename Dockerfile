@@ -33,11 +33,6 @@ RUN yarn add vuetify@2.6.10
 
 RUN yarn build
 
-# Delete the source code
-RUN find . -maxdepth 1 ! -name 'node_modules' ! -name 'static' \
-  ! -name '.nuxt' ! -name 'nuxt.config.js' ! -name '.env' \
-  -exec rm -rf {} +
-
 ENV HOST 0.0.0.0
 EXPOSE 3001
 
@@ -54,11 +49,6 @@ ENV PATH="/app/node_modules/.bin:${PATH}"
 RUN yarn add vuetify@2.6.10
 
 RUN yarn build
-
-# Delete the source code
-RUN find . -maxdepth 1 ! -name 'node_modules' ! -name 'static' \
-  ! -name '.nuxt' ! -name 'nuxt.config.js' ! -name '.env' \
-  -exec rm -rf {} +
 
 ENV HOST 0.0.0.0
 EXPOSE 3000
