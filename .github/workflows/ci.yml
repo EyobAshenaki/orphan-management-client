@@ -63,6 +63,7 @@ jobs:
             abulhuman/omp-client:latest
           cache-from: type=registry,ref=abulhuman/omp-client:${{ needs.environment.outputs.target }}-buildcache
           cache-to: type=registry,ref=abulhuman/omp-client:${{ needs.environment.outputs.target }}-buildcache,mode=max
+          target: ${{ needs.environment.outputs.target }}
 
   deploy:
     name: Continuous Deployment
