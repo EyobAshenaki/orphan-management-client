@@ -118,7 +118,7 @@ export default {
   },
   methods: {
     async initialize() {
-      console.log(`Initialize ${this._name}`)
+      console.log(`Initialize <VillageTable>`)
       console.log(
         'Selected SocialWorker Id: ',
         this.$store.state.coordinator.selectedSocialWorkerId
