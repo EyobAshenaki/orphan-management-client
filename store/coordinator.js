@@ -6,22 +6,26 @@ import {
   createPayment,
 } from '~/services/support.service'
 
-export const state = () => ({
-  selectedProjectId: null,
-  selectedProjectNumber: '',
-  selectedSupportPlan: {
-    id: null,
-    name: '',
-    adminFeePercentage: 0.0,
-  },
-  selectedPayment: {},
-  donors: [],
-  projectOrphans: [],
-  selectedSocialWorkerId: null,
-  selectedDistrictId: null,
-  selectedVillageId: null,
-  shouldBeNullValue: null,
-})
+export const state = () => {
+  const stateObject = {
+    selectedProjectId: null,
+    selectedProjectNumber: '',
+    selectedSupportPlan: {
+      id: null,
+      name: '',
+      adminFeePercentage: 0.0,
+    },
+    selectedPayment: {},
+    donors: [],
+    projectOrphans: [],
+    selectedSocialWorkerId: null,
+    selectedDistrictId: null,
+    selectedVillageId: null,
+    shouldBeNullValue: null,
+  }
+  console.log({ stateObject })
+  return stateObject
+}
 
 export const getters = {
   shouldGetNullValue: (state) => state.shouldBeNullValue,
