@@ -21,14 +21,14 @@ export const state = () => {
     selectedSocialWorkerId: null,
     selectedDistrictId: null,
     selectedVillageId: null,
-    shouldBeNullValue: null,
   }
+  // todo: remove this when done
+  // eslint-disable-next-line no-console
   console.log({ stateObject })
   return stateObject
 }
 
 export const getters = {
-  shouldGetNullValue: (state) => state.shouldBeNullValue,
   donorOptions: (state) =>
     Array.from(state?.donors).map((donor) => ({
       value: donor.id,
@@ -75,6 +75,9 @@ export const mutations = {
   SET_SELECTED_SOCIAL_WORKER_ID(state, payload) {
     if (typeof payload !== 'string')
       throw new TypeError('Payload must be a string')
+    if (payload === '') throw new EvalError('Payload must not be empty')
+    if (payload === 'undefined') payload = undefined
+    if (payload === 'null') payload = null
     state.selectedSocialWorkerId = payload
   },
   SET_SELECTED_DISTRICT_ID(state, payload) {

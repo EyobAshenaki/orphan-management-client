@@ -167,6 +167,7 @@ export async function fetchVillages(
   socialWorkerId = undefined,
   withSocialWorkers = false
 ) {
+  console.log('fetchVillages', districtId, socialWorkerId, withSocialWorkers);
   const { data, errors } = await handleGQL(() => {
     return graphqlInstance.post('', {
       operationName: 'FetchVillages',
@@ -209,9 +210,4 @@ export async function createVillage(villageInput) {
   const { data, errors } = await handleGQL(createVillage)
   if (data) return data.createVillage
   throw errors
-}
-
-export function shouldBeCalledWithStringAndNull(string, nullValue) {
-  console.log('String Value: ', string)
-  console.log('Null Value: ', nullValue)
 }
