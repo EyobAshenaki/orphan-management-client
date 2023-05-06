@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Individual Payments"
     :headers="headers"
     :items="individualPayments"
@@ -72,6 +73,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
       singleSelect: true,
       showSelect: false,
       selectedIndividualPayment: null,
@@ -124,6 +126,7 @@ export default {
     },
   },
   mounted() {
+    this.loading = true
     this.initialize()
   },
   methods: {
@@ -141,93 +144,106 @@ export default {
           orphanName: orphanFullName(idp.orphan),
           guardianName: fullName(idp.orphan.guardian),
         }))
-      } catch (error) {}
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
     async distribute() {
-      const supportPlan = await fetchSupportPlan(
-        this.$store.state.coordinator.selectedSupportPlan.id
-      )
-      const payment = this.$store.state.coordinator.selectedPayment
+      this.loading = true
+      try {
+        const supportPlan = await fetchSupportPlan(
+          this.$store.state.coordinator.selectedSupportPlan.id
+        )
+        const payment = this.$store.state.coordinator.selectedPayment
 
-      const { _count_orphans: countOrphans, orphans } = supportPlan
-      const newIndividualPaymentsTabularData = orphans.map((orphan) => {
-        const {
-          paymentPeriodInMonths,
-          adminFeeInDomesticCurrency,
-          grossPaymentInDomesticCurrency,
-          grossPaymentInPrimaryForeignCurrency,
-          grossPaymentInSecondaryForeignCurrency,
-          netPaymentInDomesticCurrency,
-          id: paymentId,
-        } = payment
-        const {
-          name,
-          father,
-          dateOfBirth,
-          gender,
-          guardian,
-          accountNumber,
-          id: orphanId,
-        } = orphan
-        return {
-          orphanId,
-          orphan: {
+        const { _count_orphans: countOrphans, orphans } = supportPlan
+        const newIndividualPaymentsTabularData = orphans.map((orphan) => {
+          const {
+            paymentPeriodInMonths,
+            adminFeeInDomesticCurrency,
+            grossPaymentInDomesticCurrency,
+            grossPaymentInPrimaryForeignCurrency,
+            grossPaymentInSecondaryForeignCurrency,
+            netPaymentInDomesticCurrency,
+            id: paymentId,
+          } = payment
+          const {
             name,
             father,
-            gender,
             dateOfBirth,
+            gender,
             guardian,
             accountNumber,
-          },
-          payment: { paymentPeriodInMonths },
-          adminFeeInDomesticCurrency: adminFeeInDomesticCurrency / countOrphans,
-          grossDepositInDomesticCurrency:
-            grossPaymentInDomesticCurrency / countOrphans,
-          grossDepositInPrimaryForeignCurrency:
-            grossPaymentInPrimaryForeignCurrency / countOrphans,
-          grossDepositInSecondaryForeignCurrency:
-            grossPaymentInSecondaryForeignCurrency / countOrphans,
-          netDepositInDomesticCurrency:
-            netPaymentInDomesticCurrency / countOrphans,
-          paymentId,
-        }
-      })
-
-      this.individualPayments = newIndividualPaymentsTabularData
-      // todo: enable customizing the individual payments
-      // |--   beyond equal distribution of the payment
-      // |--   and show details of the payment,
-      // |--   like the gross payment, the admin fee, etc.
-      // |--   and show the net payment
-      // |--   and show the total amount of the payment
-      // |--   when the user deducts a certain amount from a specific orphan's either
-      // |--   gross payment (primary or secondary foreign currency or domestic currency)
-      // |--   since only one of the gross payments can be deducted based on the payment type
-
-      const newIndividualPaymentsCreateInput =
-        newIndividualPaymentsTabularData.map((individualPayment) => {
-          const {
-            orphanId,
-            paymentId,
-            adminFeeInDomesticCurrency,
-            grossDepositInDomesticCurrency,
-            grossDepositInPrimaryForeignCurrency,
-            grossDepositInSecondaryForeignCurrency,
-            netDepositInDomesticCurrency,
-          } = individualPayment
+            id: orphanId,
+          } = orphan
           return {
             orphanId,
+            orphan: {
+              name,
+              father,
+              gender,
+              dateOfBirth,
+              guardian,
+              accountNumber,
+            },
+            payment: { paymentPeriodInMonths },
+            adminFeeInDomesticCurrency:
+              adminFeeInDomesticCurrency / countOrphans,
+            grossDepositInDomesticCurrency:
+              grossPaymentInDomesticCurrency / countOrphans,
+            grossDepositInPrimaryForeignCurrency:
+              grossPaymentInPrimaryForeignCurrency / countOrphans,
+            grossDepositInSecondaryForeignCurrency:
+              grossPaymentInSecondaryForeignCurrency / countOrphans,
+            netDepositInDomesticCurrency:
+              netPaymentInDomesticCurrency / countOrphans,
             paymentId,
-            adminFeeInDomesticCurrency,
-            grossDepositInDomesticCurrency,
-            grossDepositInPrimaryForeignCurrency,
-            grossDepositInSecondaryForeignCurrency,
-            netDepositInDomesticCurrency,
           }
         })
-      this.saveIndividualPayments(newIndividualPaymentsCreateInput)
+
+        this.individualPayments = newIndividualPaymentsTabularData
+        // todo: enable customizing the individual payments
+        // |--   beyond equal distribution of the payment
+        // |--   and show details of the payment,
+        // |--   like the gross payment, the admin fee, etc.
+        // |--   and show the net payment
+        // |--   and show the total amount of the payment
+        // |--   when the user deducts a certain amount from a specific orphan's either
+        // |--   gross payment (primary or secondary foreign currency or domestic currency)
+        // |--   since only one of the gross payments can be deducted based on the payment type
+
+        const newIndividualPaymentsCreateInput =
+          newIndividualPaymentsTabularData.map((individualPayment) => {
+            const {
+              orphanId,
+              paymentId,
+              adminFeeInDomesticCurrency,
+              grossDepositInDomesticCurrency,
+              grossDepositInPrimaryForeignCurrency,
+              grossDepositInSecondaryForeignCurrency,
+              netDepositInDomesticCurrency,
+            } = individualPayment
+            return {
+              orphanId,
+              paymentId,
+              adminFeeInDomesticCurrency,
+              grossDepositInDomesticCurrency,
+              grossDepositInPrimaryForeignCurrency,
+              grossDepositInSecondaryForeignCurrency,
+              netDepositInDomesticCurrency,
+            }
+          })
+        await this.saveIndividualPayments(newIndividualPaymentsCreateInput)
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
     async saveIndividualPayments(individualPayments) {
+      this.loading = true
       try {
         const response = await createManyIndividualPayments(individualPayments)
         if (Array.isArray(response)) {
@@ -246,6 +262,8 @@ export default {
           content: 'Failed to save individual payments',
           state: 'error',
         })
+      } finally {
+        this.loading = false
       }
     },
 
@@ -254,7 +272,6 @@ export default {
     },
 
     exportToExcel() {
-      console.log('Export to excel')
       const workbook = utils.book_new()
       const projectNumber = this.$store.state.coordinator.selectedProjectNumber
       const startDate = new Date(
@@ -283,9 +300,7 @@ export default {
               : [...acc, orphan.village.district.name],
           []
         )
-      console.log(allDistrictsArray)
-      // eslint-disable-next-line no-unused-vars
-      const allSheets = allDistrictsArray.map((districtName) => {
+      allDistrictsArray.forEach((districtName) => {
         // get zoneName for each district
         const zonesAggregate = this.individualPayments
           .map((idp) => {
@@ -402,7 +417,6 @@ export default {
         ]
 
         utils.book_append_sheet(workbook, worksheet, districtName)
-        return {}
       })
 
       const allZonesString = this.individualPayments

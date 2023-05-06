@@ -1,6 +1,7 @@
 <template>
   <div>
     <table-component
+      :loading="loading"
       title="Regions"
       :headers="headers"
       :items="regions"
@@ -13,9 +14,7 @@
         <search-field @onSearch="handleSearch($event)" />
       </template>
       <template #title-button>
-        <button-light
-          to="/head/locations/region/add-region"
-        >
+        <button-light to="/head/locations/region/add-region">
           <span>Add Region</span>
           <fa-layers class="tw-ml-2">
             <fa :icon="['fa', 'plus']" />
@@ -39,6 +38,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
     }
   },
   computed: {
@@ -57,6 +57,7 @@ export default {
     },
   },
   mounted() {
+    this.loading = true
     this.initialize()
   },
   methods: {
@@ -67,8 +68,14 @@ export default {
       this.$store.commit('location/SET_SELECTED_REGION', selectedRegion)
       this.$router.push(`/head/locations/region`)
     },
-    initialize() {
-      this.$store.dispatch('location/fetchRegions')
+    async initialize() {
+      try {
+        await this.$store.dispatch('location/fetchRegions')
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
   },
 }

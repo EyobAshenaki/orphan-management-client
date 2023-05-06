@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Social Workers"
     :headers="headers"
     :items="socialWorkers"
@@ -40,6 +41,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
       socialWorkers: [],
     }
   },
@@ -67,6 +69,7 @@ export default {
     },
   },
   mounted() {
+    this.loading = true
     this.initialize()
   },
   methods: {
@@ -79,7 +82,11 @@ export default {
           gender: sw.user.personalInfo.gender,
           fullName: fullName(sw.user.personalInfo),
         }))
-      } catch (error) {}
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
 
     handleSearch(value) {

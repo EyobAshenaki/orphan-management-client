@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Districts"
     :headers="headers"
     :items="districts"
@@ -88,6 +89,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 10,
+      loading: false,
       districts: [],
     }
   },
@@ -129,6 +131,7 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true
     await this.initialize()
   },
   methods: {
@@ -163,6 +166,8 @@ export default {
         })
       } catch (error) {
         console.error(error)
+      } finally {
+        this.loading = false
       }
     },
 

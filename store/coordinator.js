@@ -6,27 +6,21 @@ import {
   createPayment,
 } from '~/services/support.service'
 
-export const state = () => {
-  const stateObject = {
-    selectedProjectId: null,
-    selectedProjectNumber: '',
-    selectedSupportPlan: {
-      id: null,
-      name: '',
-      adminFeePercentage: 0.0,
-    },
-    selectedPayment: {},
-    donors: [],
-    projectOrphans: [],
-    selectedSocialWorkerId: null,
-    selectedDistrictId: null,
-    selectedVillageId: null,
-  }
-  // todo: remove this when done
-  // eslint-disable-next-line no-console
-  console.log({ stateObject })
-  return stateObject
-}
+export const state = () => ({
+  selectedProjectId: null,
+  selectedProjectNumber: '',
+  selectedSupportPlan: {
+    id: null,
+    name: '',
+    adminFeePercentage: 0.0,
+  },
+  selectedPayment: {},
+  donors: [],
+  projectOrphans: [],
+  selectedSocialWorkerId: null,
+  selectedDistrictId: null,
+  selectedVillageId: null,
+})
 
 export const getters = {
   donorOptions: (state) =>

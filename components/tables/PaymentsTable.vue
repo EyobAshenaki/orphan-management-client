@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Payments"
     :headers="headers"
     :items="payments"
@@ -62,6 +63,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
       payments: [],
     }
   },
@@ -102,13 +104,20 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true
     await this.initialize()
   },
   methods: {
     async initialize() {
-      this.payments = await fetchPayments(
-        this.$store.state.coordinator.selectedSupportPlan.id
-      )
+      try {
+        this.payments = await fetchPayments(
+          this.$store.state.coordinator.selectedSupportPlan.id
+        )
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
 
     handleSearch(value) {

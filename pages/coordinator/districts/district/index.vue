@@ -73,6 +73,7 @@ export default {
   data() {
     return {
       tab: null,
+      loading: false,
       items: ['Villages', 'Orphans'],
       district: null,
       isOrphansTableOnDistrict: true,
@@ -80,14 +81,21 @@ export default {
   },
 
   mounted() {
+    this.loading = true
     this.initialize()
   },
 
   methods: {
     async initialize() {
-      this.district = await fetchDistrict(
-        this.$store.state.coordinator.selectedDistrictId
-      )
+      try {
+        this.district = await fetchDistrict(
+          this.$store.state.coordinator.selectedDistrictId
+        )
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
     navigateToOrphansTab(village) {
       this.$store.dispatch('coordinator/setSelectedVillageId', village.id)
