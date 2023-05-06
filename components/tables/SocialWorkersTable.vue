@@ -71,7 +71,6 @@ export default {
   },
   methods: {
     async initialize() {
-      console.log(`Initialize ${this._name}`)
       try {
         this.socialWorkers = (await fetchSocialWorkers()).map((sw) => ({
           ...sw,

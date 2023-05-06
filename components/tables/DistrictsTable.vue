@@ -133,7 +133,6 @@ export default {
   },
   methods: {
     async initialize() {
-      console.log(`Initialize ${this._name}`)
       try {
         this.districts = (
           await fetchDistricts(
@@ -172,7 +171,8 @@ export default {
     },
 
     navigateToDistrict(selectedDistrict) {
-      if (this.isOnHeadLocationsZone) { // todo: refactor this
+      if (this.isOnHeadLocationsZone) {
+        // todo: refactor this
         this.$store.commit('location/SET_SELECTED_DISTRICT', selectedDistrict)
         this.$router.push('/head/locations/district')
       } else {
@@ -215,7 +215,7 @@ export default {
     },
 
     handleSocialWorkerClick(socialWorker) {
-      console.log('Social worker clicked', socialWorker)
+      if (this.$route.name.includes('social-worker')) return
       this.$store.dispatch(
         `${this.userRole}/setSelectedSocialWorkerId`,
         socialWorker.id

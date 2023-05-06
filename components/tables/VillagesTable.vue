@@ -61,9 +61,7 @@
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
-import {
-  fetchVillages,
-} from '~/services/location.service'
+import { fetchVillages } from '~/services/location.service'
 export default {
   name: 'VillagesTable',
 
@@ -112,17 +110,15 @@ export default {
         },
       ]
     },
+    userRole() {
+      return this.$store.getters['auth/userRole']
+    },
   },
   async mounted() {
     await this.initialize()
   },
   methods: {
     async initialize() {
-      console.log(`Initialize <VillageTable>`)
-      console.log(
-        'Selected SocialWorker Id: ',
-        this.$store.state.coordinator.selectedSocialWorkerId
-      )
       if (this.isOnHeadLocationsDistrict) {
         this.villages = Array.from(
           this.$store.state.location.selectedDistrict?.villages
@@ -158,7 +154,6 @@ export default {
           villageSocialWorker: village.socialWorkers[0],
           districtName: village.district.name,
         }))
-      console.log('Villages', this.villages)
     },
 
     handleSearch(value) {
@@ -185,7 +180,12 @@ export default {
     },
 
     handleSocialWorkerClick(socialWorker) {
-      console.log('Social worker clicked', socialWorker)
+      if (this.$route.name.includes('social-worker')) return
+      this.$store.dispatch(
+        `${this.userRole}/setSelectedSocialWorkerId`,
+        socialWorker.id
+      )
+      this.$router.push(`/${this.userRole}/social-workers/social-worker`)
     },
   },
 }

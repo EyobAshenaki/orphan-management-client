@@ -114,7 +114,6 @@ export default {
   },
   methods: {
     async initialize() {
-      console.log(`Initialize ${this._name}`)
       if (this.isOnDistrict)
         this.$store.dispatch('coordinator/unsetSelectedVillageId')
       this.orphans = (

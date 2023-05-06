@@ -131,7 +131,6 @@ export default {
     orphanFullName,
     fullName,
     async initialize() {
-      console.log(`Initialize ${this._name}`)
       try {
         this.individualPayments = (
           await fetchIndividualPayments(
@@ -193,9 +192,7 @@ export default {
           paymentId,
         }
       })
-      console.log({ newIndividualPayments: newIndividualPaymentsTabularData })
 
-      // sub-todo: show the individual payments in a table
       this.individualPayments = newIndividualPaymentsTabularData
       // todo: enable customizing the individual payments
       // |--   beyond equal distribution of the payment
@@ -207,9 +204,6 @@ export default {
       // |--   gross payment (primary or secondary foreign currency or domestic currency)
       // |--   since only one of the gross payments can be deducted based on the payment type
 
-      // todo: save the individual payments
-      // sub-todo: save the individual payments to the database
-      // <--|_|-->
       const newIndividualPaymentsCreateInput =
         newIndividualPaymentsTabularData.map((individualPayment) => {
           const {
@@ -232,8 +226,6 @@ export default {
           }
         })
       this.saveIndividualPayments(newIndividualPaymentsCreateInput)
-      // sub-todo: show a success message
-      // sub-todo: show a failure message
     },
     async saveIndividualPayments(individualPayments) {
       try {
@@ -304,7 +296,6 @@ export default {
               ? orphan.village.district.zone.name
               : ''
           )
-        // eslint-disable-next-line no-unused-vars
         const zoneName = Array.from(new Set(zonesAggregate).values()).find(
           (x) => x !== ''
         )
@@ -320,7 +311,6 @@ export default {
                 : `${acc}${acc === '' ? '' : ','} ${orphan.village.name}`,
             ''
           )
-        // eslint-disable-next-line no-unused-vars
         const exportHeader = [
           `Zone: ${zoneName}`,
           null,
@@ -398,7 +388,7 @@ export default {
           },
         ]
 
-        // sets the width of colns
+        // sets the width of columns
         worksheet['!cols'] = [
           { wpx: 150 }, // A
           { wpx: 150 }, // B

@@ -103,19 +103,16 @@ export default {
   methods: {
     fullName,
     async initialize() {
-      console.log(`Initialize ${this._name}`)
+      // todo: if this keeps failing, we should stop using the userRole as part of the store as well as the route
       this.socialWorker = await fetchSocialWorker(
         this.$store.state[`${this.userRole}`].selectedSocialWorkerId
       )
-      console.log('Social worker: ', this.socialWorker)
     },
     navigateToVillagesTab() {
-      console.log('Go to villages tab ')
       this.tab = 1
     },
     
     navigateToOrphansTab(village) {
-      console.log('Go to orphans tab ', village)
       this.$store.dispatch('coordinator/setSelectedVillageId', village.id)
       this.tab = 2
     },

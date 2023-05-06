@@ -85,21 +85,19 @@ export default {
 
   methods: {
     async initialize() {
-      console.log(`Initialize ${this._name}`)
       this.district = await fetchDistrict(
         this.$store.state.coordinator.selectedDistrictId
       )
     },
     navigateToOrphansTab(village) {
-      console.log('Go to orphans tab ', village)
       this.$store.dispatch('coordinator/setSelectedVillageId', village.id)
+      // todo: find a way to not need to do this
       this.$store.dispatch('coordinator/unsetSelectedDistrictId')
       this.isOrphansTableOnDistrict = false
       this.tab = 1
     },
 
     handleOrphanDetailClick(item) {
-      console.log('Go to orphan detail: ', item)
       this.$router.push({
         name: 'coordinator-districts-district-orphan',
         // Instead of passing the id to the route, we should store it in the vuex store
