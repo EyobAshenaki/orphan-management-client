@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Orphans"
     :headers="headers"
     :items="orphans"
@@ -85,6 +86,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 10,
+      loading: false,
       orphans: [],
     }
   },
@@ -110,34 +112,40 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true
     await this.initialize()
   },
   methods: {
     async initialize() {
-      console.log(`Initialize ${this._name}`)
-      if (this.isOnDistrict)
-        this.$store.dispatch('coordinator/unsetSelectedVillageId')
-      this.orphans = (
-        await fetchOrphans(
-          undefined,
-          !this.isOnProject && !this.isOnDistrict
-            ? this.$store.state.coordinator.selectedVillageId ?? undefined
-            : undefined,
-          !this.isOnProject && this.isOnDistrict
-            ? this.$store.state.coordinator.selectedDistrictId
-            : undefined,
-          this.isOnProject
-            ? this.$store.state.coordinator.selectedProjectId
-            : undefined
-        )
-      ).map((orphan) => ({
-        ...orphan,
-        orphanName: orphanFullName(orphan),
-        age: calculateAge(orphan.dateOfBirth),
-        gender: orphan.gender === 'M' ? 'Male' : 'Female',
-        sponsorshipStatus: orphan.currentOrphanData.sponsorshipStatus.status,
-        registrationDate: new Date(orphan.createdAt).toLocaleDateString(),
-      }))
+      try {
+        if (this.isOnDistrict)
+          this.$store.dispatch('coordinator/unsetSelectedVillageId')
+        this.orphans = (
+          await fetchOrphans(
+            undefined,
+            !this.isOnProject && !this.isOnDistrict
+              ? this.$store.state.coordinator.selectedVillageId ?? undefined
+              : undefined,
+            !this.isOnProject && this.isOnDistrict
+              ? this.$store.state.coordinator.selectedDistrictId
+              : undefined,
+            this.isOnProject
+              ? this.$store.state.coordinator.selectedProjectId
+              : undefined
+          )
+        ).map((orphan) => ({
+          ...orphan,
+          orphanName: orphanFullName(orphan),
+          age: calculateAge(orphan.dateOfBirth),
+          gender: orphan.gender === 'M' ? 'Male' : 'Female',
+          sponsorshipStatus: orphan.currentOrphanData.sponsorshipStatus.status,
+          registrationDate: new Date(orphan.createdAt).toLocaleDateString(),
+        }))
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
 
     handleSearch(value) {

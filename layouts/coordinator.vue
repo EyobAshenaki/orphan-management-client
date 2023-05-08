@@ -37,11 +37,12 @@ export default {
           title: 'Social Workers',
           to: '/coordinator/social-workers',
         },
-        {
-          icon: ['fas', 'hand-holding-dollar'],
-          title: 'Donors',
-          to: '/coordinator/donors',
-        },
+        // todo: uncomment when donors page is ready
+        // {
+        //   icon: ['fas', 'hand-holding-dollar'],
+        //   title: 'Donors',
+        //   to: '/coordinator/donors',
+        // },
         {
           icon: ['fas', 'city'],
           title: 'Districts',

@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Villages"
     :headers="headers"
     :items="villages"
@@ -73,6 +74,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
       villages: [],
     }
   },
@@ -110,49 +112,57 @@ export default {
         },
       ]
     },
+    userRole() {
+      return this.$store.getters['auth/userRole']
+    },
   },
   async mounted() {
+    this.loading = true
     await this.initialize()
   },
   methods: {
     async initialize() {
-      console.log(`Initialize ${this._name}`)
-      if (this.isOnHeadLocationsDistrict) {
-        this.villages = Array.from(
-          this.$store.state.location.selectedDistrict?.villages
-        ).map((village) => {
-          const noOfOrphans = village?._count_orphans
-          const villageSocialWorkers = Array.from(
-            this.$store.state.location.selectedDistrict?.socialWorkers
-          ).map((socialWorker) => ({
-            firstName: socialWorker.user.personalInfo.firstName,
-            lastName: socialWorker.user.personalInfo.lastName,
-          }))
-          return {
+      try {
+        if (this.isOnHeadLocationsDistrict) {
+          this.villages = Array.from(
+            this.$store.state.location.selectedDistrict?.villages
+          ).map((village) => {
+            const noOfOrphans = village?._count_orphans
+            const villageSocialWorkers = Array.from(
+              this.$store.state.location.selectedDistrict?.socialWorkers
+            ).map((socialWorker) => ({
+              firstName: socialWorker.user.personalInfo.firstName,
+              lastName: socialWorker.user.personalInfo.lastName,
+            }))
+            return {
+              ...village,
+              id: village.id,
+              name: village.name,
+              noOfOrphans: noOfOrphans ?? 0,
+              villageSocialWorker: villageSocialWorkers[0] ?? {
+                firstName: 'John',
+                lastName: 'Doe',
+              },
+            }
+          })
+        } else
+          this.villages = (
+            await fetchVillages(
+              this.$store.state.coordinator.selectedDistrictId,
+              this.$store.state.coordinator.selectedSocialWorkerId,
+              true
+            )
+          ).map((village) => ({
             ...village,
-            id: village.id,
-            name: village.name,
-            noOfOrphans: noOfOrphans ?? 0,
-            villageSocialWorker: villageSocialWorkers[0] ?? {
-              firstName: 'John',
-              lastName: 'Doe',
-            },
-          }
-        })
-      } else
-        this.villages = (
-          await fetchVillages(
-            this.$store.state.coordinator.selectedDistrictId,
-            this.$store.state.coordinator.selectedSocialWorkerId,
-            true
-          )
-        ).map((village) => ({
-          ...village,
-          noOfOrphans: village._count_orphans,
-          villageSocialWorker: village.socialWorkers[0],
-          districtName: village.district.name,
-        }))
-      console.log('Villages', this.villages)
+            noOfOrphans: village._count_orphans,
+            villageSocialWorker: village.socialWorkers[0],
+            districtName: village.district.name,
+          }))
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
 
     handleSearch(value) {
@@ -179,7 +189,12 @@ export default {
     },
 
     handleSocialWorkerClick(socialWorker) {
-      console.log('Social worker clicked', socialWorker)
+      if (this.$route.name.includes('social-worker')) return
+      this.$store.dispatch(
+        `${this.userRole}/setSelectedSocialWorkerId`,
+        socialWorker.id
+      )
+      this.$router.push(`/${this.userRole}/social-workers/social-worker`)
     },
   },
 }

@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Coordinators"
     :headers="headers"
     :items="coordinators"
@@ -35,6 +36,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
     }
   },
   computed: {
@@ -161,6 +163,7 @@ export default {
     },
   },
   mounted() {
+    this.loading = true
     this.initialize()
   },
   methods: {
@@ -168,6 +171,7 @@ export default {
       if (this.isOnHeadCoordinatorsPage) {
         this.$store.dispatch('head/fetchCoordinators')
       }
+    this.loading = false
     },
 
     handleSearch(value) {

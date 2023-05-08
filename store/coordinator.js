@@ -7,19 +7,19 @@ import {
 } from '~/services/support.service'
 
 export const state = () => ({
-  selectedProjectId: '',
+  selectedProjectId: null,
   selectedProjectNumber: '',
   selectedSupportPlan: {
-    id: '',
+    id: null,
     name: '',
     adminFeePercentage: 0.0,
   },
   selectedPayment: {},
   donors: [],
   projectOrphans: [],
-  selectedSocialWorkerId: '',
-  selectedDistrictId: '',
-  selectedVillageId: '',
+  selectedSocialWorkerId: null,
+  selectedDistrictId: null,
+  selectedVillageId: null,
 })
 
 export const getters = {
@@ -69,6 +69,9 @@ export const mutations = {
   SET_SELECTED_SOCIAL_WORKER_ID(state, payload) {
     if (typeof payload !== 'string')
       throw new TypeError('Payload must be a string')
+    if (payload === '') throw new EvalError('Payload must not be empty')
+    if (payload === 'undefined') payload = undefined
+    if (payload === 'null') payload = null
     state.selectedSocialWorkerId = payload
   },
   SET_SELECTED_DISTRICT_ID(state, payload) {

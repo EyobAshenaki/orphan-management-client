@@ -25,39 +25,47 @@ export default {
   data() {
     return {
       items: [],
+      loading: false,
     }
   },
 
   mounted() {
+    this.loading = true
     this.initialize()
   },
 
   methods: {
     async initialize() {
-      this.items = [
-        {
-          icon: ['fas', 'people-group'],
-          title: 'Total Social Workers',
-          value: await countSocialWorkers(),
-        },
-        /* todo: add this when zone social workers are added
-        {
-          icon: ['fas', 'people-line'],
-          title: 'Zone Social Workers',
-          value: 10,
-        },
-         */
-        {
-          icon: ['fas', 'people-arrows'],
-          title: 'Total Families',
-          value: await countGuardians(),
-        },
-        {
-          icon: ['fas', 'people-roof'],
-          title: 'Total Orphans',
-          value: await countOrphans(),
-        },
-      ]
+      try {
+        this.items = [
+          {
+            icon: ['fas', 'people-group'],
+            title: 'Total Social Workers',
+            value: await countSocialWorkers(),
+          },
+          /* todo: add this when zone social workers are added
+          {
+            icon: ['fas', 'people-line'],
+            title: 'Zone Social Workers',
+            value: 10,
+          },
+           */
+          {
+            icon: ['fas', 'people-arrows'],
+            title: 'Total Families',
+            value: await countGuardians(),
+          },
+          {
+            icon: ['fas', 'people-roof'],
+            title: 'Total Orphans',
+            value: await countOrphans(),
+          },
+        ]
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
   },
 }

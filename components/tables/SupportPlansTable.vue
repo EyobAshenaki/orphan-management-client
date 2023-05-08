@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Support Plans"
     :headers="headers"
     :items="supportPlans"
@@ -49,6 +50,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
       supportPlans: [],
     }
   },
@@ -75,6 +77,7 @@ export default {
     },
   },
   mounted() {
+    this.loading = true
     this.initialize()
   },
   methods: {
@@ -96,6 +99,8 @@ export default {
           // eslint-disable-next-line no-console
         } else console.error(error)
         throw error
+      } finally {
+        this.loading = false
       }
       this.supportPlans = rawSupportPlans ? Array.from(rawSupportPlans) : []
     },

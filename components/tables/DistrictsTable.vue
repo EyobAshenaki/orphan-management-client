@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Districts"
     :headers="headers"
     :items="districts"
@@ -88,6 +89,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 10,
+      loading: false,
       districts: [],
     }
   },
@@ -129,11 +131,11 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true
     await this.initialize()
   },
   methods: {
     async initialize() {
-      console.log(`Initialize ${this._name}`)
       try {
         this.districts = (
           await fetchDistricts(
@@ -164,6 +166,8 @@ export default {
         })
       } catch (error) {
         console.error(error)
+      } finally {
+        this.loading = false
       }
     },
 
@@ -172,7 +176,8 @@ export default {
     },
 
     navigateToDistrict(selectedDistrict) {
-      if (this.isOnHeadLocationsZone) { // todo: refactor this
+      if (this.isOnHeadLocationsZone) {
+        // todo: refactor this
         this.$store.commit('location/SET_SELECTED_DISTRICT', selectedDistrict)
         this.$router.push('/head/locations/district')
       } else {
@@ -215,7 +220,7 @@ export default {
     },
 
     handleSocialWorkerClick(socialWorker) {
-      console.log('Social worker clicked', socialWorker)
+      if (this.$route.name.includes('social-worker')) return
       this.$store.dispatch(
         `${this.userRole}/setSelectedSocialWorkerId`,
         socialWorker.id
