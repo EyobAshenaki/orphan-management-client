@@ -6,7 +6,7 @@
       Welcome to CDA's Orphan Management Portal (OMP)
     </p>
     <v-form
-      v-if="nodeEnv === 'production'"
+      v-if="nodeTarget === 'production'"
       ref="loginForm"
       class="tw-mx-auto tw-max-w-lg tw-border tw-rounded tw-p-5 tw-bg-white"
     >
@@ -48,7 +48,7 @@
       <button-dark @click="login">Login</button-dark>
     </v-form>
     <v-card
-      v-if="nodeEnv !== 'production'"
+      v-if="nodeTarget !== 'production'"
       class="tw-mt-3 tw-mx-auto tw-max-w-3xl tw-p-0 tw-bg-amber-50 tw-border-dashed tw-border-emerald-800 tw-rounded-xl"
       elevation="0"
       :loading="loading"
@@ -166,9 +166,12 @@ export default {
     }
   },
   computed: {
-    nodeEnv() {
-      return process.env.NODE_ENV
+    nodeTarget() {
+      return process.env.TARGET
     },
+  },
+  mounted() {
+    console.log(this.nodeTarget)
   },
   methods: {
     login() {

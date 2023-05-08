@@ -31,7 +31,7 @@ ENV PATH="/app/node_modules/.bin:${PATH}"
 
 RUN yarn add vuetify@2.6.10
 
-RUN yarn build
+RUN TARGET=staging yarn build
 
 ENV HOST 0.0.0.0
 EXPOSE 3001
@@ -48,7 +48,7 @@ ENV PATH="/app/node_modules/.bin:${PATH}"
 
 RUN yarn add vuetify@2.6.10
 
-RUN yarn build
+RUN TARGET=production yarn build
 
 ENV HOST 0.0.0.0
 EXPOSE 3000
