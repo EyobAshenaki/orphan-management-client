@@ -5,6 +5,7 @@
     :ripple="false"
     :to="to"
     :disabled="disabled"
+    :loading="disabled || loading"
     @click="$emit('click')"
   >
     <slot> Click Me </slot>
@@ -20,6 +21,10 @@ export default {
       default: '',
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    loading: {
       type: Boolean,
       default: false,
     },

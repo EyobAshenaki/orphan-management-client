@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     class="tw-flex tw-flex-col tw-justify-between tw-px-5"
-    width="280"
+    width="300"
     fixed
     floating
     app
@@ -10,12 +10,12 @@
       <div class="nav-list">
         <div
           id="logo"
-          class="tw-flex tw-items-center tw-border-b-2 tw-border-gray-100 tw-py-6 tw-mb-8"
+          class="tw-flex tw-items-center tw-border-b-2 tw-border-gray-100 tw-py-6 tw-mb-8 tw-font-serif"
         >
           <v-avatar size="50" color="black">
             <v-icon size="20" color="white">CDA</v-icon>
           </v-avatar>
-          <v-card-title class="tw-font-bold tw-text-xl">{{
+          <v-card-title class="tw-break-keep tw-font-bold tw-text-xl">{{
             name
           }}</v-card-title>
         </div>
@@ -45,6 +45,7 @@
 
       <v-list class="tw-flex tw-flex-col tw-gap-1.5">
         <v-list-item
+          v-if="false"
           to="/coordinator/settings"
           router
           exact
@@ -63,6 +64,7 @@
         </v-list-item>
 
         <!-- Logout -->
+        <!-- !todo: call api logout -->
         <v-list-item
           to="/"
           router
@@ -72,7 +74,7 @@
           active-class="tw-text-red-800 tw-bg-red-50"
         >
           <v-list-item-action class="tw-mr-5">
-            <fa-layers class="fa-lg">
+            <fa-layers class="fa-lg fa-rotate-180">
               <fa :icon="['fa', 'arrow-right-from-bracket']" />
             </fa-layers>
           </v-list-item-action>
@@ -96,7 +98,7 @@ export default {
   },
   data() {
     return {
-      name: 'Charity Development Association',
+      name: 'Charity Development Association - OMP',
     }
   },
 }
