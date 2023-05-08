@@ -40,7 +40,7 @@ CMD ["yarn", "start"]
 
 FROM base-builder AS production
 
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 ARG NUXT_API_URL
 
 RUN npm install -g nuxt@2.16.1
