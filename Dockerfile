@@ -40,6 +40,8 @@ CMD ["yarn", "start"]
 
 FROM base-builder AS production
 
+COPY . .
+
 # ENV NODE_ENV=production
 ARG NUXT_API_URL
 
