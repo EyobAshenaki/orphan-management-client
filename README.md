@@ -1,5 +1,5 @@
 # omp
-
+[![Automatic Deployment](https://github.com/abulhuman/omp-client/actions/workflows/ci.yml/badge.svg)](https://github.com/abulhuman/omp-client/actions/workflows/ci.yml)
 ## Build Setup
 
 ```bash
