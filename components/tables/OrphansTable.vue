@@ -145,10 +145,6 @@ export default {
     },
 
     navigateToOrphanDetails(item) {
-      // this.$router.push({
-      //   name: 'orphanDetails',
-      //   params: { id: item.id },
-      // })
       this.$emit('onOrphanDetailClick', item)
     },
 

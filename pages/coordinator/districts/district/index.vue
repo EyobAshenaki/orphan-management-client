@@ -103,7 +103,7 @@ export default {
       this.$router.push({
         name: 'coordinator-districts-district-orphan',
         // Instead of passing the id to the route, we should store it in the vuex store
-        // params: { id: item.id },
+        params: { id: item.id },
       })
     },
   },
