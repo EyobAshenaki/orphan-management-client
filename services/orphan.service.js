@@ -3,6 +3,7 @@ import { graphqlInstance } from '~/helpers/axios.helper'
 import {
   CreateOrphanWithNestedCreate,
   FetchOrphans,
+  FetchOrphan,
   CountOrphans,
   CountGuardians,
 } from '~/graphql/orphan.graphql'
@@ -44,6 +45,21 @@ export async function fetchOrphans(
     })
   )
   if (data) return data.orphans
+
+  throw errors
+}
+
+export async function fetchOrphan(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphan',
+      query: print(FetchOrphan),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
 
   throw errors
 }

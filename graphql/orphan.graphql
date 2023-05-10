@@ -34,6 +34,50 @@ query FetchOrphans(
   }
 }
 
+query FetchOrphan($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    id
+    code
+    name
+    dateOfBirth
+    gender
+    placeOfBirth
+    hobbies
+    religion
+    spokenLanguages
+    village {
+      name
+      district {
+        name
+        zone {
+          name
+          region {
+            name
+          }
+        }
+      }
+    }
+    currentOrphanData {
+      sponsorshipStatus {
+        status
+      }
+    }
+    latestOrphanData {
+      photos {
+        photoPortraitUrl
+      }
+      educationalRecord {
+        id
+      }
+    }
+    father {
+      firstName
+      middleName
+      lastName
+    }
+  }
+}
+
 query CountOrphans(
   $status: SponsorshipStatusEnum
   $villageId: ID

@@ -3,7 +3,7 @@ import { toEnumString } from '~/helpers/app.helpers'
 import { createOrphanWithNestedCreate } from '~/services/orphan.service'
 
 export const state = () => ({
-  activeStep: 1,
+  activeStep: 4,
   totalSteps: 6,
   registrationSteps: [
     {
@@ -555,7 +555,9 @@ export const actions = {
   },
 
   setMotherMaritalStatus({ commit }, payload) {
-    commit('MODIFY_CREATE_MOTHER_INPUT', { maritalStatus: toEnumString(payload) })
+    commit('MODIFY_CREATE_MOTHER_INPUT', {
+      maritalStatus: toEnumString(payload),
+    })
   },
 
   setMotherDateOfBirth({ commit }, payload) {
@@ -674,7 +676,10 @@ export const actions = {
   },
 
   setOrphanPhoto({ commit }, payload) {
-    commit('SET_CREATE_ORPHAN_PHOTO_INPUT', { photoPortraitUrl: payload, photoLongUrl: payload })
+    commit('SET_CREATE_ORPHAN_PHOTO_INPUT', {
+      photoPortraitUrl: payload,
+      photoLongUrl: payload,
+    })
   },
 
   setFatherDeathCertificate({ commit }, payload) {
