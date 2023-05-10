@@ -53,6 +53,7 @@ export default {
 
   env: {
     NUXT_API_URL: process.env.NUXT_API_URL || 'http://localhost:3002',
+    TARGET: process.env.TARGET || 'development',
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Donors"
     :headers="headers"
     :items="donors"
@@ -39,6 +40,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
     }
   },
   computed: {
@@ -60,11 +62,18 @@ export default {
     },
   },
   mounted() {
+    this.loading = true
     this.initialize()
   },
   methods: {
     async initialize() {
-      await this.$store.dispatch('head/fetchDonors')
+      try {
+        await this.$store.dispatch('head/fetchDonors')
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
     handleSearch(value) {
       this.searchValue = value

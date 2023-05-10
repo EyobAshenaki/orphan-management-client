@@ -42,7 +42,10 @@
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="(item, idx) in items" :key="idx">
         <div v-if="tab === 0" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
-          <profile :social-worker="socialWorker" @onVillagesViewAllClick="navigateToVillagesTab" />
+          <profile
+            :social-worker="socialWorker"
+            @onVillagesViewAllClick="navigateToVillagesTab"
+          />
         </div>
 
         <div v-if="tab === 1" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
@@ -85,6 +88,7 @@ export default {
   data() {
     return {
       tab: null,
+      loading: false,
       items: ['Profile', 'Villages', 'Orphans'],
       socialWorker: null,
     }
@@ -97,25 +101,29 @@ export default {
   },
 
   async mounted() {
+    this.loading = true
     await this.initialize()
   },
 
   methods: {
     fullName,
     async initialize() {
-      console.log(`Initialize ${this._name}`)
-      this.socialWorker = await fetchSocialWorker(
-        this.$store.state[`${this.userRole}`].selectedSocialWorkerId
-      )
-      console.log('Social worker: ', this.socialWorker)
+      try {
+        // todo: if this keeps failing, we should stop using the userRole as part of the store as well as the route
+        this.socialWorker = await fetchSocialWorker(
+          this.$store.state[`${this.userRole}`].selectedSocialWorkerId
+        )
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
+      }
     },
     navigateToVillagesTab() {
-      console.log('Go to villages tab ')
       this.tab = 1
     },
-    
+
     navigateToOrphansTab(village) {
-      console.log('Go to orphans tab ', village)
       this.$store.dispatch('coordinator/setSelectedVillageId', village.id)
       this.tab = 2
     },

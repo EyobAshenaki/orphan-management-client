@@ -167,6 +167,10 @@ export async function fetchVillages(
   socialWorkerId = undefined,
   withSocialWorkers = false
 ) {
+  socialWorkerId =
+    typeof socialWorkerId === 'string' && socialWorkerId.length > 0
+      ? socialWorkerId
+      : undefined
   const { data, errors } = await handleGQL(() => {
     return graphqlInstance.post('', {
       operationName: 'FetchVillages',

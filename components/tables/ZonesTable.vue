@@ -1,6 +1,7 @@
 <template>
   <div>
     <table-component
+      :loading="loading"
       title="Zones"
       :headers="headers"
       :items="zones"
@@ -37,6 +38,7 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
+      loading: false,
     }
   },
   computed: {
@@ -68,8 +70,14 @@ export default {
       this.$router.push(`/head/locations/zone`)
     },
     initialize() {
-      if (!this.$store.state.location.selectedRegion) {
-        this.$store.dispatch('location/fetchZones')
+      try {
+        if (!this.$store.state.location.selectedRegion) {
+          this.$store.dispatch('location/fetchZones')
+        }
+      } catch (error) {
+        /* empty */
+      } finally {
+        this.loading = false
       }
     },
   },

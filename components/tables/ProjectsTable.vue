@@ -51,8 +51,8 @@ export default {
     return {
       searchValue: '',
       itemsPerPage: 5,
-      projects: [],
       loading: false,
+      projects: [],
     }
   },
   computed: {
@@ -89,6 +89,17 @@ export default {
       let projects = {}
       try {
         projects = await fetchProjects()
+
+        this.projects = Array.from(projects).map((project) => {
+          return {
+            ...project,
+            coordinatorFullName: `${
+              Array.from(project?.coordinators)[0].user.personalInfo.firstName
+            } ${
+              Array.from(project?.coordinators)[0].user.personalInfo.lastName
+            }`,
+          }
+        })
       } catch (error) {
         if (Array.from(error)[0] instanceof GraphQLError) {
           error.forEach((e) => {
@@ -100,19 +111,9 @@ export default {
           // eslint-disable-next-line no-console
         } else console.error(error)
         throw error
+      } finally {
+        this.loading = false
       }
-
-      this.projects = Array.from(
-        projects
-      ).map((project) => {
-        return {
-          ...project,
-          coordinatorFullName: `${
-            Array.from(project?.coordinators)[0].user.personalInfo.firstName
-          } ${Array.from(project?.coordinators)[0].user.personalInfo.lastName}`,
-        }
-      })
-      this.loading = false
     },
 
     handleSearch(value) {

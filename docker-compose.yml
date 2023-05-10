@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   client:
-    image: abulhuman/omp-client
+    image: abulhuman/omp-client:${IMAGE_TAG:-latest}
     ports:
       - ${PORT:-3000}:3000
     restart: always
