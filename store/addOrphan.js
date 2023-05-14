@@ -398,14 +398,14 @@ export const mutations = {
     if (payload.some((item) => typeof item !== 'object'))
       throw new TypeError('Payload must be an array of objects')
 
-    if (payload.some((item) => !item.documentType))
+    if (payload.some((item) => !item?.documentType))
       throw new TypeError(
         'Payload must be an array of objects with documentType property'
       )
 
     const documents = state.createOrphanInput.documents.map((item) => {
       const newDoc = payload.find(
-        (item2) => item.documentType === item2.documentType
+        (item2) => item?.documentType === item2?.documentType
       )
       return newDoc || item
     })

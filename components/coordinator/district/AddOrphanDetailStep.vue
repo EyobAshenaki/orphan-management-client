@@ -310,7 +310,7 @@ export default {
         return this.$store.getters['addOrphan/getOrphanDetails'].dateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setDateOfBirth', value)
+        this.$store.dispatch('addOrphan/setDateOfBirth', new Date(value).toISOString())
       },
     },
 

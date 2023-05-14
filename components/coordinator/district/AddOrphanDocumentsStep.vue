@@ -216,7 +216,7 @@ export default {
           orphanBirthCertificateDocument,
           orphanIdDocument,
           orphanPassportDocument,
-        ]
+        ].filter((document) => document)
 
         const guardianDocumentUrls = {
           idCardUrl,
