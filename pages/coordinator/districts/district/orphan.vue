@@ -115,7 +115,6 @@ import FamilyInfo from '~/components/global/orphan-detail/FamilyInfo.vue'
 import GuardianInfo from '~/components/global/orphan-detail/GuardianInfo.vue'
 import OtherInfo from '~/components/global/orphan-detail/OtherInfo.vue'
 
-import { orphanFullName, calculateAge } from '~/helpers/app.helpers'
 export default {
   name: 'OrphanPage',
   components: {
@@ -140,34 +139,38 @@ export default {
     }
   },
   computed: {
-    orphan() {
-      return this.$store.getters['orphan/orphanData']
+    orphanDetail() {
+      return this.$store.getters['orphan/orphanDetail']
     },
 
     orphanFullName() {
-      return orphanFullName(this.orphan)
+      const { name, fatherName, grandFatherName } = this.orphanDetail
+      return `${name} ${fatherName} ${grandFatherName}`
     },
 
     orphanCode() {
-      return this.orphan.code?.slice(1)
+      return this.orphanDetail?.code?.slice(1)
     },
 
     orphanStatus() {
-      return this.orphan.currentOrphanData.sponsorshipStatus.status
+      return this.orphanDetail?.status
     },
 
     orphanAddress() {
-      return `${this.orphan.village.district.name}, ${this.orphan.village.name}`
+      const { villageName, districtName } = this.orphanDetail
+      return `${villageName}, ${districtName}`
     },
   },
   mounted() {
     this.initialize()
   },
+
   methods: {
-    initialize() {
+    async initialize() {
+      const orphanId = this.$route.params.id
       console.log(`Initialize ${this._name}`)
-      this.$store.dispatch('orphan/fetchOrphanData', this.$route.params.id)
-      console.log(calculateAge(this.orphan))
+      await this.$store.dispatch('orphan/fetchOrphanDetail', orphanId)
+      await this.$store.dispatch('orphan/fetchOrphanPersonal', orphanId)
     },
   },
 }
