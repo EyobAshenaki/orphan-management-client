@@ -1,6 +1,9 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  router: {
+    middleware: ['auth'],
+  },
   ignore: ['.git/'],
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -49,6 +52,9 @@ export default {
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
     baseURL: '/',
+    axios: {
+      withCredentials: true
+    },
   },
 
   env: {
