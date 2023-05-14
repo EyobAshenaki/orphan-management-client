@@ -10,6 +10,7 @@
 <script>
 import UsersLayout from '~/layouts/users.vue'
 import SideBar from '~/components/layout/SideBar.vue'
+import { layoutGuard } from '~/helpers/auth.helper';
 
 export default {
   name: 'HeadLayout',
@@ -49,6 +50,9 @@ export default {
         },
       ],
     }
+  },
+  beforeMount() {
+    layoutGuard(this)
   },
 }
 </script>

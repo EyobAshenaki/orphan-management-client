@@ -64,14 +64,13 @@
         </v-list-item>
 
         <!-- Logout -->
-        <!-- !todo: call api logout -->
         <v-list-item
-          to="/"
           router
           exact
           :ripple="false"
           class="hover:tw-text-red-800 hover:tw-bg-red-50 tw-rounded-md"
           active-class="tw-text-red-800 tw-bg-red-50"
+          @click="logout"
         >
           <v-list-item-action class="tw-mr-5">
             <fa-layers class="fa-lg fa-rotate-180">
@@ -88,6 +87,8 @@
 </template>
 
 <script>
+import { logout } from '~/services/user.service'
+
 export default {
   name: 'SideBar',
   props: {
@@ -100,6 +101,13 @@ export default {
     return {
       name: 'Charity Development Association - OMP',
     }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('auth/unsetUser')
+      logout()
+      this.$router.push('/')
+    },
   },
 }
 </script>

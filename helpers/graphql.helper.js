@@ -10,6 +10,9 @@ export async function handleGQL(handler, params) {
       if (!response?.data?.data) {
         const { errors } = response.data
         const gqlErrors = Array.from(errors).map((e) => {
+          // todo: handle 401 on all requests
+          // if (e?.extensions?.originalError?.statusCode === 401)
+          //   location.replace('/')
           return new GraphQLError(e.message, {
             extensions: e.extensions,
           })
