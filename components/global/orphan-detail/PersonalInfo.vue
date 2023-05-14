@@ -22,6 +22,7 @@
           dense
           filled
           outlined
+          :readonly="!isEditable"
         ></v-text-field>
       </div>
 
@@ -34,6 +35,7 @@
           required
           class="-tw-mt-1"
           row
+          :readonly="!isEditable"
         >
           <custom-radio
             :class="[gender === 'M' ? 'tw-border-emerald-800' : '']"
@@ -60,6 +62,7 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
 
@@ -74,6 +77,7 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
       </div>
@@ -90,6 +94,7 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
 
@@ -100,6 +105,7 @@
             v-model="dateOfBirth"
             :rules="[rules.required]"
             required
+            :readonly="!isEditable"
           />
         </div>
 
@@ -112,6 +118,7 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
       </div>
@@ -128,13 +135,18 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
 
         <!-- Religion -->
         <div class="form-control">
           <label class="form-label"> Religion </label>
-          <custom-combobox v-model="religion" :items="religions" />
+          <custom-combobox
+            v-model="religion"
+            :items="religions"
+            :readonly="!isEditable"
+          />
         </div>
       </div>
 
@@ -145,6 +157,7 @@
           v-model="spokenLanguages"
           :items="languagesOption"
           :multiple="true"
+          :readonly="!isEditable"
         />
       </div>
 
@@ -176,11 +189,11 @@
 
         <div v-else>
           <div class="tw-flex tw-items-center tw-gap-2">
-            <div v-if="hobbies">
+            <div v-if="hasHobbies">
               <v-chip
                 v-for="(hobby, idx) in hobbies"
                 :key="idx"
-                class="tw-mx-2"
+                class="tw-mx-2 tw-my-1"
                 color="teal darken-3"
                 text-color="white"
                 close
@@ -201,13 +214,17 @@
                 {{ hobby }}
               </v-chip>
             </div>
-            <div v-if="!hobbies" class="form-control tw-w-1/2">
+            <div
+              v-if="!hasHobbies && !xisEditable"
+              class="form-control tw-w-1/2"
+            >
               <v-text-field
                 value="None"
                 color="teal darken-2"
                 dense
                 filled
                 outlined
+                :readonly="!isEditable"
               ></v-text-field>
             </div>
 
@@ -299,7 +316,7 @@ export default {
     },
 
     hobbies() {
-      return this.$store.getters['addOrphan/getOrphanDetails'].hobbies
+      return this.$store.getters['orphan/orphanPersonal'].hobbies
     },
 
     hasHobbies() {
@@ -312,82 +329,82 @@ export default {
 
     code: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].code
+        return this.$store.getters['orphan/orphanPersonal'].code
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setCode', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
 
     gender: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].gender
+        return this.$store.getters['orphan/orphanPersonal'].gender
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGender', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
 
     orphanName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].name
+        return this.$store.getters['orphan/orphanPersonal'].name
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setOrphanName', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
 
     fatherName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].fatherName
+        return this.$store.getters['orphan/orphanPersonal'].fatherName
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setFatherName', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
 
     grandFatherName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].grandFatherName
+        return this.$store.getters['orphan/orphanPersonal'].grandFatherName
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGrandFatherName', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
 
     dateOfBirth: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].dateOfBirth
+        return this.$store.getters['orphan/orphanPersonal'].dateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setDateOfBirth', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
 
     placeOfBirth: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].placeOfBirth
+        return this.$store.getters['orphan/orphanPersonal'].placeOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setPlaceOfBirth', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
 
     religion: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].religion
+        return this.$store.getters['orphan/orphanPersonal'].religion
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setReligion', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
 
     spokenLanguages: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].spokenLanguages
+        return this.$store.getters['orphan/orphanPersonal'].spokenLanguages
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setSpokenLanguages', value)
+        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
       },
     },
   },
@@ -402,11 +419,12 @@ export default {
     },
 
     deleteHobby(hobby) {
-      this.$store.dispatch('addOrphan/deleteHobby', hobby)
+      if (!this.isEditable) return
+      this.$store.commit('orphan/REMOVE_HOBBY', hobby)
     },
 
     addHobby() {
-      this.$store.dispatch('addOrphan/addHobby', this.hobbyValue)
+      this.$store.commit('orphan/ADD_HOBBY', this.hobbyValue)
       this.hobbyValue = ''
       this.closeHobbyField()
     },
@@ -414,11 +432,24 @@ export default {
     cancel() {
       // TODO: show confirmation dialog
       // and if confirmed, reset the store and go back to the previous page
+      if (this.$refs.form.validate()) {
+        this.isEditable = false
+
+        this.$toaster.showToast({
+          content: 'Profile Edit Cancelled',
+          state: 'error',
+        })
+      }
     },
 
     submit() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch('addOrphan/nextStep')
+        this.isEditable = false
+
+        this.$toaster.showToast({
+          content: 'Profile Edited successfully',
+          state: 'success',
+        })
       }
     },
   },
