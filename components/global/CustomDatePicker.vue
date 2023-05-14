@@ -40,6 +40,7 @@
       "
       min="1950-01-01"
       color="teal darken-2"
+      :readonly="readonly"
       @change="save"
     ></v-date-picker>
   </v-menu>
@@ -57,6 +58,10 @@ export default {
     rules: {
       type: Array,
       default: () => [],
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
     },
   },
 

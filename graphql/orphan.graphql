@@ -95,3 +95,194 @@ query CountOrphans(
 query CountGuardians {
   _count_guardians
 }
+
+# Queries for Orphan Details
+
+query FetchOrphanDetail($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    village {
+      name
+      district {
+        name
+      }
+    }
+    latestOrphanData {
+      photos {
+        photoLongUrl
+        photoPortraitUrl
+      }
+    }
+    currentOrphanData {
+      sponsorshipStatus {
+        status
+      }
+    }
+  }
+}
+
+query FetchOrphanPersonal($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    code
+    gender
+    name
+    father {
+      firstName
+      lastName
+    }
+    dateOfBirth
+    placeOfBirth
+    religion
+    spokenLanguages
+    hobbies
+  }
+}
+
+query FetchOrphanEducation($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    latestOrphanData {
+      educationalRecord {
+        enrollmentStatus
+        level
+        year
+        gradeAgeMismatchReason
+        typeOfSchool
+        schoolName
+        reason
+      }
+    }
+  }
+}
+
+query FetchOrphanEducationHistory($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    educationalRecords {
+      id
+      year
+      level
+      typeOfSchool
+      schoolName
+      yearDivision
+      semester
+      quarter
+      totalMark
+      average
+      rank
+      semesterGPA
+      cumulativeGPA
+      reportCard {
+        documentType
+        documentUrl
+      }
+    }
+  }
+}
+
+query FetchOrphanFamily($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    father {
+      dateOfBirth
+      dateOfDeath
+      causeOfDeath
+    }
+    mother {
+      firstName
+      middleName
+      lastName
+      dateOfBirth
+      vitalStatus
+      maritalStatus
+      dateOfBirth
+      causeOfDeath
+      mobileNumber
+    }
+  }
+}
+
+query FetchOrphanGuardian($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    guardian {
+      relationToOrphan
+      gender
+      firstName
+      middleName
+      lastName
+      dateOfBirth
+      nationality
+      mobileNumber
+      telephoneNumber
+    }
+    housing {
+      houseType
+      livingArrangement
+    }
+  }
+}
+
+query FetchOrphanHealthStatus($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    currentOrphanData {
+      healthStatus {
+        psychologicalStatus
+        description
+        document {
+          documentType
+          documentUrl
+        }
+      }
+    }
+  }
+}
+
+query FetchOrphanHealthStatuses($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    healthStatuses {
+      id
+      psychologicalStatus
+      description
+      document {
+        documentType
+        documentUrl
+      }
+    }
+  }
+}
+
+query FetchOrphanPhotos($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    photos {
+      id
+      createdAt
+      photoPortraitUrl
+      photoLongUrl
+    }
+  }
+}
+
+query FetchOrphanLetters($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    letters {
+      id
+      createdAt
+      originalThankyouLetterUrl
+      translatedThankyouLetterUrl
+    }
+  }
+}
+
+query FetchOrphanDocuments($orphanId: ID!) {
+  orphan(id: $orphanId) {
+    documents {
+      id
+      documentType
+      documentUrl
+    }
+    father {
+      deathCertificateUrl
+    }
+    guardian {
+      idCardUrl
+      adoptionCertificateUrl
+      memorandumOfUnderstandingUrl
+    }
+  }
+}

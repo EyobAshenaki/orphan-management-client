@@ -11,6 +11,7 @@
     filled
     outlined
     small-chips
+    :readonly="readonly"
   >
     <template #no-data>
       <div class="tw-text-sm tw-text-gray-600 tw-rounded-md tw-px-2">
@@ -23,7 +24,7 @@
         :key="JSON.stringify(data.item)"
         v-bind="data.attrs"
         :input-value="data.selected"
-        :disabled="data.disabled"
+        :readonly="data.disabled"
         class="combo-chip tw-bg-white"
       >
         <v-avatar class="combo-chip-avatar" left>
@@ -51,6 +52,10 @@ export default {
       required: true,
     },
     multiple: {
+      type: Boolean,
+      default: false,
+    },
+    readonly: {
       type: Boolean,
       default: false,
     },

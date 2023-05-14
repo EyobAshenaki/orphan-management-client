@@ -6,6 +6,18 @@ import {
   FetchOrphan,
   CountOrphans,
   CountGuardians,
+  // OrphanDetails queries
+  FetchOrphanDetail,
+  FetchOrphanPersonal,
+  FetchOrphanEducation,
+  FetchOrphanEducationHistory,
+  FetchOrphanFamily,
+  FetchOrphanGuardian,
+  FetchOrphanHealthStatus,
+  FetchOrphanHealthStatuses,
+  FetchOrphanPhotos,
+  FetchOrphanLetters,
+  FetchOrphanDocuments,
 } from '~/graphql/orphan.graphql'
 import { handleGQL } from '~/helpers/graphql.helper'
 
@@ -87,6 +99,173 @@ export async function countGuardians() {
     })
   )
   if (data) return data._count_guardians
+
+  throw errors
+}
+
+// WQ: Orphan Details
+
+export async function fetchOrphanDetail(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanDetail',
+      query: print(FetchOrphanDetail),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanPersonal(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanPersonal',
+      query: print(FetchOrphanPersonal),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanEducation(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanEducation',
+      query: print(FetchOrphanEducation),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanEducationHistory(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanEducationHistory',
+      query: print(FetchOrphanEducationHistory),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanFamily(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanFamily',
+      query: print(FetchOrphanFamily),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanGuardian(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanGuardian',
+      query: print(FetchOrphanGuardian),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanHealthStatus(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanHealthStatus',
+      query: print(FetchOrphanHealthStatus),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanHealthStatuses(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanHealthStatuses',
+      query: print(FetchOrphanHealthStatuses),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanPhotos(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanPhotos',
+      query: print(FetchOrphanPhotos),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanLetters(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanLetters',
+      query: print(FetchOrphanLetters),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchOrphanDocuments(orphanId = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchOrphanDocuments',
+      query: print(FetchOrphanDocuments),
+      variables: {
+        orphanId,
+      },
+    })
+  )
+  if (data) return data.orphan
 
   throw errors
 }
