@@ -9,8 +9,10 @@ export const state = () => ({
 
 export const getters = {
   userRole: (state) => {
-    if (state.user) {
-      return String(state.user.role).toLowerCase()
+    const { user } = state
+    if (user !== null || user !== undefined) {
+      const role = String(user?.role ?? '').toLowerCase()
+      return role.length > 0 ? role : undefined
     }
     return null
   },
@@ -32,6 +34,11 @@ export const mutations = {
       throw new TypeError('Payload must be a string')
     state.password = payload
   },
+  UNSET_USER(state) {
+    state.user = null
+    state.email = null
+    state.password = null
+  },
 }
 
 export const actions = {
@@ -44,7 +51,7 @@ export const actions = {
   setPassword({ commit }, payload) {
     commit('SET_PASSWORD', payload)
   },
-  async login({ commit, state }) {
+  async login({ commit, state, ...loginRest }) {
     try {
       const user = await login(state.email, state.password)
       commit('SET_USER', user)
@@ -61,5 +68,8 @@ export const actions = {
       } else console.error(error)
       throw error
     }
+  },
+  unsetUser({ commit }) {
+    commit('UNSET_USER')
   },
 }

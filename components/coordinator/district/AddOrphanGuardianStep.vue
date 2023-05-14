@@ -270,7 +270,7 @@ export default {
         return this.$store.getters['addOrphan/getOrphanGuardian'].dateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianDateOfBirth', value)
+        this.$store.dispatch('addOrphan/setGuardianDateOfBirth', new Date(value).toISOString())
       },
     },
 

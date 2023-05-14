@@ -3,7 +3,7 @@ import { toEnumString } from '~/helpers/app.helpers'
 import { createOrphanWithNestedCreate } from '~/services/orphan.service'
 
 export const state = () => ({
-  activeStep: 4,
+  activeStep: 1,
   totalSteps: 6,
   registrationSteps: [
     {
@@ -398,14 +398,14 @@ export const mutations = {
     if (payload.some((item) => typeof item !== 'object'))
       throw new TypeError('Payload must be an array of objects')
 
-    if (payload.some((item) => !item.documentType))
+    if (payload.some((item) => !item?.documentType))
       throw new TypeError(
         'Payload must be an array of objects with documentType property'
       )
 
     const documents = state.createOrphanInput.documents.map((item) => {
       const newDoc = payload.find(
-        (item2) => item.documentType === item2.documentType
+        (item2) => item?.documentType === item2?.documentType
       )
       return newDoc || item
     })
@@ -424,6 +424,105 @@ export const mutations = {
       throw new TypeError('Payload must be an object')
 
     state.createOrphanPhotoInput = payload
+  },
+
+  CLEAR_FORM(state) {
+    state.activeStep = 1
+    state.createOrphanInput = {
+      villageId: undefined,
+      code: undefined,
+      name: undefined,
+      gender: undefined,
+      dateOfBirth: undefined,
+      placeOfBirth: undefined,
+      religion: undefined,
+      spokenLanguages: [],
+      hobbies: [],
+      father: undefined, 
+      mother: undefined, 
+      guardian: undefined,
+      healthStatus: undefined,
+      educationalRecord: undefined,
+      documents: [],
+      housing: undefined,
+      assets: [],
+      photos: undefined,
+    }
+
+    state.createFatherInput = {
+      firstName: undefined,
+      lastName: undefined,
+      dateOfBirth: undefined,
+      dateOfDeath: undefined,
+      causeOfDeath: undefined,
+      deathCertificateUrl: undefined,
+    }
+
+    state.createMotherInput = {
+      firstName: undefined,
+      middleName: undefined,
+      lastName: undefined,
+      dateOfBirth: undefined,
+      dateOfDeath: undefined,
+      causeOfDeath: undefined,
+      vitalStatus: undefined,
+      maritalStatus: undefined,
+    }
+
+    state.createGuardianInput = {
+      firstName: undefined,
+      middleName: undefined,
+      lastName: undefined,
+      gender: undefined,
+      dateOfBirth: undefined,
+      nationality: undefined,
+      monthlyExpense: undefined,
+      relationToOrphan: undefined,
+      mobileNumber: undefined,
+      telephoneNumber: undefined,
+      idCardUrl: undefined,
+      memorandumOfUnderstandingUrl: undefined,
+      adoptionCertificateUrl: undefined,
+    }
+
+    state.createEducationalRecordInput = {
+      enrollmentStatus: undefined,
+      schoolName: undefined,
+      gradeAgeMismatchReason: undefined,
+      level: undefined,
+      reason: undefined,
+      typeOfSchool: undefined,
+      year: undefined,
+      reportCard: {},
+    }
+
+    state.createHealthStatusInput = {
+      psychologicalStatus: undefined,
+      description: undefined,
+    }
+
+    state.createOrphanHousingInput = {
+      livingArrangement: undefined,
+      houseType: undefined,
+    }
+
+    state.createOrphanAssetInput = {
+      name: undefined,
+      description: undefined,
+      amount: undefined,
+      unit: undefined,
+      attachments: [],
+    }
+
+    state.createOrphanDocumentInput = {
+      documentType: undefined,
+      documentUrl: undefined,
+    }
+
+    state.createOrphanPhotoInput = {
+      photoPortraitUrl: undefined,
+      photoLongUrl: undefined,
+    }
   },
 }
 
@@ -732,5 +831,10 @@ export const actions = {
 
   setVillageId({ commit }, payload) {
     commit('SET_VILLAGE_ID', payload)
+  },
+
+  // *** Orphan Form Clear ***
+  clearForm({ commit }) {
+    commit('CLEAR_FORM')
   },
 }

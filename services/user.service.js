@@ -43,7 +43,6 @@ export async function login(email, password) {
   throw errors
 }
 
-// todo:  implement full logout
 export async function logout() {
   const logout = async () => {
     const response = await graphqlInstance.post('', {

@@ -130,6 +130,7 @@
 export default {
   name: 'IndexPage',
   layout: 'default',
+  middleware: false,
   data() {
     return {
       email: '',
