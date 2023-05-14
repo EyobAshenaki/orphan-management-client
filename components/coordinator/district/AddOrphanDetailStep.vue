@@ -189,12 +189,51 @@
       </div>
 
       <div class="tw-flex tw-justify-between tw-mt-8">
+        <v-dialog
+          v-model="cancelConfirmDialog"
+          persistent
+          :overlay="false"
+          max-width="500px"
+          transition="dialog-transition"
+        >
+          <v-card>
+            <v-card-title class="text-h5"
+              >Confirm cancellation. Are you you sure?</v-card-title
+            >
+            <v-divider />
+            <v-card-text
+              >If you cancel orphan registration all the data in the form will
+              be lost.</v-card-text
+            >
+            <v-card-actions>
+              <v-spacer />
+              <button-dark
+                color="red darken-1"
+                text
+                @click="cancelConfirmDialog = false"
+              >
+                No
+              </button-dark>
+              <button-light
+                color="green darken-1"
+                text
+                class="hover:tw-bg-red-700"
+                @click="
+                  cancelConfirmDialog = false
+                  cancel()
+                "
+              >
+                Yes
+              </button-light>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <button-dark
           class="tw-bg-red-800 hover:tw-bg-red-700 tw-rounded-lg tw-py-6 tw-px-5"
-          @click="cancel"
+          @click="showCancelConfirmDialog"
         >
           <fa-layers class="fa-lg">
-            <fa :icon="['fa', 'arrow-left-long']" />
+            <fa :icon="['fa', 'xmark']" />
           </fa-layers>
           <span class="tw-ml-4"> Cancel </span>
         </button-dark>
@@ -244,6 +283,7 @@ export default {
           )
         },
       },
+      cancelConfirmDialog: false,
     }
   },
 
@@ -310,7 +350,10 @@ export default {
         return this.$store.getters['addOrphan/getOrphanDetails'].dateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setDateOfBirth', new Date(value).toISOString())
+        this.$store.dispatch(
+          'addOrphan/setDateOfBirth',
+          new Date(value).toISOString()
+        )
       },
     },
 
@@ -361,9 +404,13 @@ export default {
       this.closeHobbyField()
     },
 
+    showCancelConfirmDialog() {
+      this.cancelConfirmDialog = true
+    },
+
     cancel() {
-      // TODO: show confirmation dialog
-      // and if confirmed, reset the store and go back to the previous page
+      this.$store.dispatch('addOrphan/clearForm')
+      this.$router.back()
     },
 
     submit() {
