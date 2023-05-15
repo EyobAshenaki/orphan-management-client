@@ -33,12 +33,12 @@ export default {
       {
         icon: ['fas', 'timeline'],
         title: 'In-progress Projects',
-        value: await this.countProjects('in-progress'),
+        value: await countProjects('in-progress'),
       },
       {
         icon: ['fas', 'list-check'],
         title: 'Total Projects',
-        value: await this.countProjects(),
+        value: await countProjects(),
       },
       {
         icon: ['fas', 'hands-holding-child'],
@@ -51,11 +51,6 @@ export default {
         value: await countOrphans(),
       },
     ]
-  },
-  methods: {
-    async countProjects(status) {
-      return await countProjects(status)
-    },
   },
 }
 </script>

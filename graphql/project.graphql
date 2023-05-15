@@ -1,10 +1,10 @@
-query Projects {
+query FetchProjects {
   projects {
     ...ProjectFragment
   }
 }
 
-query Project($id: ID!) {
+query FetchProject($id: ID!) {
   project(id: $id) {
     ...ProjectFragment
   }
