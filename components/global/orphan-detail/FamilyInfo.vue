@@ -378,7 +378,15 @@ export default {
     },
   },
 
+  async mounted() {
+    await this.initialize()
+  },
+
   methods: {
+    async initialize() {
+      const orphanId = this.$route.params.id
+      await this.$store.dispatch('orphan/fetchOrphanFamily', orphanId)
+    },
     cancel() {
       this.isEditable = false
 
