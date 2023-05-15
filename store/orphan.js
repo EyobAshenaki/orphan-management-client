@@ -140,7 +140,7 @@ export const mutations = {
     orphanPersonal.fatherName = payload.father?.firstName
     orphanPersonal.grandFatherName = payload.father?.lastName
     orphanPersonal.gender = payload.gender
-    orphanPersonal.dateOfBirth = payload.dateOfBirth
+    orphanPersonal.dateOfBirth = payload.dateOfBirth?.substr(0, 10)
     orphanPersonal.placeOfBirth = payload.placeOfBirth
     orphanPersonal.religion = payload.religion
     orphanPersonal.spokenLanguages = payload.spokenLanguages
@@ -176,16 +176,16 @@ export const mutations = {
   },
 
   SET_ORPHAN_FAMILY({ orphanFamily }, { father, mother }) {
-    orphanFamily.fatherDateOfBirth = father.dateOfBirth
-    orphanFamily.fatherDateOfDeath = father.dateOfDeath
+    orphanFamily.fatherDateOfBirth = father.dateOfBirth?.substr(0, 10)
+    orphanFamily.fatherDateOfDeath = father.dateOfDeath?.substr(0, 10)
     orphanFamily.fatherCauseOfDeath = father.causeOfDeath
     orphanFamily.motherFirstName = mother.firstName
     orphanFamily.motherMiddleName = mother.middleName
     orphanFamily.motherLastName = mother.lastName
-    orphanFamily.motherDateOfBirth = mother.dateOfBirth
+    orphanFamily.motherDateOfBirth = mother.dateOfBirth?.substr(0, 10)
     orphanFamily.motherVitalStatus = mother.vitalStatus
     orphanFamily.motherMaritalStatus = mother.maritalStatus
-    orphanFamily.motherDateOfDeath = mother.dateOfDeath
+    orphanFamily.motherDateOfDeath = mother.dateOfDeath?.substr(0, 10)
     orphanFamily.motherCauseOfDeath = mother.causeOfDeath
     orphanFamily.motherMobileNumber = mother.mobileNumber
   },
@@ -201,7 +201,7 @@ export const mutations = {
     orphanGuardian.firstName = guardian.firstName
     orphanGuardian.middleName = guardian.middleName
     orphanGuardian.lastName = guardian.lastName
-    orphanGuardian.dateOfBirth = guardian.dateOfBirth
+    orphanGuardian.dateOfBirth = guardian.dateOfBirth?.substr(0, 10)
     orphanGuardian.nationality = guardian.nationality
     orphanGuardian.mobileNumber = guardian.mobileNumber
     orphanGuardian.telephoneNumber = guardian.telephoneNumber
