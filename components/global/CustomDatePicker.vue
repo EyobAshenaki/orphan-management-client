@@ -3,6 +3,7 @@
     ref="menu"
     v-model="menu"
     :close-on-content-click="false"
+    :return-value.sync="date"
     transition="scale-transition"
     offset-y
     min-width="auto"
@@ -67,15 +68,22 @@ export default {
 
   data: () => ({
     activePicker: null,
-    date: null,
+    // date: null,
     menu: false,
   }),
+  computed: {
+    date: {
+      get() {
+        return this.$attrs.value
+      },
+      set(val) {
+        this.$emit('input', val)
+      },
+    },
+  },
   watch: {
     menu(val) {
       val && setTimeout(() => (this.activePicker = 'YEAR'))
-    },
-    date(val) {
-      this.$emit('input', val)
     },
   },
   methods: {
