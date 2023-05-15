@@ -312,7 +312,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].relationToOrphan
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           relationToOrphan: value,
         })
       },
@@ -323,7 +323,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].gender
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', { gender: value })
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', { gender: value })
       },
     },
 
@@ -332,7 +332,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].firstName
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           firstName: value,
         })
       },
@@ -343,7 +343,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].middleName
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           middleName: value,
         })
       },
@@ -354,7 +354,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].lastName
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           lastName: value,
         })
       },
@@ -365,7 +365,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].dateOfBirth
       },
       set(value) {
-        this.$store.dispatch('orphan/setGuardianDateOfBirth', {
+        this.$store.commit('orphan/setGuardianDateOfBirth', {
           dateOfBirth: new Date(value).toISOString(),
         })
       },
@@ -376,7 +376,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].nationality
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           nationality: value,
         })
       },
@@ -387,7 +387,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].monthlyExpense
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           monthlyExpense: value,
         })
       },
@@ -398,7 +398,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].mobileNumber
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           mobileNumber: value,
         })
       },
@@ -409,7 +409,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].telephoneNumber
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           telephoneNumber: value,
         })
       },
@@ -422,7 +422,7 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].livingArrangement
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           livingArrangement: value,
         })
       },
@@ -433,14 +433,22 @@ export default {
         return this.$store.getters['orphan/orphanGuardian'].houseType
       },
       set(value) {
-        this.$store.dispatch('orphan/MODIFY_ORPHAN_GUARDIAN', {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
           houseType: value,
         })
       },
     },
   },
 
+  async mounted() {
+    await this.initialize()
+  },
+
   methods: {
+    async initialize() {
+      const orphanId = this.$route.params.id
+      await this.$store.dispatch('orphan/fetchOrphanGuardian', orphanId)
+    },
     back() {
       this.isEditable = false
 

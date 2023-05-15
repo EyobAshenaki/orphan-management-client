@@ -243,6 +243,7 @@
         </div>
       </div>
 
+      <!-- Action Buttons -->
       <div v-if="isEditable" class="tw-flex tw-justify-between tw-mt-8">
         <button-dark
           class="tw-bg-red-800 hover:tw-bg-red-700 tw-rounded-lg tw-py-6 tw-px-5"
