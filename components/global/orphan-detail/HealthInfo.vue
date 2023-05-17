@@ -144,7 +144,7 @@ import ButtonLight from '~/components/global/ButtonLight.vue'
 import * as orphanPsychologicalStatusOptions from '~/helpers/psychologicalStatusOptions.json'
 
 export default {
-  name: 'OrphanDetailStep',
+  name: 'HealthInfo',
   components: {
     AddOrphanAssetComponent,
     ButtonDark,

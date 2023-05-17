@@ -282,7 +282,7 @@ import * as ethiopianLanguages from '~/helpers/commonEthiopianLanguages.json'
 import * as ethiopianReligions from '~/helpers/commonEthiopianReligions.json'
 
 export default {
-  name: 'PersonalInfo',
+  name: 'PersonalInfoTab',
   components: { ButtonDark, ButtonLight, CustomRadio, CustomCombobox },
 
   data() {

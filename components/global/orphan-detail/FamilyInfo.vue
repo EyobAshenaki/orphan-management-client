@@ -205,7 +205,7 @@ import CustomDatePicker from '~/components/global/CustomDatePicker.vue'
 import CustomRadio from '~/components/global/CustomRadio.vue'
 
 export default {
-  name: 'OrphanDetailStep',
+  name: 'FamilyInfoTab',
   components: {
     ButtonDark,
     ButtonLight,

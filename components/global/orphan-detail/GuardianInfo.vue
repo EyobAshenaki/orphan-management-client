@@ -254,7 +254,7 @@ import * as relationToOrphanOptions from '~/helpers/relationToOrphanOptions.json
 import * as orphanLivingArrangements from '~/helpers/livingArrangements.json'
 
 export default {
-  name: 'OrphanDetailStep',
+  name: 'PersonalInfoTab',
   components: {
     ButtonDark,
     ButtonLight,
