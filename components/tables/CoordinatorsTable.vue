@@ -24,7 +24,9 @@
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
-import { calculateAge } from '~/helpers/app.helpers'
+import { fetchCoordinators } from '~/services/user.service'
+import { calculateAge, fullName } from '~/helpers/app.helper'
+
 export default {
   name: 'ZonesTable',
 
@@ -37,6 +39,7 @@ export default {
       searchValue: '',
       itemsPerPage: 5,
       loading: false,
+      coordinators: [],
     }
   },
   computed: {
@@ -53,13 +56,13 @@ export default {
           value: 'age',
         },
         { text: 'Mobile Number', value: 'mobileNumber' },
-        { text: 'Project count', value: 'noOfProjects' },
+        { text: 'Project count', value: '_count_projects' },
         {
           text: 'Zone count',
 
-          value: 'noOfZones',
+          value: '_count_zones',
         },
-        { text: 'Orphan count', value: 'noOfOrphans' },
+        { text: 'Orphan count', value: '_count_orphans' },
       ]
     },
 
@@ -67,7 +70,7 @@ export default {
       return this.$route.path === '/head/coordinators'
     },
 
-    coordinators() {
+    __coordinators() {
       if (this.isOnHeadCoordinatorsPage) {
         return this.$store.state.head.coordinators.map((coordinator) => {
           return {
@@ -167,11 +170,18 @@ export default {
     this.initialize()
   },
   methods: {
-    initialize() {
-      if (this.isOnHeadCoordinatorsPage) {
-        this.$store.dispatch('head/fetchCoordinators')
-      }
-    this.loading = false
+    async initialize() {
+      try {
+        this.coordinators = (await fetchCoordinators()).map((coordinator) => ({
+          ...coordinator,
+          fullName: fullName(coordinator.user.personalInfo),
+          gender: coordinator.user.personalInfo.gender ?? 'N/A',
+          age: calculateAge(coordinator.user.personalInfo.dateOfBirth),
+          mobileNumber: coordinator.user.personalInfo.mobileNumber ?? 'N/A',
+        }))
+      } catch (error) {}
+
+      this.loading = false
     },
 
     handleSearch(value) {

@@ -11,7 +11,9 @@
     @onItemsPerPage="handleItemsPerPage"
   >
     <template #title-button>
-      <button-light to="/coordinator/projects/project/add-payment">
+      <button-light
+        :to="`/projects/project/add-payment?=supportPlanId=${$route.query.supportPlanId}`"
+      >
         <span>Add Payment</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
@@ -71,8 +73,12 @@ export default {
     headers() {
       return [
         {
-          text: 'Payment Period',
+          text: 'Start Date',
           align: 'start',
+          value: 'startDate',
+        },
+        {
+          text: 'Payment Period',
           value: 'paymentPeriodInMonths',
         },
         {
@@ -110,9 +116,12 @@ export default {
   methods: {
     async initialize() {
       try {
-        this.payments = await fetchPayments(
-          this.$store.state.coordinator.selectedSupportPlan.id
-        )
+        this.payments = (
+          await fetchPayments(this.$route.query.supportPlanId)
+        ).map((payment) => ({
+          ...payment,
+          startDate: new Date(payment?.startDate).toLocaleDateString(),
+        }))
       } catch (error) {
         /* empty */
       } finally {

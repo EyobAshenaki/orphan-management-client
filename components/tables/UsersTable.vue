@@ -1,5 +1,6 @@
 <template>
   <table-component
+    :loading="loading"
     title="Users"
     :headers="headers"
     :items="items"
@@ -15,7 +16,7 @@
     </template>
     <template #title-button>
       <button-light
-        to="/admin/users/add-user"
+        to="/users/add-user"
         class="tw-border tw-border-emerald-600"
       >
         <span>Add User</span>
@@ -24,14 +25,14 @@
         </fa-layers>
       </button-light>
     </template>
-    <template #no-data>
+    <!-- <template #no-data>
       <div
         class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full"
       >
         <div class="tw-text-2xl tw-font-bold tw-text-gray-500">No data</div>
         <div class="tw-text-gray-500">No data to display</div>
       </div>
-    </template>
+    </template> -->
   </table-component>
 </template>
 
@@ -46,6 +47,10 @@ export default {
     items: {
       type: Array,
       default: () => [],
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -65,7 +70,7 @@ export default {
         },
         {
           text: 'Phone Number',
-          value: 'personalInfo.phoneNumber',
+          value: 'phoneNumber',
         },
       ],
       searchValue: '',

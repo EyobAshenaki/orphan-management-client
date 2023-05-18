@@ -57,14 +57,12 @@ export async function logout() {
 }
 
 export async function fetchUsers() {
-  const fetchUsers = async () => {
-    const response = await graphqlInstance.post('', {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
       operationName: 'FetchUsers',
       query: print(FetchUsers),
     })
-    return response
-  }
-  const { data, errors } = await handleGQL(fetchUsers)
+  )
   if (data) return data.users
   throw errors
 }

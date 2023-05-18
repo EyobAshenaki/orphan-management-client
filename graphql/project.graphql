@@ -1,6 +1,7 @@
 query FetchProjects {
   projects {
     ...ProjectFragment
+    _count_supportPlans
   }
 }
 

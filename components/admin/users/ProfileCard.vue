@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { calculateAge } from '~/helpers/app.helpers'
+import { calculateAge } from '~/helpers/app.helper'
 export default {
   name: 'UserProfileCard',
   props: {

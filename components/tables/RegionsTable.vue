@@ -13,8 +13,8 @@
       <template #top-right>
         <search-field @onSearch="handleSearch($event)" />
       </template>
-      <template #title-button>
-        <button-light to="/head/locations/region/add-region">
+      <template v-if="userRole === 'head'" #title-button>
+        <button-light :to="`/locations/add-region`">
           <span>Add Region</span>
           <fa-layers class="tw-ml-2">
             <fa :icon="['fa', 'plus']" />
@@ -26,7 +26,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import TableComponent from '../global/TableComponent.vue'
+import { fetchRegions } from '~/services/location.service'
 export default {
   name: 'RegionsTable',
   components: {
@@ -39,6 +41,7 @@ export default {
       searchValue: '',
       itemsPerPage: 5,
       loading: false,
+      regions: [],
     }
   },
   computed: {
@@ -50,11 +53,27 @@ export default {
           align: 'left',
           sortable: true,
         },
+        {
+          text: 'Zones Count',
+          value: '_count_zones',
+        },
+        {
+          text: 'Districts Count',
+          value: '_count_districts',
+        },
+        {
+          text: 'Villages Count',
+          value: '_count_villages',
+        },
+        {
+          text: 'Orphans Count',
+          value: '_count_orphans',
+        },
       ]
     },
-    regions() {
-      return this.$store.state.location.regions
-    },
+    ...mapGetters({
+      userRole: 'auth/userRole',
+    }),
   },
   mounted() {
     this.loading = true
@@ -66,11 +85,14 @@ export default {
     },
     navigateToRegion(selectedRegion) {
       this.$store.commit('location/SET_SELECTED_REGION', selectedRegion)
-      this.$router.push(`/head/locations/region`)
+      this.$router.push({
+        name: 'locations-regionId',
+        params: { regionId: selectedRegion.id },
+      })
     },
     async initialize() {
       try {
-        await this.$store.dispatch('location/fetchRegions')
+        this.regions = await fetchRegions()
       } catch (error) {
         /* empty */
       } finally {

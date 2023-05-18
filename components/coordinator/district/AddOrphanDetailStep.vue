@@ -217,7 +217,7 @@
               <button-light
                 color="green darken-1"
                 text
-                class="hover:tw-bg-red-700"
+                class="hover:tw-bg-red-700 hover:tw-text-white"
                 @click="
                   cancelConfirmDialog = false
                   cancel()

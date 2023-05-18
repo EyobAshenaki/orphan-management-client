@@ -10,8 +10,11 @@
     @onDoubleClickRow="navigateToPayments($event)"
     @onItemsPerPage="handleItemsPerPage"
   >
+    <!-- v-if="userRole === 'coordinator'" -->
     <template #title-button>
-      <button-light to="/coordinator/projects/project/add-support-plan">
+      <button-light
+        :to="`/projects/project/add-support-plan?projectId=${$route.query.projectId}`"
+      >
         <span>Add Support Plan</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
@@ -41,7 +44,7 @@
 
 <script>
 import { GraphQLError } from 'graphql'
-import { fetchSupportPlansByProjectId } from '~/services/project.service'
+import { fetchSupportPlans } from '~/services/support.service'
 
 export default {
   name: 'SupportPlanTable',
@@ -55,6 +58,9 @@ export default {
     }
   },
   computed: {
+    userRole() {
+      return this.$store.getters['auth/userRole']
+    },
     headers() {
       return [
         {
@@ -72,9 +78,6 @@ export default {
         { text: 'Orphans Count', value: 'orphansCount' },
       ]
     },
-    isOnHeadProjectsPage() {
-      return this.$route.path === '/head/projects/project'
-    },
   },
   mounted() {
     this.loading = true
@@ -82,12 +85,10 @@ export default {
   },
   methods: {
     async initialize() {
-      let rawSupportPlans = []
-
       try {
-        rawSupportPlans = await fetchSupportPlansByProjectId(
-          this.$store.state.coordinator.selectedProjectId
-        )
+        this.supportPlans = [
+          ...(await fetchSupportPlans(this.$route.query.projectId)),
+        ]
       } catch (error) {
         if (Array.from(error)[0] instanceof GraphQLError) {
           error.forEach((e) => {
@@ -102,7 +103,6 @@ export default {
       } finally {
         this.loading = false
       }
-      this.supportPlans = rawSupportPlans ? Array.from(rawSupportPlans) : []
     },
 
     handleSearch(value) {

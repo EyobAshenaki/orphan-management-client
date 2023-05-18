@@ -147,7 +147,7 @@ query ProjectOrphans($filter: ProjectOrphanArgs!) {
   }
 }
 
-query SupportPlansByProjectId($projectId: ID!) {
+query FetchSupportPlans($projectId: ID!) {
   supportPlans(projectId: $projectId) {
     ...SupportPlanFragment
     _count_orphans
@@ -157,10 +157,16 @@ query SupportPlansByProjectId($projectId: ID!) {
   }
 }
 
-query SupportPlan($id: ID!) {
+query FetchSupportPlan($id: ID!) {
   supportPlan(id: $id) {
     ...SupportPlanFragment
     _count_orphans
+    donor {
+      nameInitials
+    }
+    project {
+      number
+    }
     orphans {
       id
       name
@@ -260,5 +266,37 @@ mutation CreateManyIndividualPayments(
 ) {
   createManyIndividualPayments(input: { individualPaymentsInputs: $input }) {
     ...IndividualPaymentFragment
+    payment {
+      paymentPeriodInMonths
+    }
+    orphan {
+      id
+      name
+      code
+      gender
+      dateOfBirth
+      accountNumber
+      father {
+        id
+        firstName
+        middleName
+        lastName
+      }
+      guardian {
+        id
+        firstName
+        middleName
+        lastName
+      }
+      village {
+        name
+        district {
+          name
+          zone {
+            name
+          }
+        }
+      }
+    }
   }
 }

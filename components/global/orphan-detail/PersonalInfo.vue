@@ -275,7 +275,7 @@ import ButtonLight from '~/components/global/ButtonLight.vue'
 import CustomCombobox from '~/components/global/CustomCombobox.vue'
 import CustomRadio from '~/components/global/CustomRadio.vue'
 
-import { calculateAge } from '~/helpers/app.helpers'
+import { calculateAge } from '~/helpers/app.helper'
 
 import * as ethiopianLanguages from '~/helpers/commonEthiopianLanguages.json'
 import * as ethiopianReligions from '~/helpers/commonEthiopianReligions.json'

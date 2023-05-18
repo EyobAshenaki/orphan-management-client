@@ -24,35 +24,35 @@ export default {
     return {
       items: [
         {
-          icon: ['fas', 'house'],
-          title: 'Home',
-          to: '/head',
+          icon: ['fas', 'gauge'],
+          title: 'Dashboard',
+          to: '/dashboard',
         },
         {
           icon: ['fas', 'hand-holding-dollar'],
           title: 'Donors',
-          to: '/head/donors',
+          to: '/donors',
         },
         {
           icon: ['fas', 'map'],
           title: 'Locations',
-          to: '/head/locations',
+          to: '/locations',
         },
         {
           icon: ['fas', 'diagram-project'],
           title: 'Projects',
-          to: '/head/projects',
+          to: '/projects',
         },
         {
           icon: ['fas', 'people-roof'],
           title: 'Coordinators',
-          to: '/head/coordinators',
+          to: '/coordinators',
         },
       ],
     }
   },
   beforeMount() {
-    layoutGuard(this)
+    layoutGuard(this, 'head')
   },
 }
 </script>

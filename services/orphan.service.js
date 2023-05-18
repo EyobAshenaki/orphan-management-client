@@ -76,13 +76,14 @@ export async function fetchOrphan(orphanId = null) {
   throw errors
 }
 
-export async function countOrphans(status = null) {
+export async function countOrphans(status = null, districtId = null) {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
       operationName: 'CountOrphans',
       query: print(CountOrphans),
       variables: {
         status,
+        districtId,
       },
     })
   )

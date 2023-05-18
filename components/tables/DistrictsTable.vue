@@ -54,8 +54,10 @@
       </div>
     </template>
 
-    <template v-if="isOnHeadLocationsZone" #title-button>
-      <button-light to="/head/locations/district/add-district">
+    <template v-if="userRole === 'head'" #title-button>
+      <button-light
+        :to="`/locations/${$route.params.regionId}/${$route.params.zoneId}/add-district`"
+      >
         <span>Add District</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
@@ -70,6 +72,7 @@
 </template>
 
 <script>
+import { GraphQLError } from 'graphql'
 import TableComponent from '../global/TableComponent.vue'
 import { fetchDistricts } from '~/services/location.service'
 export default {
@@ -82,6 +85,10 @@ export default {
     isOnProject: {
       type: Boolean,
       default: false,
+    },
+    zoneId: {
+      type: String,
+      default: undefined,
     },
   },
 
@@ -105,15 +112,11 @@ export default {
           value: 'name',
         },
         { text: 'Projects', value: 'districtProjects' },
-        !this.isOnHeadLocationsZone
-          ? {
-              text: 'Zone',
-              value: 'zoneName',
-            }
-          : {},
-        !this.isOnHeadLocationsZone
-          ? { text: 'Region', value: 'regionName' }
-          : {},
+        {
+          text: 'Zone',
+          value: 'zoneName',
+        },
+        { text: 'Region', value: 'regionName' },
         {
           text: 'Village count',
 
@@ -124,10 +127,11 @@ export default {
           text: 'Social Workers',
           value: 'districtSocialWorkers',
         },
-      ].filter((header) => Object.keys(header).length !== 0)
+      ]
     },
     isOnHeadLocationsZone() {
-      return this.$route.name === 'head-locations-zone'
+      // todo: remove this later
+      return this.userRole === 'head' && this.$route.params.zoneId
     },
   },
   async mounted() {
@@ -139,9 +143,7 @@ export default {
       try {
         this.districts = (
           await fetchDistricts(
-            this.isOnHeadLocationsZone
-              ? this.$store.state.location.selectedZone.id
-              : undefined,
+            this.userRole === 'head' ? this.$route.params.zoneId : undefined,
             this.isOnProject
               ? this.$store.state[`${this.userRole}`].selectedProjectId
               : undefined
@@ -165,7 +167,15 @@ export default {
           }
         })
       } catch (error) {
-        console.error(error)
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.log(error)
       } finally {
         this.loading = false
       }
@@ -176,18 +186,16 @@ export default {
     },
 
     navigateToDistrict(selectedDistrict) {
-      if (this.isOnHeadLocationsZone) {
+      if (this.userRole === 'head') {
         // todo: refactor this
-        this.$store.commit('location/SET_SELECTED_DISTRICT', selectedDistrict)
-        this.$router.push('/head/locations/district')
-      } else {
-        this.$store.dispatch(
-          'coordinator/setSelectedDistrictId',
-          selectedDistrict.id
-        )
         this.$router.push({
-          name: 'coordinator-districts-district',
-          // change selected project state using the item argument
+          name: 'locations-regionId-zoneId-districtId',
+          params: { districtId: selectedDistrict.id },
+        })
+      } else {
+        this.$router.push({
+          name: 'districts-districtId',
+          params: { districtId: selectedDistrict.id },
         })
       }
     },
@@ -220,12 +228,12 @@ export default {
     },
 
     handleSocialWorkerClick(socialWorker) {
+      if (!socialWorker) return
       if (this.$route.name.includes('social-worker')) return
-      this.$store.dispatch(
-        `${this.userRole}/setSelectedSocialWorkerId`,
-        socialWorker.id
-      )
-      this.$router.push(`/${this.userRole}/social-workers/social-worker`)
+      this.$router.push({
+        name: 'social-workers-socialWorkerId',
+        params: { socialWorkerId: socialWorker.id },
+      })
     },
   },
 }

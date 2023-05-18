@@ -2,9 +2,13 @@ import { print } from 'graphql'
 import { graphqlInstance } from '~/helpers/axios.helper'
 import { handleGQL } from '~/helpers/graphql.helper'
 import {
-  Regions,
+  FetchRegions,
+  FetchRegion,
+  CountRegions,
   CreateRegion,
-  Zones,
+  FetchZones,
+  FetchZone,
+  CountZones,
   CreateZone,
   FetchDistricts,
   FetchDistrict,
@@ -16,16 +20,39 @@ import {
 } from '~/graphql/location.graphql'
 
 export async function fetchRegions() {
-  const fetchRegions = async () => {
-    const response = await graphqlInstance.post('', {
-      operationName: 'Regions',
-      query: print(Regions),
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchRegions',
+      query: print(FetchRegions),
     })
-    return response
-  }
-
-  const { data, errors } = await handleGQL(fetchRegions)
+  )
   if (data) return data.regions
+  throw errors
+}
+
+export async function fetchRegion(id = undefined) {
+  if (!id) return
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchRegion',
+      query: print(FetchRegion),
+      variables: {
+        id,
+      },
+    })
+  )
+  if (data) return data.region
+  throw errors
+}
+
+export async function countRegions() {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'CountRegions',
+      query: print(CountRegions),
+    })
+  )
+  if (data) return data._count_regions
   throw errors
 }
 
@@ -55,8 +82,8 @@ export async function createRegion(regionInput) {
 export async function fetchZones(regionId = undefined) {
   const fetchZones = async (regionId = undefined) => {
     const response = await graphqlInstance.post('', {
-      operationName: 'Zones',
-      query: print(Zones),
+      operationName: 'FetchZones',
+      query: print(FetchZones),
       variables: {
         regionId,
       },
@@ -66,6 +93,41 @@ export async function fetchZones(regionId = undefined) {
 
   const { data, errors } = await handleGQL(fetchZones, regionId)
   if (data) return data.zones
+  throw errors
+}
+
+export async function fetchZone(id = undefined) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchZone',
+      query: print(FetchZone),
+      variables: {
+        id,
+      },
+    })
+  )
+  if (data) return data.zone
+  throw errors
+}
+/**
+ * Count zones by regionId
+ * If regionId is undefined, count all zones
+ * @param {string} regionId
+ * @returns `Zone[]`
+ * @throws `GraphQLError[]`
+ * @throws `Error`
+ */
+export async function countZones(regionId = undefined) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'CountZones',
+      query: print(CountZones),
+      variables: {
+        regionId,
+      },
+    })
+  )
+  if (data) return data._count_zones
   throw errors
 }
 

@@ -2,7 +2,7 @@ import { GraphQLError } from 'graphql'
 import { fetchCoordinators, fetchUsers } from '~/services/user.service'
 import {
   fetchProjects,
-  fetchSupportPlansByProjectId,
+  fetchSupportPlans,
   createProject,
 } from '~/services/project.service'
 import {
@@ -108,7 +108,7 @@ export const actions = {
   },
 
   async setSelectedProject({ commit }, project) {
-    project.supportPlans = await fetchSupportPlansByProjectId(project.id)
+    project.supportPlans = await fetchSupportPlans(project.id)
     commit('SET_SELECTED_PROJECT', project)
   },
 

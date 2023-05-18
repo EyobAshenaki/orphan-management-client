@@ -51,7 +51,7 @@
 <script>
 import TableComponent from '../global/TableComponent.vue'
 import { fetchOrphans } from '~/services/orphan.service'
-import { orphanFullName, calculateAge } from '~/helpers/app.helpers'
+import { orphanFullName, calculateAge } from '~/helpers/app.helper'
 export default {
   name: 'OrphansTable',
 

@@ -25,6 +25,7 @@
 
 <script>
 import startCase from 'lodash.startcase'
+import isUUID from 'validator/lib/isUUID'
 
 export default {
   name: 'NewCustomBreadcrumb',
@@ -37,7 +38,12 @@ export default {
           to: breadcrumbArray[idx - 1]
             ? breadcrumbArray[idx - 1].to + '/' + path
             : '/' + path,
-          title: idx === 0 ? 'Home' : startCase(path),
+          title:
+            idx === 0
+              ? 'Home'
+              : isUUID(path)
+              ? String(path).split('-')[0]
+              : startCase(path),
           disabled: idx === pathArray.length - 1,
         })
         return breadcrumbArray

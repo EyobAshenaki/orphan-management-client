@@ -45,8 +45,10 @@
       </v-tooltip>
     </template>
 
-    <template v-if="isOnHeadLocationsDistrict" #title-button>
-      <button-light to="/head/locations/village/add-village">
+    <template v-if="userRole === 'head'" #title-button>
+      <button-light
+        :to="`/locations/${$route.params.regionId}/${$route.params.zoneId}/${$route.params.districtId}/add-village`"
+      >
         <span>Add Village</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
@@ -61,6 +63,7 @@
 </template>
 
 <script>
+import { GraphQLError } from 'graphql'
 import TableComponent from '../global/TableComponent.vue'
 import { fetchVillages } from '~/services/location.service'
 export default {
@@ -79,25 +82,7 @@ export default {
     }
   },
   computed: {
-    isOnHeadLocationsDistrict() {
-      return this.$route.name === 'head-locations-district'
-    },
     headers() {
-      if (this.isOnHeadLocationsDistrict) {
-        return [
-          {
-            text: 'Village Name',
-            align: 'start',
-            value: 'name',
-          },
-          { text: 'Orphan count', value: 'noOfOrphans' },
-          // {
-          //   text: 'Social Worker',
-          //   value: 'villageSocialWorker',
-          // },
-          // { text: 'Projects', value: 'districtProjects' },
-        ]
-      }
       return [
         {
           text: 'Village Name',
@@ -105,7 +90,7 @@ export default {
           value: 'name',
         },
         { text: 'District', value: 'districtName' },
-        { text: 'Orphan count', value: 'noOfOrphans' },
+        { text: 'Orphan count', value: '_count_orphans' },
         {
           text: 'Social Worker',
           value: 'villageSocialWorker',
@@ -123,43 +108,32 @@ export default {
   methods: {
     async initialize() {
       try {
-        if (this.isOnHeadLocationsDistrict) {
-          this.villages = Array.from(
-            this.$store.state.location.selectedDistrict?.villages
-          ).map((village) => {
-            const noOfOrphans = village?._count_orphans
-            const villageSocialWorkers = Array.from(
-              this.$store.state.location.selectedDistrict?.socialWorkers
-            ).map((socialWorker) => ({
-              firstName: socialWorker.user.personalInfo.firstName,
-              lastName: socialWorker.user.personalInfo.lastName,
-            }))
-            return {
-              ...village,
-              id: village.id,
-              name: village.name,
-              noOfOrphans: noOfOrphans ?? 0,
-              villageSocialWorker: villageSocialWorkers[0] ?? {
-                firstName: 'John',
-                lastName: 'Doe',
-              },
-            }
-          })
-        } else
-          this.villages = (
-            await fetchVillages(
-              this.$store.state.coordinator.selectedDistrictId,
-              this.$store.state.coordinator.selectedSocialWorkerId,
-              true
-            )
-          ).map((village) => ({
+        this.villages = (
+          await fetchVillages(
+            this.$route.params.districtId ?? null,
+            this.$route.params.socialWorkerId ?? null,
+            true
+          )
+        ).map((village) => {
+          const villageSocialWorkers = village?.socialWorkers
+          return {
             ...village,
-            noOfOrphans: village._count_orphans,
-            villageSocialWorker: village.socialWorkers[0],
+            id: village.id,
+            name: village.name,
             districtName: village.district.name,
-          }))
+            villageSocialWorker: villageSocialWorkers[0],
+          }
+        })
       } catch (error) {
-        /* empty */
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.log(error)
       } finally {
         this.loading = false
       }
@@ -189,12 +163,12 @@ export default {
     },
 
     handleSocialWorkerClick(socialWorker) {
+      if (!socialWorker) return
       if (this.$route.name.includes('social-worker')) return
-      this.$store.dispatch(
-        `${this.userRole}/setSelectedSocialWorkerId`,
-        socialWorker.id
-      )
-      this.$router.push(`/${this.userRole}/social-workers/social-worker`)
+      this.$router.push({
+        name: 'social-workers-socialWorkerId',
+        params: { socialWorkerId: socialWorker.id },
+      })
     },
   },
 }

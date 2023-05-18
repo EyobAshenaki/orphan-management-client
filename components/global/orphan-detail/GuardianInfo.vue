@@ -193,7 +193,7 @@ import ButtonLight from '~/components/global/ButtonLight.vue'
 import CustomDatePicker from '~/components/global/CustomDatePicker.vue'
 import CustomRadio from '~/components/global/CustomRadio.vue'
 
-import { calculateAge } from '~/helpers/app.helpers'
+import { calculateAge } from '~/helpers/app.helper'
 
 import * as eastAfricanCountries from '~/helpers/eastAfricanCountries.json'
 import * as relationToOrphanOptions from '~/helpers/relationToOrphanOptions.json'
@@ -299,7 +299,10 @@ export default {
         return this.$store.getters['addOrphan/getOrphanGuardian'].dateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianDateOfBirth', new Date(value).toISOString())
+        this.$store.dispatch(
+          'addOrphan/setGuardianDateOfBirth',
+          new Date(value).toISOString()
+        )
       },
     },
 
