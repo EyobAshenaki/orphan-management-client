@@ -147,7 +147,7 @@
         :show="showPostSaveDialog"
         :item-name="projectNumber"
         item-type="Project"
-        no-route="/head/projects"
+        no-route="/projects"
         @redoActionDeclined="showPostSaveDialog = false"
       />
     </v-card-text>
@@ -155,6 +155,7 @@
 </template>
 
 <script>
+import { GraphQLError } from 'graphql'
 import moment from 'moment'
 import PostSaveDialog from '~/components/global/dialogs/PostSaveDialog.vue'
 import { handleUrlUpload } from '~/helpers/upload.helper'
@@ -163,6 +164,7 @@ import {
   fetchRegions,
   fetchZones,
 } from '~/services/location.service'
+import { createProject } from '~/services/project.service'
 export default {
   name: 'AddRegion',
   components: {
@@ -268,16 +270,24 @@ export default {
       }
       this.projectNumber = this.number
       try {
-        await this.$store.dispatch('head/createProject', createProjectInput)
+        await createProject(createProjectInput)
         this.$toaster.showToast({
           content: 'Project created successfully',
           state: 'success',
         })
         this.reset()
-        this.$router.back()
-      } catch (e) {
-        /* empty */
-      } // grounding the error
+        // this.$router.back()
+      } catch (error) {
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.error(error)
+      }
     },
     reset() {
       this.showPostSaveDialog = true

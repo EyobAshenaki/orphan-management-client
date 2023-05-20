@@ -207,7 +207,7 @@
         :show="showPostSaveDialog"
         :item-name="donorCompanyName"
         item-type="Donor"
-        no-route="/head/donors"
+        no-route="/donors"
         @redoActionDeclined="showPostSaveDialog = false"
       />
     </v-card-text>
@@ -216,7 +216,8 @@
 
 <script>
 import PostSaveDialog from '~/components/global/dialogs/PostSaveDialog.vue'
-import { generatePassword as passGen, fullName  } from '~/helpers/app.helper'
+import { generatePassword as passGen, fullName } from '~/helpers/app.helper'
+import { createDonor, createDonorWithUser } from '~/services/donor.service'
 function capitalizeCompanyInitials(companyName) {
   return companyName
     .split(' ')
@@ -326,7 +327,9 @@ export default {
           : undefined,
       }
       try {
-        await this.$store.dispatch('head/createDonor', createDonorInput)
+        if (this.withUserCreate) {
+          await createDonorWithUser(createDonorInput)
+        } else await createDonor(createDonorInput)
         this.reset()
         this.$router.push('/donors')
       } catch (e) {

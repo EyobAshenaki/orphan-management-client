@@ -9,7 +9,6 @@
     :items-per-page="itemsPerPage"
     :single-select="false"
     :show-select="false"
-    @onDoubleClickRow="navigateToSocialWorker($event)"
     @onItemsPerPage="handleItemsPerPage"
   >
     <template #top-right>
@@ -65,105 +64,6 @@ export default {
         { text: 'Orphan count', value: '_count_orphans' },
       ]
     },
-
-    isOnHeadCoordinatorsPage() {
-      return this.$route.path === '/head/coordinators'
-    },
-
-    __coordinators() {
-      if (this.isOnHeadCoordinatorsPage) {
-        return this.$store.state.head.coordinators.map((coordinator) => {
-          return {
-            ...coordinator,
-            fullName: `${coordinator.user.personalInfo.firstName} ${coordinator.user.personalInfo.middleName} ${coordinator.user.personalInfo.lastName}`,
-            gender: coordinator.user.personalInfo.gender ?? 'N/A',
-            age: calculateAge(coordinator.user.personalInfo.dateOfBirth),
-            mobileNumber: coordinator.user.personalInfo.mobileNumber ?? 'N/A',
-            noOfProjects: Array.from(coordinator?.zones)?.reduce(
-              (acc, zone) => {
-                return (
-                  acc +
-                  Array.from(zone.districts).reduce((acc, district) => {
-                    return acc + Array.from(district.projects).length
-                  }, 0)
-                )
-              },
-              0
-            ),
-            noOfZones: Array.from(coordinator?.zones)?.length,
-            noOfOrphans: Array.from(coordinator?.zones)?.reduce((acc, zone) => {
-              return (
-                acc +
-                Array.from(zone.districts).reduce((acc, district) => {
-                  return (
-                    acc +
-                    Array.from(district.villages).reduce((acc, village) => {
-                      return acc + Array.from(village.orphans).length
-                    }, 0)
-                  )
-                }, 0)
-              )
-            }, 0),
-          }
-        })
-      }
-      return [
-        {
-          id: 1,
-          fullName: 'John Doe',
-          gender: 'Male',
-          age: 27,
-          mobileNumber: '0912345678',
-          noOfZones: 10,
-          noOfOrphans: 100,
-        },
-        {
-          id: 2,
-          fullName: 'Bob Do',
-          gender: 'Male',
-          age: 32,
-          mobileNumber: '0953456789',
-          noOfZones: 10,
-          noOfOrphans: 200,
-        },
-        {
-          id: 3,
-          fullName: 'Jane Doe',
-          gender: 'Female',
-          age: 24,
-          mobileNumber: '0967347348',
-          noOfZones: 10,
-          noOfOrphans: 80,
-        },
-        {
-          id: 4,
-          fullName: 'John Doe',
-          gender: 'Male',
-          age: 27,
-          mobileNumber: '0912345678',
-          noOfZones: 10,
-          noOfOrphans: 100,
-        },
-        {
-          id: 5,
-          fullName: 'Bob Do',
-          gender: 'Male',
-          age: 32,
-          mobileNumber: '0953456789',
-          noOfZones: 10,
-          noOfOrphans: 200,
-        },
-        {
-          id: 6,
-          fullName: 'Jane Doe',
-          gender: 'Female',
-          age: 24,
-          mobileNumber: '0967347348',
-          noOfZones: 10,
-          noOfOrphans: 80,
-        },
-      ]
-    },
   },
   mounted() {
     this.loading = true
@@ -186,14 +86,6 @@ export default {
 
     handleSearch(value) {
       this.searchValue = value
-    },
-
-    navigateToSocialWorker(item) {
-      console.log(`Navigating to coordinator ${item.id}`)
-      //   this.$router.push({
-      //     name: 'coordinator-social-workers-social-worker',
-      //     // change selected project state using the item argument
-      //   })
     },
 
     handleItemsPerPage(value) {
