@@ -1,18 +1,25 @@
 <template>
   <section class="tw-bg-white tw-rounded-md tw-p-5">
-    <button-light
-      class="tw-absolute tw-top-11 tw-right-6"
-      @click="isEditable = !isEditable"
-    >
-      <fa-layers class="tw-mr-2">
-        <fa :icon="['fa', 'pen-to-square']" />
-      </fa-layers>
-      <span>Edit</span>
-    </button-light>
+    <div class="tw-absolute tw-top-11 tw-right-6">
+      <button-dark class="tw-mr-2">
+        <fa-layers class="tw-mr-2">
+          <fa :icon="['fa', 'clock-rotate-left']" />
+        </fa-layers>
+        <span>History</span>
+      </button-dark>
+
+      <button-light @click="isEditable = !isEditable">
+        <fa-layers class="tw-mr-2">
+          <fa :icon="['fa', 'pen-to-square']" />
+        </fa-layers>
+        <span>Edit</span>
+      </button-light>
+    </div>
 
     <v-form ref="form" v-model="valid" class="tw-max-w-[37rem]">
       <h2 class="tw-text-xl tw-text-emerald-800 tw-mt-4 tw-mb-3">Health</h2>
 
+      <!-- Psychological Status -->
       <div class="form-control">
         <label class="form-label"> Psychological Status </label>
         <custom-combobox
@@ -20,9 +27,10 @@
           :items="psychologicalStatuses"
           :rules="[rules.required]"
           required
+          :readonly="!isEditable"
         />
       </div>
-
+      <!-- Health Desicription -->
       <div class="form-control">
         <label class="form-label"> Description </label>
         <v-textarea
@@ -36,34 +44,8 @@
           filled
           rows="3"
           row-height="25"
+          :readonly="!isEditable"
         ></v-textarea>
-      </div>
-
-      <h2 class="tw-text-xl tw-text-emerald-800 tw-mt-4 tw-mb-3">Housing</h2>
-
-      <div class="form-control-group">
-        <div class="form-control">
-          <label class="form-label"> Living Arrangement </label>
-          <custom-combobox
-            v-model="livingArrangement"
-            :items="orphanLivingArrangements"
-            :rules="[rules.required]"
-            required
-          />
-        </div>
-
-        <div class="form-control">
-          <label class="form-label"> House Type </label>
-          <v-text-field
-            v-model="houseType"
-            :rules="[rules.required, rules.name, rules.textWithSpaces]"
-            required
-            color="teal darken-2"
-            dense
-            filled
-            outlined
-          ></v-text-field>
-        </div>
       </div>
 
       <h2 class="tw-text-xl tw-text-emerald-800 tw-mt-4 tw-mb-3">Assets</h2>
@@ -160,10 +142,9 @@ import ButtonDark from '~/components/global/ButtonDark.vue'
 import ButtonLight from '~/components/global/ButtonLight.vue'
 
 import * as orphanPsychologicalStatusOptions from '~/helpers/psychologicalStatusOptions.json'
-import * as orphanLivingArrangements from '~/helpers/livingArrangements.json'
 
 export default {
-  name: 'OrphanDetailStep',
+  name: 'HealthInfo',
   components: {
     AddOrphanAssetComponent,
     ButtonDark,
@@ -196,10 +177,6 @@ export default {
       return orphanPsychologicalStatusOptions.default.psychologicalStatuses
     },
 
-    orphanLivingArrangements() {
-      return orphanLivingArrangements.default.livingArrangements
-    },
-
     assets() {
       return this.$store.getters['addOrphan/getOrphanSupplementary'].assets
     },
@@ -225,25 +202,6 @@ export default {
       },
       set(value) {
         this.$store.dispatch('addOrphan/setHealthDescription', value)
-      },
-    },
-
-    livingArrangement: {
-      get() {
-        return this.$store.getters['addOrphan/getOrphanSupplementary']
-          .livingArrangement
-      },
-      set(value) {
-        this.$store.dispatch('addOrphan/setLivingArrangement', value)
-      },
-    },
-
-    houseType: {
-      get() {
-        return this.$store.getters['addOrphan/getOrphanSupplementary'].houseType
-      },
-      set(value) {
-        this.$store.dispatch('addOrphan/setHouseType', value)
       },
     },
   },

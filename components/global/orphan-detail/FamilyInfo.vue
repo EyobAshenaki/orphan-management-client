@@ -17,7 +17,10 @@
       <div class="form-control-group">
         <div class="form-control">
           <label class="form-label"> Date of Birth (Optional) </label>
-          <custom-date-picker v-model="fatherDateOfBirth" />
+          <custom-date-picker
+            v-model="fatherDateOfBirth"
+            :readonly="!isEditable"
+          />
         </div>
 
         <div class="form-control">
@@ -26,6 +29,7 @@
             v-model="fatherDateOfDeath"
             :rules="[rules.required]"
             required
+            :readonly="!isEditable"
           />
         </div>
       </div>
@@ -40,6 +44,7 @@
           dense
           filled
           outlined
+          :readonly="!isEditable"
         ></v-text-field>
       </div>
 
@@ -57,6 +62,7 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
 
@@ -70,6 +76,7 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
       </div>
@@ -85,12 +92,16 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
 
         <div class="form-control">
           <label class="form-label"> Date of Birth (Optional) </label>
-          <custom-date-picker v-model="motherDateOfBirth" />
+          <custom-date-picker
+            v-model="motherDateOfBirth"
+            :readonly="!isEditable"
+          />
         </div>
       </div>
 
@@ -102,6 +113,7 @@
           required
           class="-tw-mt-1"
           row
+          :readonly="!isEditable"
         >
           <custom-radio
             :class="[isAlive ? 'tw-border-emerald-800' : '']"
@@ -118,7 +130,12 @@
 
       <div v-if="isAlive" class="form-control">
         <label class="form-label"> Marital Status (Optional) </label>
-        <v-radio-group v-model="motherMaritalStatus" class="-tw-mt-1" row>
+        <v-radio-group
+          v-model="motherMaritalStatus"
+          class="-tw-mt-1"
+          row
+          :readonly="!isEditable"
+        >
           <custom-radio
             :class="[isMarried ? 'tw-border-emerald-800' : '']"
             label="Married"
@@ -135,7 +152,10 @@
       <div v-if="isDeceased" class="form-control-group">
         <div class="form-control">
           <label class="form-label"> Date of Death (Optional) </label>
-          <custom-date-picker v-model="motherDateOfDeath" />
+          <custom-date-picker
+            v-model="motherDateOfDeath"
+            :readonly="!isEditable"
+          />
         </div>
 
         <div class="form-control">
@@ -147,6 +167,7 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
       </div>
@@ -154,12 +175,12 @@
       <div v-if="isEditable" class="tw-flex tw-justify-between tw-mt-8">
         <button-dark
           class="tw-bg-red-800 hover:tw-bg-red-700 tw-rounded-lg tw-py-6 tw-px-5"
-          @click="back"
+          @click="cancel"
         >
           <fa-layers class="fa-lg">
             <fa :icon="['fa', 'arrow-left-long']" />
           </fa-layers>
-          <span class="tw-ml-4"> Back </span>
+          <span class="tw-ml-4"> Cancel </span>
         </button-dark>
 
         <button-dark
@@ -184,7 +205,7 @@ import CustomDatePicker from '~/components/global/CustomDatePicker.vue'
 import CustomRadio from '~/components/global/CustomRadio.vue'
 
 export default {
-  name: 'OrphanDetailStep',
+  name: 'FamilyInfoTab',
   components: {
     ButtonDark,
     ButtonLight,
@@ -231,108 +252,122 @@ export default {
 
     fatherDateOfBirth: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily']
-          .fatherDateOfBirth
+        return this.$store.getters['orphan/orphanFamily'].fatherDateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setFatherDateOfBirth', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          fatherDateOfBirth: value,
+        })
       },
     },
 
     fatherDateOfDeath: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily']
-          .fatherDateOfDeath
+        return this.$store.getters['orphan/orphanFamily'].fatherDateOfDeath
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setFatherDateOfDeath', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          fatherDateOfDeath: value,
+        })
       },
     },
 
     fatherCauseOfDeath: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily']
-          .fatherCauseOfDeath
+        return this.$store.getters['orphan/orphanFamily'].fatherCauseOfDeath
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setFatherCauseOfDeath', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          fatherCauseOfDeath: value,
+        })
       },
     },
 
     motherFirstName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily'].motherFirstName
+        return this.$store.getters['orphan/orphanFamily'].motherFirstName
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherFirstName', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          motherFirstName: value,
+        })
       },
     },
 
     motherMiddleName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily'].motherMiddleName
+        return this.$store.getters['orphan/orphanFamily'].motherMiddleName
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherMiddleName', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          motherMiddleName: value,
+        })
       },
     },
 
     motherLastName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily'].motherLastName
+        return this.$store.getters['orphan/orphanFamily'].motherLastName
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherLastName', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          motherLastName: value,
+        })
       },
     },
 
     motherDateOfBirth: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily']
-          .motherDateOfBirth
+        return this.$store.getters['orphan/orphanFamily'].motherDateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherDateOfBirth', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          motherDateOfBirth: value,
+        })
       },
     },
 
     motherVitalStatus: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily']
-          .motherVitalStatus
+        return this.$store.getters['orphan/orphanFamily'].motherVitalStatus
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherVitalStatus', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          motherVitalStatus: value,
+        })
       },
     },
 
     motherMaritalStatus: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily']
-          .motherMaritalStatus
+        return this.$store.getters['orphan/orphanFamily'].motherMaritalStatus
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherMaritalStatus', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          motherMaritalStatus: value,
+        })
       },
     },
 
     motherDateOfDeath: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily']
-          .motherDateOfDeath
+        return this.$store.getters['orphan/orphanFamily'].motherDateOfDeath
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherDateOfDeath', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          motherDateOfDeath: value,
+        })
       },
     },
 
     motherCauseOfDeath: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanFamily']
-          .motherCauseOfDeath
+        return this.$store.getters['orphan/orphanFamily'].motherCauseOfDeath
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherCauseOfDeath', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_FAMILY', {
+          motherCauseOfDeath: value,
+        })
       },
     },
   },
@@ -343,14 +378,32 @@ export default {
     },
   },
 
+  async mounted() {
+    await this.initialize()
+  },
+
   methods: {
-    back() {
-      this.$store.dispatch('addOrphan/previousStep')
+    async initialize() {
+      const orphanId = this.$route.params.id
+      await this.$store.dispatch('orphan/fetchOrphanFamily', orphanId)
+    },
+    cancel() {
+      this.isEditable = false
+
+      this.$toaster.showToast({
+        content: 'Profile Edit Cancelled',
+        state: 'error',
+      })
     },
 
     submit() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch('addOrphan/nextStep')
+        this.isEditable = false
+
+        this.$toaster.showToast({
+          content: 'Profile Edited successfully',
+          state: 'success',
+        })
       }
     },
   },

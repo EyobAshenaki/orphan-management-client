@@ -5,9 +5,9 @@
     :search-input.sync="search"
     :multiple="multiple"
     :hide-selected="!multiple"
-    clearable
+    :clearable="!readonly"
     color="teal darken-2"
-    dense
+    :dense="!multiple"
     filled
     outlined
     small-chips
@@ -25,7 +25,7 @@
         v-bind="data.attrs"
         :input-value="data.selected"
         :readonly="data.disabled"
-        class="combo-chip tw-bg-white"
+        class="combo-chip"
       >
         <v-avatar class="combo-chip-avatar" left>
           {{ data.item.slice(0, 1).toUpperCase() }}
@@ -33,7 +33,7 @@
         {{ data.item }}
         <fa-layers
           class="tw-text-emerald-800 tw-ml-1"
-          @click="data.parent.selectItem(data.item)"
+          @click="readonly || data.parent.selectItem(data.item)"
         >
           <fa class="tw-w-4 tw-h-4" :icon="['fa', 'xmark']" />
         </fa-layers>
@@ -70,7 +70,7 @@ export default {
   computed: {
     selectedItems: {
       get() {
-        return this.$vmodel
+        return this.$attrs.value
       },
       set(value) {
         this.$emit('input', value)
@@ -82,7 +82,7 @@ export default {
 
 <style scoped>
 .combo-chip {
-  @apply tw-text-sm tw-text-emerald-800 tw-font-normal tw-border tw-border-emerald-800 tw-my-2 tw-mr-1;
+  @apply tw-text-sm tw-bg-white tw-text-emerald-800 tw-font-normal tw-border tw-border-emerald-800 tw-mb-2 tw-mr-1;
 }
 
 .combo-chip-avatar {

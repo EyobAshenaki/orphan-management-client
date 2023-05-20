@@ -137,14 +137,19 @@ export const mutations = {
   SET_ORPHAN_PERSONAL({ orphanPersonal }, payload) {
     orphanPersonal.code = payload.code
     orphanPersonal.name = payload.name
-    orphanPersonal.fatherName = payload.father.firstName
-    orphanPersonal.grandFatherName = payload.father.lastName
+    orphanPersonal.fatherName = payload.father?.firstName
+    orphanPersonal.grandFatherName = payload.father?.lastName
     orphanPersonal.gender = payload.gender
-    orphanPersonal.dateOfBirth = payload.dateOfBirth
+    orphanPersonal.dateOfBirth = payload.dateOfBirth?.substr(0, 10)
     orphanPersonal.placeOfBirth = payload.placeOfBirth
     orphanPersonal.religion = payload.religion
     orphanPersonal.spokenLanguages = payload.spokenLanguages
     orphanPersonal.hobbies = payload.hobbies
+  },
+
+  MODIFY_ORPHAN_PERSONAL({ orphanPersonal }, payload) {
+    orphanPersonal = { ...orphanPersonal, ...payload }
+    console.log('MODIFY_ORPHAN_PERSONAL', orphanPersonal)
   },
 
   SET_ORPHAN_EDUCATION(
@@ -161,23 +166,33 @@ export const mutations = {
     orphanEducation.reason = educationalRecord.reason
   },
 
+  MODIFY_ORPHAN_EDUCATION({ orphanEducation }, payload) {
+    orphanEducation = { ...orphanEducation, ...payload }
+    console.log('MODIFY_ORPHAN_EDUCATION', orphanEducation)
+  },
+
   SET_ORPHAN_EDUCATION_HISTORY(state, { educationalRecords }) {
     state.orphanEducationHistory = educationalRecords
   },
 
   SET_ORPHAN_FAMILY({ orphanFamily }, { father, mother }) {
-    orphanFamily.fatherDateOfBirth = father.dateOfBirth
-    orphanFamily.fatherDateOfDeath = father.dateOfDeath
+    orphanFamily.fatherDateOfBirth = father.dateOfBirth?.substr(0, 10)
+    orphanFamily.fatherDateOfDeath = father.dateOfDeath?.substr(0, 10)
     orphanFamily.fatherCauseOfDeath = father.causeOfDeath
     orphanFamily.motherFirstName = mother.firstName
     orphanFamily.motherMiddleName = mother.middleName
     orphanFamily.motherLastName = mother.lastName
-    orphanFamily.motherDateOfBirth = mother.dateOfBirth
+    orphanFamily.motherDateOfBirth = mother.dateOfBirth?.substr(0, 10)
     orphanFamily.motherVitalStatus = mother.vitalStatus
     orphanFamily.motherMaritalStatus = mother.maritalStatus
-    orphanFamily.motherDateOfDeath = mother.dateOfDeath
+    orphanFamily.motherDateOfDeath = mother.dateOfDeath?.substr(0, 10)
     orphanFamily.motherCauseOfDeath = mother.causeOfDeath
     orphanFamily.motherMobileNumber = mother.mobileNumber
+  },
+
+  MODIFY_ORPHAN_FAMILY({ orphanFamily }, payload) {
+    orphanFamily = { ...orphanFamily, ...payload }
+    console.log('MODIFY_ORPHAN_FAMILY', orphanFamily)
   },
 
   SET_ORPHAN_GUARDIAN({ orphanGuardian }, { guardian, housing }) {
@@ -186,7 +201,7 @@ export const mutations = {
     orphanGuardian.firstName = guardian.firstName
     orphanGuardian.middleName = guardian.middleName
     orphanGuardian.lastName = guardian.lastName
-    orphanGuardian.dateOfBirth = guardian.dateOfBirth
+    orphanGuardian.dateOfBirth = guardian.dateOfBirth?.substr(0, 10)
     orphanGuardian.nationality = guardian.nationality
     orphanGuardian.mobileNumber = guardian.mobileNumber
     orphanGuardian.telephoneNumber = guardian.telephoneNumber
@@ -194,11 +209,24 @@ export const mutations = {
     orphanGuardian.orphanLivingArrangement = housing.livingArrangement
   },
 
+  MODIFY_ORPHAN_GUARDIAN({ orphanGuardian }, payload) {
+    orphanGuardian = { ...orphanGuardian, ...payload }
+    console.log('MODIFY_ORPHAN_GUARDIAN', orphanGuardian)
+  },
+
   SET_ORPHAN_CURRENT_HEALTH_STATUS({ orphanCurrentHealthStatus }, payload) {
     orphanCurrentHealthStatus.psychologicalStatus = payload.psychologicalStatus
     orphanCurrentHealthStatus.description = payload.description
     orphanCurrentHealthStatus.healthDocumentName = payload.document.documentType
     orphanCurrentHealthStatus.healthDocumentUrl = payload.document.documentUrl
+  },
+
+  MODIFY_ORPHAN_CURRENT_HEALTH_STATUS({ orphanCurrentHealthStatus }, payload) {
+    orphanCurrentHealthStatus = { ...orphanCurrentHealthStatus, ...payload }
+    console.log(
+      'MODIFY_ORPHAN_CURRENT_HEALTH_STATUS',
+      orphanCurrentHealthStatus
+    )
   },
 
   SET_ORPHAN_HEALTH_STATUS_HISTORY(state, { healthStatuses }) {
@@ -220,6 +248,11 @@ export const mutations = {
     orphanDocuments.adoptionCertificateUrl = guardian.adoptionCertificateUrl
     orphanDocuments.memorandumOfUnderstandingUrl =
       guardian.memorandumOfUnderstandingUrl
+  },
+
+  MODIFY_ORPHAN_DOCUMENTS({ orphanDocuments }, payload) {
+    orphanDocuments = { ...orphanDocuments, ...payload }
+    console.log('MODIFY_ORPHAN_DOCUMENTS', orphanDocuments)
   },
 
   ADD_HOBBY({ orphanPersonal }, payload) {
