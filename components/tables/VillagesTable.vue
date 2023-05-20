@@ -164,11 +164,7 @@ export default {
 
     handleSocialWorkerClick(socialWorker) {
       if (!socialWorker) return
-      if (this.$route.name.includes('social-worker')) return
-      this.$router.push({
-        name: 'social-workers-socialWorkerId',
-        params: { socialWorkerId: socialWorker.id },
-      })
+      this.$router.push(`/social-workers/${socialWorker.id}`)
     },
   },
 }

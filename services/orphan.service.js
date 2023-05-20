@@ -39,20 +39,18 @@ export async function createOrphanWithNestedCreate(
 }
 
 export async function fetchOrphans(
-  status = null,
-  villageId = null,
-  districtId = null,
-  projectId = null
+  // status = null,
+  // villageId = null,
+  // districtId = null,
+  // projectId = null
+  filter = {}
 ) {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
       operationName: 'FetchOrphans',
       query: print(FetchOrphans),
       variables: {
-        status,
-        villageId,
-        districtId,
-        projectId,
+        ...filter,
       },
     })
   )

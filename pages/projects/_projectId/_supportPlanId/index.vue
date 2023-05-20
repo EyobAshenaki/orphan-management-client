@@ -35,7 +35,7 @@
         </div>
         <div
           v-if="
-            tab === 1 && $store.state.coordinator.selectedPayment.id.length > 0
+            tab === 1
           "
           class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5"
         >
@@ -79,7 +79,6 @@ export default {
       this.supportPlan = await fetchSupportPlan(this.$route.params.supportPlanId)
     },
     navigateToIndividualPaymentsTab(item) {
-      this.$store.dispatch('coordinator/setSelectedPayment', item)
       this.selectedPaymentId = item.id
       if (this.items[1] !== 'Individual Payments')
         this.items.push('Individual Payments')

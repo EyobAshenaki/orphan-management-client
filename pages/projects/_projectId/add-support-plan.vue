@@ -118,6 +118,8 @@
 <script>
 import moment from 'moment'
 import { toUpper } from 'lodash'
+import { GraphQLError } from 'graphql'
+import { createSupportPlan } from '~/services/support.service'
 export default {
   name: 'AddSupportPlanPage',
   layout: 'dashboard',
@@ -181,10 +183,7 @@ export default {
         orphansIds: this.orphansIds,
       }
       try {
-        await this.$store.dispatch(
-          'coordinator/createSupportPlan',
-          createSupportPlanInput
-        )
+        await createSupportPlan(createSupportPlanInput)
         this.$toaster.showToast({
           content: 'Support plan created successfully',
           state: 'success',
@@ -194,8 +193,16 @@ export default {
           name: 'projects-projectId',
           params: { projectId: this.$route.params.projectId },
         })
-      } catch (e) {
-        /* empty */
+      } catch (error) {
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.error(error)
       }
     },
   },

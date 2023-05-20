@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="tw-flex tw-justify-evenly">
-      <statistics-card v-for="item in items" :key="item.title" :item="item" />
+      <statistics-card v-for="item in statisticsItems" :key="item.title" :item="item" />
     </div>
     <div class="px-3">
       <districts-table class="tw-my-5" />
@@ -25,12 +25,12 @@ export default {
 
   data() {
     return {
-      items: [],
+      statisticsItems: [],
     }
   },
 
   async mounted() {
-    this.items = [
+    this.statisticsItems = [
         {
           icon: ['fas', 'city'],
           title: 'Total Districts',

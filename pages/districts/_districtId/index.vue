@@ -100,7 +100,7 @@ export default {
     navigateToOrphansTab(village) {
       this.$store.dispatch('coordinator/setSelectedVillageId', village.id)
       // todo: find a way to not need to do this
-      this.$store.dispatch('coordinator/unsetSelectedDistrictId')
+      // this.$store.dispatch('coordinator/unsetSelectedDistrictId')
       this.isOrphansTableOnDistrict = false
       this.tab = 1
     },

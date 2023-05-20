@@ -219,8 +219,9 @@
 </template>
 
 <script>
+import { GraphQLError } from 'graphql';
 import currencies from '~/helpers/currencies.json'
-import { fetchSupportPlan } from '~/services/support.service'
+import { createPayment, fetchSupportPlan } from '~/services/support.service'
 
 function toFixedMoney(value) {
   return value ? +value.toFixed(6) : null
@@ -276,7 +277,9 @@ export default {
   },
   methods: {
     async initialize() {
-      this.supportPlan = await fetchSupportPlan(this.$route.params.supportPlanId)
+      this.supportPlan = await fetchSupportPlan(
+        this.$route.params.supportPlanId
+      )
     },
     async savePayment() {
       const startDate = new Date(this.startDate)
@@ -315,10 +318,7 @@ export default {
         paymentPeriodInMonths: this.period,
       }
       try {
-        await this.$store.dispatch(
-          'coordinator/createPayment',
-          createPaymentInput
-        )
+        await createPayment(createPaymentInput)
         this.$toaster.showToast({
           content: 'Payment created successfully',
           state: 'success',
@@ -328,8 +328,16 @@ export default {
           name: 'projects-projectId-supportPlanId',
           params: { supportPlanId: this.$route.params.supportPlanId },
         })
-      } catch (e) {
-        /* empty */
+      } catch (error) {
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.error(error)
       }
     },
     handleCurrencyConversionsChange() {

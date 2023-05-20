@@ -145,7 +145,7 @@ export default {
           await fetchDistricts(
             this.userRole === 'head' ? this.$route.params.zoneId : undefined,
             this.isOnProject
-              ? this.$store.state[`${this.userRole}`].selectedProjectId
+              ? this.$route.params.projectId
               : undefined
           )
         ).map((district) => {
@@ -187,7 +187,6 @@ export default {
 
     navigateToDistrict(selectedDistrict) {
       if (this.userRole === 'head') {
-        // todo: refactor this
         this.$router.push({
           name: 'locations-regionId-zoneId-districtId',
           params: { districtId: selectedDistrict.id },
@@ -212,28 +211,13 @@ export default {
     },
 
     handleProjectClick(project) {
-      this.$store.dispatch(
-        `${this.userRole}/setSelectedProjectNumber`,
-        project.number
-      )
-      this.$router.push(`/${this.userRole}/projects/project`)
-      if (
-        this.isOnProject &&
-        !this.isOnHeadLocationsZone &&
-        this.$store.state.coordinator.selectedProjectId !== project.id
-      ) {
-        window.location.reload()
-      }
-      this.$store.dispatch(`${this.userRole}/setSelectedProjectId`, project.id)
+      if (!project) return
+      this.$router.push(`/projects/${project.id}`)
     },
 
     handleSocialWorkerClick(socialWorker) {
       if (!socialWorker) return
-      if (this.$route.name.includes('social-worker')) return
-      this.$router.push({
-        name: 'social-workers-socialWorkerId',
-        params: { socialWorkerId: socialWorker.id },
-      })
+      this.$router.push(`/social-workers/${socialWorker.id}`)
     },
   },
 }
