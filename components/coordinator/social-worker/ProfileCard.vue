@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { fullName, calculateAge } from '~/helpers/app.helpers'
+import { fullName, calculateAge } from '~/helpers/app.helper'
 export default {
   name: 'SocialWorkerProfileCard',
 

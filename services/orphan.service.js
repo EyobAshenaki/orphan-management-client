@@ -39,20 +39,18 @@ export async function createOrphanWithNestedCreate(
 }
 
 export async function fetchOrphans(
-  status = null,
-  villageId = null,
-  districtId = null,
-  projectId = null
+  // status = null,
+  // villageId = null,
+  // districtId = null,
+  // projectId = null
+  filter = {}
 ) {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
       operationName: 'FetchOrphans',
       query: print(FetchOrphans),
       variables: {
-        status,
-        villageId,
-        districtId,
-        projectId,
+        ...filter,
       },
     })
   )
@@ -76,13 +74,14 @@ export async function fetchOrphan(orphanId = null) {
   throw errors
 }
 
-export async function countOrphans(status = null) {
+export async function countOrphans(status = null, districtId = null) {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
       operationName: 'CountOrphans',
       query: print(CountOrphans),
       variables: {
         status,
+        districtId,
       },
     })
   )

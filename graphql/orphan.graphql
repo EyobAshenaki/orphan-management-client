@@ -6,12 +6,14 @@ mutation CreateOrphanWithNestedCreate($input: CreateOrphanNestedCreateInput!) {
 
 query FetchOrphans(
   $status: SponsorshipStatusEnum
+  $socialWorkerId: ID
   $villageId: ID
   $districtId: ID
   $projectId: ID
 ) {
   orphans(
     status: $status
+    socialWorkerId: $socialWorkerId
     villageId: $villageId
     districtId: $districtId
     projectId: $projectId

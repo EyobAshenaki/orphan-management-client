@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { calculateAge } from '~/helpers/app.helpers'
+import { calculateAge } from '~/helpers/app.helper'
 export default {
   name: 'UserProfileCard',
   props: {
@@ -101,15 +101,15 @@ export default {
   computed: {
     user() {
       const age = calculateAge(this.userProp.personalInfo.dateOfBirth)
-      const retVal = {
+      const customUser = {
         ...this.userProp,
         gender: this.userProp.personalInfo.gender === 'F' ? 'Female' : 'Male',
         age,
         ...this.userProp.personalInfo,
       }
-      delete retVal.dateOfBirth
-      delete retVal.personalInfo
-      return retVal
+      delete customUser.dateOfBirth
+      delete customUser.personalInfo
+      return customUser
     },
   },
 }

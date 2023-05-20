@@ -9,8 +9,8 @@
     :items-per-page="itemsPerPage"
     @onDoubleClickRow="navigateToDonor($event)"
   >
-    <template #title-button>
-      <button-light to="/head/donors/add-donor">
+    <template v-if="userRole === 'head'" #title-button>
+      <button-light to="/donors/add-donor">
         <span>Add Donor</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
@@ -29,7 +29,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { GraphQLError } from 'graphql'
 import TableComponent from '../global/TableComponent.vue'
+import { fetchDonors } from '~/services/donor.service'
 export default {
   name: 'DonorsTable',
   components: {
@@ -41,9 +44,13 @@ export default {
       searchValue: '',
       itemsPerPage: 5,
       loading: false,
+      donors: [],
     }
   },
   computed: {
+    ...mapGetters({
+      userRole: 'auth/userRole',
+    }),
     headers() {
       return [
         {
@@ -57,9 +64,6 @@ export default {
         },
       ]
     },
-    donors() {
-      return this.$store.state.head.donors
-    },
   },
   mounted() {
     this.loading = true
@@ -68,9 +72,17 @@ export default {
   methods: {
     async initialize() {
       try {
-        await this.$store.dispatch('head/fetchDonors')
+        this.donors = await fetchDonors()
       } catch (error) {
-        /* empty */
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.error(error)
       } finally {
         this.loading = false
       }
