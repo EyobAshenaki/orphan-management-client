@@ -446,7 +446,7 @@ export default {
 
   methods: {
     async initialize() {
-      const orphanId = this.$route.params.id
+      const orphanId = this.$route.params.orphanId
       await this.$store.dispatch('orphan/fetchOrphanGuardian', orphanId)
     },
     back() {
