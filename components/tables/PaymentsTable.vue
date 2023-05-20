@@ -12,7 +12,7 @@
   >
     <template #title-button>
       <button-light
-        :to="`/projects/project/add-payment?=supportPlanId=${$route.query.supportPlanId}`"
+        :to="`/projects/${$route.params.projectId}/${$route.params.supportPlanId}/add-payment`"
       >
         <span>Add Payment</span>
         <fa-layers class="tw-ml-2">
@@ -117,7 +117,7 @@ export default {
     async initialize() {
       try {
         this.payments = (
-          await fetchPayments(this.$route.query.supportPlanId)
+          await fetchPayments(this.$route.params.supportPlanId)
         ).map((payment) => ({
           ...payment,
           startDate: new Date(payment?.startDate).toLocaleDateString(),

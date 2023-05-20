@@ -107,7 +107,7 @@ export default {
   methods: {
     async initialize() {
       try {
-        this.project = await fetchProject(this.$route.query.projectId)
+        this.project = await fetchProject(this.$route.params.projectId)
       } catch (error) {
         if (Array.from(error)[0] instanceof GraphQLError) {
           error.forEach((e) => {
@@ -125,26 +125,17 @@ export default {
 
     navigateToSupportPlanPage(item) {
       this.$router.push({
-        name: 'projects-project-support-plan',
-        query: { supportPlanId: item.id },
+        name: 'projects-projectId-supportPlanId',
+        params: { supportPlanId: item.id },
       })
-    },
-    navigateToPaymentsTab(item) {
-      console.log('Go to payments tab', item)
-      this.tab = 1
-    },
-
-    navigateToIndividualPaymentsTab(item) {
-      console.log('Generate Individual Payment: ', item)
-      this.tab = 2
     },
 
     handleOrphanDetailClick(item) {
       console.log('Go to orphan detail: ', item)
       this.$router.push({
-        name: 'projects-project-orphan',
+        name: 'projects-projectId-orphanId',
         // Instead of passing the id to the route, we should store it in the vuex store
-        query: { orphanId: item.id },
+        params: { orphanId: item.id },
       })
     },
   },

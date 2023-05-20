@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     async initialize() {
-      this.supportPlan = await fetchSupportPlan(this.$route.query.supportPlanId)
+      this.supportPlan = await fetchSupportPlan(this.$route.params.supportPlanId)
     },
     navigateToIndividualPaymentsTab(item) {
       this.$store.dispatch('coordinator/setSelectedPayment', item)

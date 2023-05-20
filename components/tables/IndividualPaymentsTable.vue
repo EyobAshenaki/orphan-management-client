@@ -145,7 +145,7 @@ export default {
     async initialize() {
       try {
         const supportPlan = await fetchSupportPlan(
-          this.$route.query.supportPlanId
+          this.$route.params.supportPlanId
         )
         this.supportPlan = supportPlan
         const payment = supportPlan.payments.find(
@@ -170,7 +170,7 @@ export default {
       this.loading = true
       try {
         const supportPlan = await fetchSupportPlan(
-          this.$route.query.supportPlanId
+          this.$route.params.supportPlanId
         )
         this.supportPlan = supportPlan
         const payment = supportPlan.payments.find(

@@ -16,9 +16,6 @@
       </section>
 
       <bread-crumbs />
-      <v-breadcrumbs divider="🚀">
-        
-      </v-breadcrumbs>
       <nuxt v-if="!$slots.default" />
       <slot />
     </v-container>

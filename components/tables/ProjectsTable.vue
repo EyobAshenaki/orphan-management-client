@@ -20,7 +20,6 @@
         )
       }}
     </template>
-    <!-- The code should be active for the head account -->
     <template v-if="userRole === 'head'" #title-button>
       <button-light to="/projects/add-project">
         <span>Add Project</span>
@@ -116,8 +115,8 @@ export default {
 
     navigateToProject(selectedProject) {
       this.$router.push({
-        name: 'projects-project',
-        query: { projectId: selectedProject.id },
+        name: 'projects-projectId',
+        params: { projectId: selectedProject.id },
       })
     },
 

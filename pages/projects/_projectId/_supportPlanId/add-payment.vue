@@ -276,7 +276,7 @@ export default {
   },
   methods: {
     async initialize() {
-      this.supportPlan = await fetchSupportPlan(this.$route.query.supportPlanId)
+      this.supportPlan = await fetchSupportPlan(this.$route.params.supportPlanId)
     },
     async savePayment() {
       const startDate = new Date(this.startDate)
@@ -325,10 +325,8 @@ export default {
         })
         this.$refs.paymentForm.reset()
         this.$router.push({
-          name: 'projects-project-support-plan',
-          query: { supportPlanId: this.$route.query.supportPlanId },
-          // params: { id: this.$route.query.projectId },
-          // query: { tab: 'payments' },
+          name: 'projects-projectId-supportPlanId',
+          params: { supportPlanId: this.$route.params.supportPlanId },
         })
       } catch (e) {
         /* empty */

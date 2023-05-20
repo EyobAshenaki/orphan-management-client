@@ -10,10 +10,9 @@
     @onDoubleClickRow="navigateToPayments($event)"
     @onItemsPerPage="handleItemsPerPage"
   >
-    <!-- v-if="userRole === 'coordinator'" -->
-    <template #title-button>
+    <template v-if="userRole === 'coordinator'" #title-button>
       <button-light
-        :to="`/projects/project/add-support-plan?projectId=${$route.query.projectId}`"
+        :to="`/projects/${$route.params.projectId}/add-support-plan`"
       >
         <span>Add Support Plan</span>
         <fa-layers class="tw-ml-2">
@@ -87,7 +86,7 @@ export default {
     async initialize() {
       try {
         this.supportPlans = [
-          ...(await fetchSupportPlans(this.$route.query.projectId)),
+          ...(await fetchSupportPlans(this.$route.params.projectId)),
         ]
       } catch (error) {
         if (Array.from(error)[0] instanceof GraphQLError) {

@@ -147,7 +147,7 @@ export default {
   mounted() {
     this.$store.dispatch('coordinator/fetchDonors')
     this.$store.dispatch('coordinator/fetchProjectOrphans', {
-      projectId: this.$route.query.projectId,
+      projectId: this.$route.params.projectId,
       status: 'NEW',
     })
   },
@@ -167,7 +167,7 @@ export default {
       )}-${startDate.getFullYear()}`
       const createSupportPlanInput = {
         name,
-        projectId: this.$route.query.projectId,
+        projectId: this.$route.params.projectId,
         startDate: startDate.toISOString(),
         endDate: new Date(
           startDate.getFullYear(),
@@ -191,8 +191,8 @@ export default {
         })
         this.$refs.supportPlanForm.reset()
         this.$router.push({
-          name: 'projects-project',
-          query: { projectId: this.$route.query.projectId },
+          name: 'projects-projectId',
+          params: { projectId: this.$route.params.projectId },
         })
       } catch (e) {
         /* empty */
