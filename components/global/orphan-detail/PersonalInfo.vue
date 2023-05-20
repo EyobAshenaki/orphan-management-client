@@ -215,7 +215,7 @@
               </v-chip>
             </div>
             <div
-              v-if="!hasHobbies && !xisEditable"
+              v-if="!hasHobbies && !isEditable"
               class="form-control tw-w-1/2"
             >
               <v-text-field
@@ -243,6 +243,7 @@
         </div>
       </div>
 
+      <!-- Action Buttons -->
       <div v-if="isEditable" class="tw-flex tw-justify-between tw-mt-8">
         <button-dark
           class="tw-bg-red-800 hover:tw-bg-red-700 tw-rounded-lg tw-py-6 tw-px-5"
@@ -281,7 +282,7 @@ import * as ethiopianLanguages from '~/helpers/commonEthiopianLanguages.json'
 import * as ethiopianReligions from '~/helpers/commonEthiopianReligions.json'
 
 export default {
-  name: 'PersonalInfo',
+  name: 'PersonalInfoTab',
   components: { ButtonDark, ButtonLight, CustomRadio, CustomCombobox },
 
   data() {
@@ -332,7 +333,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].code
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', { code: value })
       },
     },
 
@@ -341,7 +342,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].gender
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', { gender: value })
       },
     },
 
@@ -350,7 +351,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].name
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', { name: value })
       },
     },
 
@@ -359,7 +360,9 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].fatherName
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
+          fatherName: value,
+        })
       },
     },
 
@@ -368,7 +371,9 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].grandFatherName
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
+          grandFatherName: value,
+        })
       },
     },
 
@@ -377,7 +382,9 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].dateOfBirth
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
+          dateOfBirth: value,
+        })
       },
     },
 
@@ -386,7 +393,9 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].placeOfBirth
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
+          placeOfBirth: value,
+        })
       },
     },
 
@@ -395,7 +404,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].religion
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', { religion: value })
       },
     },
 
@@ -404,7 +413,9 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].spokenLanguages
       },
       set(value) {
-        this.$store.commit('orphan/SET_ORPHAN_PERSONAL', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
+          spokenLanguages: value,
+        })
       },
     },
   },

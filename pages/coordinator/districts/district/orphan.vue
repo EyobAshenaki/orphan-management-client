@@ -97,7 +97,7 @@
         </div>
 
         <div v-if="tab === 4" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
-          <other-info />
+          <health-info />
         </div>
 
         <div v-if="tab === 5" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
@@ -113,7 +113,7 @@ import PersonalInfo from '~/components/global/orphan-detail/PersonalInfo.vue'
 import EducationInfo from '~/components/global/orphan-detail/EducationInfo.vue'
 import FamilyInfo from '~/components/global/orphan-detail/FamilyInfo.vue'
 import GuardianInfo from '~/components/global/orphan-detail/GuardianInfo.vue'
-import OtherInfo from '~/components/global/orphan-detail/OtherInfo.vue'
+import HealthInfo from '~/components/global/orphan-detail/HealthInfo.vue'
 
 export default {
   name: 'OrphanPage',
@@ -122,7 +122,7 @@ export default {
     EducationInfo,
     FamilyInfo,
     GuardianInfo,
-    OtherInfo,
+    HealthInfo,
   },
   layout: 'coordinator',
   data() {
@@ -133,7 +133,7 @@ export default {
         'Education',
         'Family',
         'Guardian',
-        'Other',
+        'Health',
         'Documents',
       ],
     }
@@ -169,6 +169,7 @@ export default {
     async initialize() {
       const orphanId = this.$route.params.id
       console.log(`Initialize ${this._name}`)
+      console.log(`Orphan ID: ${orphanId}`)
       await this.$store.dispatch('orphan/fetchOrphanDetail', orphanId)
       await this.$store.dispatch('orphan/fetchOrphanPersonal', orphanId)
     },

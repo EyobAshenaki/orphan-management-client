@@ -11,6 +11,7 @@
         <span>Edit</span>
       </button-light>
 
+      <!-- Relation to Orphan -->
       <div class="form-control">
         <label class="form-label"> Relation to Orphan </label>
         <v-select
@@ -27,10 +28,12 @@
           dense
           filled
           outlined
+          :readonly="!isEditable"
           class="tw-w-1/2"
         ></v-select>
       </div>
 
+      <!-- Gender -->
       <div class="form-control">
         <label class="form-label"> Gender </label>
         <v-radio-group
@@ -39,6 +42,7 @@
           required
           class="-tw-mt-1"
           row
+          :readonly="!isEditable"
         >
           <custom-radio
             :class="[isMale ? 'tw-border-emerald-800' : '']"
@@ -54,6 +58,7 @@
       </div>
 
       <div class="form-control-group">
+        <!-- First Name -->
         <div class="form-control">
           <label class="form-label"> First Name </label>
           <v-text-field
@@ -64,9 +69,11 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
 
+        <!-- Middle Name -->
         <div class="form-control">
           <label class="form-label"> Middle Name </label>
           <v-text-field
@@ -77,11 +84,13 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
       </div>
 
       <div class="form-control-group">
+        <!-- Last Name -->
         <div class="form-control">
           <label class="form-label"> Last Name </label>
           <v-text-field
@@ -92,6 +101,7 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
 
@@ -102,6 +112,7 @@
             v-model="dateOfBirth"
             :rules="[rules.required]"
             required
+            :readonly="!isEditable"
           />
         </div>
 
@@ -114,16 +125,23 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
       </div>
 
       <div class="form-control-group">
+        <!-- Nationality -->
         <div class="form-control">
           <label class="form-label"> Nationality (Optional) </label>
-          <custom-combobox v-model="nationality" :items="countries" />
+          <custom-combobox
+            v-model="nationality"
+            :items="countries"
+            :readonly="!isEditable"
+          />
         </div>
 
+        <!-- Monthly Expense -->
         <div class="form-control">
           <label class="form-label"> Monthly Expense (Optional) </label>
           <v-text-field
@@ -133,11 +151,13 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
       </div>
 
       <div class="form-control-group">
+        <!-- Mobile Number -->
         <div class="form-control">
           <label class="form-label"> Mobile Number (Optional) </label>
           <v-text-field
@@ -146,9 +166,11 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
 
+        <!-- Telephone Number -->
         <div class="form-control">
           <label class="form-label"> Telephone Number (Optional) </label>
           <v-text-field
@@ -157,6 +179,38 @@
             dense
             filled
             outlined
+            :readonly="!isEditable"
+          ></v-text-field>
+        </div>
+      </div>
+
+      <!-- Housing -->
+      <h2 class="tw-text-xl tw-text-emerald-800 tw-mt-4 tw-mb-3">Housing</h2>
+
+      <div class="form-control-group">
+        <!-- Living Arrangement -->
+        <div class="form-control">
+          <label class="form-label"> Living Arrangement </label>
+          <custom-combobox
+            v-model="livingArrangement"
+            :items="orphanLivingArrangements"
+            :rules="[rules.required]"
+            required
+          />
+        </div>
+
+        <!-- House Type -->
+        <div class="form-control">
+          <label class="form-label"> House Type </label>
+          <v-text-field
+            v-model="houseType"
+            :rules="[rules.required, rules.name, rules.textWithSpaces]"
+            required
+            color="teal darken-2"
+            dense
+            filled
+            outlined
+            :readonly="!isEditable"
           ></v-text-field>
         </div>
       </div>
@@ -197,9 +251,10 @@ import { calculateAge } from '~/helpers/app.helpers'
 
 import * as eastAfricanCountries from '~/helpers/eastAfricanCountries.json'
 import * as relationToOrphanOptions from '~/helpers/relationToOrphanOptions.json'
+import * as orphanLivingArrangements from '~/helpers/livingArrangements.json'
 
 export default {
-  name: 'OrphanDetailStep',
+  name: 'PersonalInfoTab',
   components: {
     ButtonDark,
     ButtonLight,
@@ -248,107 +303,169 @@ export default {
       return this.gender === 'F'
     },
 
+    orphanLivingArrangements() {
+      return orphanLivingArrangements.default.livingArrangements
+    },
+
     relationToOrphan: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian']
-          .relationToOrphan
+        return this.$store.getters['orphan/orphanGuardian'].relationToOrphan
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianRelationToOrphan', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          relationToOrphan: value,
+        })
       },
     },
 
     gender: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian'].gender
+        return this.$store.getters['orphan/orphanGuardian'].gender
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianGender', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', { gender: value })
       },
     },
 
     firstName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian'].firstName
+        return this.$store.getters['orphan/orphanGuardian'].firstName
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianFirstName', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          firstName: value,
+        })
       },
     },
 
     middleName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian'].middleName
+        return this.$store.getters['orphan/orphanGuardian'].middleName
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianMiddleName', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          middleName: value,
+        })
       },
     },
 
     lastName: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian'].lastName
+        return this.$store.getters['orphan/orphanGuardian'].lastName
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianLastName', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          lastName: value,
+        })
       },
     },
 
     dateOfBirth: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian'].dateOfBirth
+        return this.$store.getters['orphan/orphanGuardian'].dateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianDateOfBirth', new Date(value).toISOString())
+        this.$store.commit('orphan/setGuardianDateOfBirth', {
+          dateOfBirth: new Date(value).toISOString(),
+        })
       },
     },
 
     nationality: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian'].nationality
+        return this.$store.getters['orphan/orphanGuardian'].nationality
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianNationality', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          nationality: value,
+        })
       },
     },
 
     monthlyExpense: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian'].monthlyExpense
+        return this.$store.getters['orphan/orphanGuardian'].monthlyExpense
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianMonthlyExpense', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          monthlyExpense: value,
+        })
       },
     },
 
     mobileNumber: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian'].mobileNumber
+        return this.$store.getters['orphan/orphanGuardian'].mobileNumber
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianMobileNumber', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          mobileNumber: value,
+        })
       },
     },
 
     telephoneNumber: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanGuardian']
-          .telephoneNumber
+        return this.$store.getters['orphan/orphanGuardian'].telephoneNumber
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setGuardianTelephoneNumber', value)
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          telephoneNumber: value,
+        })
+      },
+    },
+
+    // Housing Details
+
+    livingArrangement: {
+      get() {
+        return this.$store.getters['orphan/orphanGuardian'].livingArrangement
+      },
+      set(value) {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          livingArrangement: value,
+        })
+      },
+    },
+
+    houseType: {
+      get() {
+        return this.$store.getters['orphan/orphanGuardian'].houseType
+      },
+      set(value) {
+        this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
+          houseType: value,
+        })
       },
     },
   },
 
+  async mounted() {
+    await this.initialize()
+  },
+
   methods: {
+    async initialize() {
+      const orphanId = this.$route.params.id
+      await this.$store.dispatch('orphan/fetchOrphanGuardian', orphanId)
+    },
     back() {
-      this.$store.dispatch('addOrphan/previousStep')
+      this.isEditable = false
+
+      this.$toaster.showToast({
+        content: 'Profile Edit Cancelled',
+        state: 'error',
+      })
     },
 
     submit() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch('addOrphan/nextStep')
+        this.isEditable = false
+
+        this.$toaster.showToast({
+          content: 'Profile Edited successfully',
+          state: 'success',
+        })
       }
     },
   },

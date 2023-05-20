@@ -238,7 +238,7 @@ import ButtonLight from '~/components/global/ButtonLight.vue'
 import CustomRadio from '~/components/global/CustomRadio.vue'
 
 export default {
-  name: 'EducationInfo',
+  name: 'EducationInfoTab',
   components: {
     ButtonDark,
     ButtonLight,
