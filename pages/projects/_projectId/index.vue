@@ -11,7 +11,9 @@
           </fa-layers>
           <span>Statistics</span>
         </button-dark>
-        <button-dark to="/locations/zone/statistics">
+        <button-dark
+          :to="`/locations/${$route.params.regionId}/${$route.params.zoneId}/statistics`"
+        >
           <fa-layers class="tw-mr-2">
             <fa :icon="['fa', 'pen']" />
           </fa-layers>
@@ -134,7 +136,6 @@ export default {
       console.log('Go to orphan detail: ', item)
       this.$router.push({
         name: 'projects-projectId-orphanId',
-        // Instead of passing the id to the route, we should store it in the vuex store
         params: { orphanId: item.id },
       })
     },
