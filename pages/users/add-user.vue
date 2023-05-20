@@ -150,6 +150,9 @@
 </template>
 
 <script>
+import { GraphQLError } from 'graphql'
+import { createUser } from '~/services/user.service'
+
 export default {
   name: 'AddUser',
 
@@ -200,7 +203,7 @@ export default {
       // eslint-disable-next-line no-console
       console.debug(this.password)
     },
-    saveUser() {
+    async saveUser() {
       if (!this.$refs.userForm.validate()) return
       const createUserInput = {
         email: this.email,
@@ -215,8 +218,19 @@ export default {
           gender: this.gender,
         },
       }
-      this.$store.commit('user/SET_USER_INPUT', createUserInput)
-      this.$store.dispatch('user/createUser')
+      try {
+        await createUser(createUserInput)
+      } catch (error) {
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.error(error)
+      }
     },
   },
 }

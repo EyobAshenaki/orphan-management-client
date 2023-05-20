@@ -27,6 +27,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { GraphQLError } from 'graphql'
 import TableComponent from '../global/TableComponent.vue'
 import { fetchRegions } from '~/services/location.service'
 export default {
@@ -84,7 +85,6 @@ export default {
       this.searchValue = value
     },
     navigateToRegion(selectedRegion) {
-      this.$store.commit('location/SET_SELECTED_REGION', selectedRegion)
       this.$router.push({
         name: 'locations-regionId',
         params: { regionId: selectedRegion.id },
@@ -94,7 +94,15 @@ export default {
       try {
         this.regions = await fetchRegions()
       } catch (error) {
-        /* empty */
+        if (Array.from(error)[0] instanceof GraphQLError) {
+          error.forEach((e) => {
+            this.$toaster.showToast({
+              content: e.message,
+              state: 'error',
+            })
+          })
+          // eslint-disable-next-line no-console
+        } else console.error(error)
       } finally {
         this.loading = false
       }

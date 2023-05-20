@@ -25,14 +25,6 @@
         </fa-layers>
       </button-light>
     </template>
-    <!-- <template #no-data>
-      <div
-        class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full"
-      >
-        <div class="tw-text-2xl tw-font-bold tw-text-gray-500">No data</div>
-        <div class="tw-text-gray-500">No data to display</div>
-      </div>
-    </template> -->
   </table-component>
 </template>
 
