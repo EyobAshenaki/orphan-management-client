@@ -80,28 +80,32 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="(item, idx) in items" :key="idx">
-        <div v-if="tab === 0" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div v-if="tab === 0" class="tab-content">
           <personal-info />
         </div>
 
-        <div v-if="tab === 1" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div v-if="tab === 1" class="tab-content">
           <education-info />
         </div>
 
-        <div v-if="tab === 2" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div v-if="tab === 2" class="tab-content">
           <family-info />
         </div>
 
-        <div v-if="tab === 3" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div v-if="tab === 3" class="tab-content">
           <guardian-info />
         </div>
 
-        <div v-if="tab === 4" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
+        <div v-if="tab === 4" class="tab-content">
           <health-info />
         </div>
 
-        <div v-if="tab === 5" class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5">
-          <education-info />
+        <div v-if="tab === 5" class="tab-content">
+          <letters-info />
+        </div>
+
+        <div v-if="tab === 6" class="tab-content">
+          <photos-info />
         </div>
       </v-tab-item>
     </v-tabs-items>
@@ -114,6 +118,8 @@ import EducationInfo from '~/components/global/orphan-detail/EducationInfo.vue'
 import FamilyInfo from '~/components/global/orphan-detail/FamilyInfo.vue'
 import GuardianInfo from '~/components/global/orphan-detail/GuardianInfo.vue'
 import HealthInfo from '~/components/global/orphan-detail/HealthInfo.vue'
+import LettersInfo from '~/components/global/orphan-detail/LettersInfo.vue'
+import PhotosInfo from '~/components/global/orphan-detail/PhotosInfo.vue'
 
 export default {
   name: 'OrphanPage',
@@ -123,6 +129,8 @@ export default {
     FamilyInfo,
     GuardianInfo,
     HealthInfo,
+    LettersInfo,
+    PhotosInfo,
   },
   layout: 'coordinator',
   data() {
@@ -134,6 +142,8 @@ export default {
         'Family',
         'Guardian',
         'Health',
+        'Letters',
+        'Photos',
         'Documents',
       ],
     }
@@ -176,3 +186,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.tab-content {
+  @apply tw-bg-gray-100 tw-border-gray-100 tw-pt-5;
+}
+</style>
