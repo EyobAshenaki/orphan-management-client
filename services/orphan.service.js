@@ -11,6 +11,9 @@ import {
   FetchOrphanPersonal,
   FetchOrphanEducation,
   FetchOrphanEducationHistory,
+  FetchLatestEducationalRecord,
+  CreateEducationalRecord,
+  DeleteEducationalRecord,
   FetchOrphanFamily,
   FetchOrphanGuardian,
   FetchOrphanHealthStatus,
@@ -160,6 +163,53 @@ export async function fetchOrphanEducationHistory(orphanId = null) {
     })
   )
   if (data) return data.orphan
+
+  throw errors
+}
+
+export async function fetchLatestEducationalRecord(id = null) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchLatestEducationalRecord',
+      query: print(FetchLatestEducationalRecord),
+      variables: {
+        id,
+      },
+    })
+  )
+  if (data) return data?.orphan?.latestOrphanData?.educationalRecord
+
+  throw errors
+}
+
+export async function createLatestEducationalRecord(
+  createEducationalRecordInput = { enrollmentStatus: 'ENROLLED' }
+) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'CreateEducationalRecord',
+      query: print(CreateEducationalRecord),
+      variables: {
+        input: createEducationalRecordInput,
+      },
+    })
+  )
+  if (data) return data?.orphan?.latestOrphanData?.educationalRecord
+
+  throw errors
+}
+
+export async function deleteEducationalRecord(id) {
+  const { data, errors } = await handleGQL(() => {
+    return graphqlInstance.post('', {
+      operationName: 'DeleteEducationalRecord',
+      query: print(DeleteEducationalRecord),
+      variables: {
+        id,
+      },
+    })
+  })
+  if (data) return data?.id
 
   throw errors
 }
