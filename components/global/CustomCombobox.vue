@@ -12,6 +12,7 @@
     outlined
     small-chips
     :readonly="readonly"
+    item-color="teal darken-2"
   >
     <template #no-data>
       <div class="tw-text-sm tw-text-gray-600 tw-rounded-md tw-px-2">

@@ -100,10 +100,10 @@ export default {
         const toaster = document.getElementById('toast-element')
         const progressBarElmt = document.getElementById('progressBar')
 
-        toaster.classList.replace('-tw-right-20', 'tw-right-5')
-        toaster.classList.replace('tw-opacity-0', 'tw-opacity-100')
-        progressBarElmt.classList.replace('tw-w-0', 'tw-w-full')
-        progressBarElmt.classList.replace(
+        toaster?.classList.replace('-tw-right-20', 'tw-right-5')
+        toaster?.classList.replace('tw-opacity-0', 'tw-opacity-100')
+        progressBarElmt?.classList.replace('tw-w-0', 'tw-w-full')
+        progressBarElmt?.classList.replace(
           'tw-transition-none',
           'tw-transition-all'
         )
@@ -116,7 +116,7 @@ export default {
 
               this.removeToast()
               // speed up the progress bar rewind animation to match the toast animation speed
-              progressBarElmt.classList.replace(
+              progressBarElmt?.classList.replace(
                 'tw-transition-all',
                 'tw-transition-none'
               )
@@ -133,9 +133,9 @@ export default {
       const toaster = document.getElementById('toast-element')
       const progressBarElmt = document.getElementById('progressBar')
 
-      toaster.classList.replace('tw-right-5', '-tw-right-20')
-      toaster.classList.replace('tw-opacity-100', 'tw-opacity-0')
-      progressBarElmt.classList.replace('tw-w-full', 'tw-w-0')
+      toaster?.classList.replace('tw-right-5', '-tw-right-20')
+      toaster?.classList.replace('tw-opacity-100', 'tw-opacity-0')
+      progressBarElmt?.classList.replace('tw-w-full', 'tw-w-0')
     },
   },
 }

@@ -26,34 +26,34 @@ export default {
         {
           icon: ['fas', 'house'],
           title: 'Home',
-          to: '/coordinator',
+          to: '/dashboard',
         },
         {
           icon: ['fas', 'diagram-project'],
           title: 'Projects',
-          to: '/coordinator/projects',
+          to: '/projects',
         },
         {
           icon: ['fas', 'people-group'],
           title: 'Social Workers',
-          to: '/coordinator/social-workers',
+          to: '/social-workers',
         },
         // todo: uncomment when donors page is ready
-        // {
-        //   icon: ['fas', 'hand-holding-dollar'],
-        //   title: 'Donors',
-        //   to: '/coordinator/donors',
-        // },
+        {
+          icon: ['fas', 'hand-holding-dollar'],
+          title: 'Donors',
+          to: '/donors',
+        },
         {
           icon: ['fas', 'city'],
           title: 'Districts',
-          to: '/coordinator/districts',
+          to: '/districts',
         },
       ],
     }
   },
   beforeMount() {
-    layoutGuard(this)
+    layoutGuard(this, 'coordinator')
   },
 }
 </script>

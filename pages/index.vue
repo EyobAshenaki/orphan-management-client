@@ -127,6 +127,8 @@
 </template>
 
 <script>
+import { login } from '~/services/user.service'
+
 export default {
   name: 'IndexPage',
   layout: 'default',
@@ -175,17 +177,12 @@ export default {
     console.log(this.nodeTarget)
   },
   methods: {
-    login() {
+    async login() {
       if (!this.$refs.loginForm.validate()) return
-      const payload = {
-        email: this.email,
-        password: this.password,
-      }
-
-      this.$store.dispatch('auth/setEmail', payload.email)
-      this.$store.dispatch('auth/setPassword', payload.password)
-
-      this.$store.dispatch('auth/login').then((user) => {
+      this.loading = true
+      try {
+        const user = await login(this.email, this.password)
+        console.log({ user })
         if (!user) {
           this.$toaster.showToast({
             content: 'Bad input! Try again.',
@@ -193,40 +190,42 @@ export default {
           })
           return
         }
-        this.$router.push(`/${this.$store.getters['auth/userRole']}`)
         this.$toaster.showToast({
           content: 'Successfully logged in!',
           state: 'success',
         })
-      })
+        this.$store.dispatch('auth/setUser', user)
+        this.$router.push({ name: 'dashboard' })
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
+      }
     },
-    demoUserLogin() {
+    async demoUserLogin() {
       if (!this.$refs.demoLoginForm.validate()) return
-      const payload = this.demoUser
+      const { email, password } = this.demoUser
       this.loading = true
-
-      this.$store.dispatch('auth/setEmail', payload.email)
-      this.$store.dispatch('auth/setPassword', payload.password)
-
-      this.$store
-        .dispatch('auth/login')
-        .then((user) => {
-          if (!user) {
-            this.$toaster.showToast({
-              content: 'Bad input! Try again.',
-              state: 'error',
-            })
-            return
-          }
-          this.$router.push(`/${this.$store.getters['auth/userRole']}`)
+      try {
+        const user = await login(email, password)
+        if (!user) {
           this.$toaster.showToast({
-            content: 'Successfully logged in!',
-            state: 'success',
+            content: 'Bad input! Try again.',
+            state: 'error',
           })
+          return
+        }
+        this.$toaster.showToast({
+          content: 'Successfully logged in!',
+          state: 'success',
         })
-        .finally(() => {
-          this.loading = false
-        })
+        this.$store.dispatch('auth/setUser', user)
+        this.$router.push({ name: 'dashboard' })
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false
+      }
     },
   },
 }

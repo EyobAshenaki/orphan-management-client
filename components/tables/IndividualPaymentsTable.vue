@@ -12,7 +12,7 @@
     @onItemsPerPage="handleItemsPerPage"
     @onSelectedItemChange="handleSelectedItemChange($event)"
   >
-    <template #title-button>
+    <template v-if="individualPayments.length > 0" #title-button>
       <button-light @click="exportToExcel">
         <span>Export</span>
         <fa-layers class="tw-ml-2">
@@ -61,12 +61,19 @@ import {
   fetchSupportPlan,
   createManyIndividualPayments,
 } from '~/services/support.service'
-import { calculateAge, fullName, orphanFullName } from '~/helpers/app.helpers'
+import { calculateAge, fullName, orphanFullName } from '~/helpers/app.helper'
 export default {
   name: 'IndividualPaymentTable',
 
   components: {
     TableComponent,
+  },
+
+  props: {
+    paymentId: {
+      type: String,
+      required: true,
+    },
   },
 
   data() {
@@ -78,6 +85,8 @@ export default {
       showSelect: false,
       selectedIndividualPayment: null,
       individualPayments: [],
+      payment: null,
+      supportPlan: null,
     }
   },
   computed: {
@@ -100,11 +109,11 @@ export default {
         },
         { text: 'Period', value: 'period' },
         {
-          text: `Total in ${this.$store.state.coordinator.selectedPayment?.primaryForeignCurrency}`,
+          text: `Total in ${this.payment?.primaryForeignCurrency ?? 'N/A'}`,
           value: 'grossDepositInPrimaryForeignCurrency',
         },
         {
-          text: `Total in ${this.$store.state.coordinator.selectedPayment?.secondaryForeignCurrency}`,
+          text: `Total in ${this.payment?.secondaryForeignCurrency ?? 'N/A'}`,
           value: 'grossDepositInSecondaryForeignCurrency',
         },
         {
@@ -135,10 +144,17 @@ export default {
     fullName,
     async initialize() {
       try {
+        const supportPlan = await fetchSupportPlan(
+          this.$route.params.supportPlanId
+        )
+        this.supportPlan = supportPlan
+        const payment = supportPlan.payments.find(
+          (p) => p.id === this.paymentId
+        )
+        this.payment = payment
+
         this.individualPayments = (
-          await fetchIndividualPayments(
-            this.$store.state.coordinator.selectedPayment?.id
-          )
+          await fetchIndividualPayments(this.paymentId)
         ).map((idp) => ({
           ...idp,
           orphanName: orphanFullName(idp.orphan),
@@ -154,9 +170,13 @@ export default {
       this.loading = true
       try {
         const supportPlan = await fetchSupportPlan(
-          this.$store.state.coordinator.selectedSupportPlan.id
+          this.$route.params.supportPlanId
         )
-        const payment = this.$store.state.coordinator.selectedPayment
+        this.supportPlan = supportPlan
+        const payment = supportPlan.payments.find(
+          (p) => p.id === this.paymentId
+        )
+        this.payment = payment
 
         const { _count_orphans: countOrphans, orphans } = supportPlan
         const newIndividualPaymentsTabularData = orphans.map((orphan) => {
@@ -203,7 +223,13 @@ export default {
           }
         })
 
-        this.individualPayments = newIndividualPaymentsTabularData
+        this.individualPayments = newIndividualPaymentsTabularData.map(
+          (individualPayment) => ({
+            ...individualPayment,
+            orphanName: orphanFullName(individualPayment.orphan),
+            guardianName: fullName(individualPayment.orphan.guardian),
+          })
+        )
         // todo: enable customizing the individual payments
         // |--   beyond equal distribution of the payment
         // |--   and show details of the payment,
@@ -251,6 +277,7 @@ export default {
             content: 'Individual payments saved successfully',
             state: 'success',
           })
+          this.initialize()
         } else {
           this.$toaster.showToast({
             content: 'Failed to save individual payments',
@@ -273,19 +300,13 @@ export default {
 
     exportToExcel() {
       const workbook = utils.book_new()
-      const projectNumber = this.$store.state.coordinator.selectedProjectNumber
-      const startDate = new Date(
-        this.$store.state.coordinator.selectedPayment.startDate
-      ).toDateString()
-      const endDate = new Date(
-        this.$store.state.coordinator.selectedPayment.endDate
-      ).toDateString()
+      const projectNumber = this.supportPlan?.project?.number
+      const startDate = new Date(this.payment?.startDate).toDateString()
+      const endDate = new Date(this.payment?.endDate).toDateString()
       const exportHeading = [
         ['Charity and Development Association (CDA)'],
         [`Payment Sheet For Orphans Project #${projectNumber}`],
-        [
-          `Donor: ${this.$store.state.coordinator.selectedSupportPlan.donor.nameInitials}`,
-        ],
+        [`Donor: ${this.supportPlan?.donor.nameInitials}`],
         [this.bankName ?? 'Cooperative Bank of Oromia (CBO)'],
         [`Payment from ${startDate} to ${endDate}`],
       ]
@@ -293,13 +314,11 @@ export default {
         .map((idp) => {
           return idp.orphan
         })
-        .reduce(
-          (acc, orphan) =>
-            acc.includes(orphan.village.district.name)
-              ? acc
-              : [...acc, orphan.village.district.name],
-          []
-        )
+        .reduce((acc, orphan) => {
+          return acc.includes(orphan?.village.district.name)
+            ? acc
+            : [...acc, orphan?.village.district.name]
+        }, [])
       allDistrictsArray.forEach((districtName) => {
         // get zoneName for each district
         const zonesAggregate = this.individualPayments
@@ -433,13 +452,11 @@ export default {
       writeFile(
         workbook,
         `OPS - ${
-          this.$store.state.coordinator.selectedSupportPlan.name
+          this.supportPlan.name
         } - ${allZonesString} Zone - ${Intl.DateTimeFormat('en-US', {
           dateStyle: 'short',
         })
-          .format(
-            new Date(this.$store.state.coordinator.selectedPayment.startDate)
-          )
+          .format(new Date(this.payment?.startDate))
           .replaceAll('/', '-')}.xlsx`,
         {
           cellStyles: true,

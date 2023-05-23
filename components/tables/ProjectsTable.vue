@@ -20,9 +20,8 @@
         )
       }}
     </template>
-    <!-- The code should be active for the head account -->
-    <template v-if="isOnHeadProjectsPage" #title-button>
-      <button-light to="/head/projects/project/add-project">
+    <template v-if="userRole === 'head'" #title-button>
+      <button-light to="/projects/add-project">
         <span>Add Project</span>
         <fa-layers class="tw-ml-2">
           <fa :icon="['fa', 'plus']" />
@@ -56,9 +55,6 @@ export default {
     }
   },
   computed: {
-    isOnHeadProjectsPage() {
-      return this.$route.path === '/head/projects'
-    },
     userRole() {
       return this.$store.getters['auth/userRole']
     },
@@ -76,6 +72,7 @@ export default {
         { text: 'Date started', value: 'startDate' },
         { text: 'Total budget', value: 'grandTotalBudget' },
         { text: 'Coordinated by', value: 'coordinatorFullName' },
+        { text: 'Support Plans Count', value: '_count_supportPlans' },
       ]
     },
   },
@@ -85,12 +82,8 @@ export default {
   methods: {
     async initialize() {
       this.loading = true
-
-      let projects = {}
       try {
-        projects = await fetchProjects()
-
-        this.projects = Array.from(projects).map((project) => {
+        this.projects = (await fetchProjects()).map((project) => {
           return {
             ...project,
             coordinatorFullName: `${
@@ -121,11 +114,10 @@ export default {
     },
 
     navigateToProject(selectedProject) {
-      this.$store.dispatch(
-        `${this.userRole}/setSelectedProjectId`,
-        selectedProject.id
-      )
-      this.$router.push(`/${this.userRole}/projects/project`)
+      this.$router.push({
+        name: 'projects-projectId',
+        params: { projectId: selectedProject.id },
+      })
     },
 
     handleItemsPerPage(value) {

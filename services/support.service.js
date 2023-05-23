@@ -4,11 +4,12 @@ import { graphqlInstance } from '~/helpers/axios.helper'
 import {
   ProjectOrphans,
   CreateSupportPlan,
-  SupportPlan,
+  FetchSupportPlan,
   CreatePayment,
   Payments,
   IndividualPayments,
   CreateManyIndividualPayments,
+  FetchSupportPlans,
 } from '~/graphql/support.graphql'
 export async function fetchProjectOrphans(projectId, status = 'NEW') {
   const { data, errors } = await handleGQL(() =>
@@ -23,6 +24,7 @@ export async function fetchProjectOrphans(projectId, status = 'NEW') {
   if (data) return data.projectOrphans
   throw errors
 }
+
 export async function createSupportPlan(createSupportPlanInput) {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
@@ -36,11 +38,26 @@ export async function createSupportPlan(createSupportPlanInput) {
   if (data) return data.createSupportPlan
   throw errors
 }
+
+export async function fetchSupportPlans(projectId) {
+  const { data, errors } = await handleGQL(() =>
+    graphqlInstance.post('', {
+      operationName: 'FetchSupportPlans',
+      query: print(FetchSupportPlans),
+      variables: {
+        projectId,
+      },
+    })
+  )
+  if (data) return data.supportPlans
+  throw errors
+}
+
 export async function fetchSupportPlan(id) {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
-      operationName: 'SupportPlan',
-      query: print(SupportPlan),
+      operationName: 'FetchSupportPlan',
+      query: print(FetchSupportPlan),
       variables: {
         id,
       },

@@ -51,7 +51,7 @@
 <script>
 import TableComponent from '../global/TableComponent.vue'
 import { fetchOrphans } from '~/services/orphan.service'
-import { orphanFullName, calculateAge } from '~/helpers/app.helpers'
+import { orphanFullName, calculateAge } from '~/helpers/app.helper'
 export default {
   name: 'OrphansTable',
 
@@ -122,16 +122,15 @@ export default {
           this.$store.dispatch('coordinator/unsetSelectedVillageId')
         this.orphans = (
           await fetchOrphans(
-            undefined,
-            !this.isOnProject && !this.isOnDistrict
-              ? this.$store.state.coordinator.selectedVillageId ?? undefined
-              : undefined,
-            !this.isOnProject && this.isOnDistrict
-              ? this.$store.state.coordinator.selectedDistrictId
-              : undefined,
-            this.isOnProject
-              ? this.$store.state.coordinator.selectedProjectId
-              : undefined
+            {
+              socialWorkerId: this.$route.params.socialWorkerId ?? undefined,
+              villageId:
+                !this.isOnProject && !this.isOnDistrict
+                  ? this.$store.state.coordinator.selectedVillageId
+                  : undefined,
+              districtId: this.$route.params.districtId ?? undefined,
+              projectId: this.$route.params.projectId ?? undefined,
+            }
           )
         ).map((orphan) => ({
           ...orphan,

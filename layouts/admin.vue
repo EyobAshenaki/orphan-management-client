@@ -31,13 +31,13 @@ export default {
         {
           icon: ['fas', 'user-group'],
           title: 'Users',
-          to: '/admin/users',
+          to: '/users',
         },
       ],
     }
   },
   beforeMount() {
-    layoutGuard(this)
+    layoutGuard(this, 'admin')
   },
 }
 </script>
