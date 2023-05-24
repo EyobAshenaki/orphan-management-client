@@ -4,6 +4,18 @@ mutation CreateOrphanWithNestedCreate($input: CreateOrphanNestedCreateInput!) {
   }
 }
 
+mutation CreateOrphanLetter($input: CreateOrphanLetterInput!) {
+  createOrphanLetter(input: $input) {
+    id
+  }
+}
+
+mutation CreateOrphanPhoto($input: CreateOrphanPhotoInput!) {
+  createOrphanPhoto(input: $input) {
+    id
+  }
+}
+
 query FetchOrphans(
   $status: SponsorshipStatusEnum
   $socialWorkerId: ID
