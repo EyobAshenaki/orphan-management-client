@@ -1,5 +1,7 @@
 import { GraphQLError } from 'graphql'
 import {
+  createOrphanPhoto,
+  createOrphanLetter,
   fetchOrphanDetail,
   fetchOrphanPersonal,
   fetchOrphanEducation,
@@ -450,6 +452,78 @@ export const actions = {
     try {
       const data = await fetchOrphanDocuments(id)
       commit('SET_ORPHAN_DOCUMENTS', data)
+    } catch (error) {
+      if (Array.from(error)[0] instanceof GraphQLError) {
+        error.forEach((e) => {
+          this.$toaster.showToast({
+            content: e.message,
+            state: 'error',
+          })
+        })
+        // eslint-disable-next-line no-console
+      } else console.error(error)
+      throw error
+    }
+  },
+
+  async addOrphanPhoto(
+    { commit },
+    { orphanId, photoPortraitUrl, photoLongUrl }
+  ) {
+    try {
+      const createOrphanPhotoInput = {
+        orphanId,
+        photoLongUrl,
+        photoPortraitUrl,
+      }
+
+      console.log('Create Orphan Input: ', createOrphanPhotoInput)
+
+      const data = await createOrphanPhoto(createOrphanPhotoInput)
+
+      console.log(data)
+      this.$toaster.showToast({
+        content: 'Photo created successfully',
+        state: 'success',
+      })
+      return data
+      // commit('CLEAR_CREATE_ORPHAN_INPUT')
+    } catch (error) {
+      if (Array.from(error)[0] instanceof GraphQLError) {
+        error.forEach((e) => {
+          this.$toaster.showToast({
+            content: e.message,
+            state: 'error',
+          })
+        })
+        // eslint-disable-next-line no-console
+      } else console.error(error)
+      throw error
+    }
+  },
+
+  async addOrphanLetter(
+    { commit },
+    { orphanId, originalThankyouLetterUrl, translatedThankyouLetterUrl }
+  ) {
+    try {
+      const createOrphanLetterInput = {
+        orphanId,
+        originalThankyouLetterUrl,
+        translatedThankyouLetterUrl,
+      }
+
+      console.log('Create Orphan Input: ', createOrphanLetterInput)
+
+      const data = await createOrphanLetter(createOrphanLetterInput)
+
+      console.log(data)
+      this.$toaster.showToast({
+        content: 'Letter created successfully',
+        state: 'success',
+      })
+      return data
+      // commit('CLEAR_CREATE_ORPHAN_INPUT')
     } catch (error) {
       if (Array.from(error)[0] instanceof GraphQLError) {
         error.forEach((e) => {

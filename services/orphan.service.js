@@ -2,6 +2,8 @@ import { print } from 'graphql'
 import { graphqlInstance } from '~/helpers/axios.helper'
 import {
   CreateOrphanWithNestedCreate,
+  CreateOrphanPhoto,
+  CreateOrphanLetter,
   FetchOrphans,
   FetchOrphan,
   CountOrphans,
@@ -38,7 +40,37 @@ export async function createOrphanWithNestedCreate(
     return response
   }
   const { data } = await handleGQL(create)
-  return data.create.user
+  return data.createOrphanWithNestedCreate
+}
+
+export async function createOrphanLetter(createOrphanLetterInput) {
+  const create = async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: 'CreateOrphanLetter',
+      query: print(CreateOrphanLetter),
+      variables: {
+        input: createOrphanLetterInput,
+      },
+    })
+    return response
+  }
+  const { data } = await handleGQL(create)
+  return data.createOrphanLetter
+}
+
+export async function createOrphanPhoto(createOrphanPhotoInput) {
+  const create = async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: 'CreateOrphanPhoto',
+      query: print(CreateOrphanPhoto),
+      variables: {
+        input: createOrphanPhotoInput,
+      },
+    })
+    return response
+  }
+  const { data } = await handleGQL(create)
+  return data.createOrphanPhoto
 }
 
 export async function fetchOrphans(
