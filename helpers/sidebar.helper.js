@@ -1,10 +1,10 @@
 export function sideBarItems(userRole = undefined) {
   const commonItems = [
-    {
-      title: 'Dashboard',
-      icon: ['fas', 'gauge'],
-      to: '/dashboard',
-    },
+    // {
+    //   title: 'Dashboard',
+    //   icon: ['fas', 'gauge'],
+    //   to: '/dashboard',
+    // },
   ]
 
   if (userRole === 'admin') {
@@ -22,9 +22,9 @@ export function sideBarItems(userRole = undefined) {
   if (userRole === 'head') {
     const headItems = [
       {
-        icon: ['fas', 'hand-holding-dollar'],
-        title: 'Donors',
-        to: '/donors',
+        icon: ['fas', 'diagram-project'],
+        title: 'Projects',
+        to: '/projects',
       },
       {
         icon: ['fas', 'map'],
@@ -32,9 +32,9 @@ export function sideBarItems(userRole = undefined) {
         to: '/locations',
       },
       {
-        icon: ['fas', 'diagram-project'],
-        title: 'Projects',
-        to: '/projects',
+        icon: ['fas', 'hand-holding-dollar'],
+        title: 'Donors',
+        to: '/donors',
       },
       {
         icon: ['fas', 'people-roof'],
@@ -59,14 +59,14 @@ export function sideBarItems(userRole = undefined) {
         to: '/projects',
       },
       {
-        icon: ['fas', 'people-group'],
-        title: 'Social Workers',
-        to: '/social-workers',
-      },
-      {
         icon: ['fas', 'hand-holding-dollar'],
         title: 'Donors',
         to: '/donors',
+      },
+      {
+        icon: ['fas', 'people-group'],
+        title: 'Social Workers',
+        to: '/social-workers',
       },
       {
         icon: ['fas', 'city'],
