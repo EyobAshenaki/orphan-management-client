@@ -18,12 +18,14 @@ mutation CreateOrphanPhoto($input: CreateOrphanPhotoInput!) {
 
 query FetchOrphans(
   $status: SponsorshipStatusEnum
+  $socialWorkerId: ID
   $villageId: ID
   $districtId: ID
   $projectId: ID
 ) {
   orphans(
     status: $status
+    socialWorkerId: $socialWorkerId
     villageId: $villageId
     districtId: $districtId
     projectId: $projectId
@@ -177,15 +179,62 @@ query FetchOrphanEducationHistory($orphanId: ID!) {
       semester
       quarter
       totalMark
+      numberOfSubjects
       average
       rank
-      semesterGPA
-      cumulativeGPA
       reportCard {
-        documentType
         documentUrl
       }
     }
+  }
+}
+
+query FetchLatestEducationalRecord($id: ID!) {
+  orphan(id: $id) {
+    latestOrphanData {
+      educationalRecord {
+        id
+        yearDivision
+        year
+        level
+        typeOfSchool
+        schoolName
+        semester
+        quarter
+        numberOfSubjects
+        enrollmentStatus
+        gradeAgeMismatchReason
+        reason
+        semesterGPA
+        cumulativeGPA
+      }
+    }
+  }
+}
+
+mutation CreateEducationalRecord($input: CreateEducationalRecordInput!) {
+  createEducationalRecord(input: $input) {
+    id
+    enrollmentStatus
+    gradeAgeMismatchReason
+    reason
+    semester
+    quarter
+    totalMark
+    average
+    rank
+    semesterGPA
+    cumulativeGPA
+    reportCard {
+      documentType
+      documentUrl
+    }
+  }
+}
+
+mutation DeleteEducationalRecord($id: ID!) {
+  deleteEducationalRecord(id: $id) {
+    id
   }
 }
 

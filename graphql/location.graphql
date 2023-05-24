@@ -1,6 +1,10 @@
-query Regions {
+query FetchRegions {
   regions {
     ...RegionFragment
+    _count_zones
+    _count_districts
+    _count_villages
+    _count_orphans
     zones {
       ...ZoneFragment
       districts {
@@ -13,7 +17,11 @@ query Regions {
   }
 }
 
-query Region($id: ID!) {
+query CountRegions {
+  _count_regions
+}
+
+query FetchRegion($id: ID!) {
   region(id: $id) {
     ...RegionFragment
     zones {
@@ -28,9 +36,12 @@ query Region($id: ID!) {
   }
 }
 
-query Zones($regionId: ID) {
+query FetchZones($regionId: ID) {
   zones(regionId: $regionId) {
     ...ZoneFragment
+    _count_districts
+    _count_villages
+    _count_orphans
     districts {
       ...DistrictFragment
       villages {
@@ -40,7 +51,11 @@ query Zones($regionId: ID) {
   }
 }
 
-query Zone($id: ID!) {
+query CountZones($regionId: ID) {
+  _count_zones(regionId: $regionId)
+}
+
+query FetchZone($id: ID!) {
   zone(id: $id) {
     ...ZoneFragment
     districts {

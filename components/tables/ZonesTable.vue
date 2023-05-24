@@ -1,6 +1,6 @@
 <template>
   <div>
-    <table-component
+    <TableComponent
       :loading="loading"
       title="Zones"
       :headers="headers"
@@ -13,20 +13,24 @@
       <template #top-right>
         <search-field @onSearch="handleSearch($event)" />
       </template>
-      <template #title-button>
-        <button-light to="/head/locations/zone/add-zone">
+      <template v-if="userRole === 'head'" #title-button>
+        <button-light
+          :to="`/locations/${$route.params.regionId}/add-zone`"
+        >
           <span>Add Zone</span>
           <fa-layers class="tw-ml-2">
             <fa :icon="['fa', 'plus']" />
           </fa-layers>
         </button-light>
       </template>
-    </table-component>
+    </TableComponent>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import TableComponent from '../global/TableComponent.vue'
+import { fetchZones } from '~/services/location.service'
 export default {
   name: 'ZonesTable',
   components: {
@@ -34,11 +38,19 @@ export default {
   },
 
   layout: 'head',
+
+  props: {
+    regionId: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       searchValue: '',
       itemsPerPage: 5,
       loading: false,
+      zones: [],
     }
   },
   computed: {
@@ -50,15 +62,26 @@ export default {
           align: 'left',
           sortable: true,
         },
+        {
+          text: 'Districts Count',
+          value: '_count_districts',
+        },
+        {
+          text: 'Villages Count',
+          value: '_count_villages',
+        },
+        {
+          text: 'Orphans Count',
+          value: '_count_orphans',
+        },
       ]
     },
-    zones() {
-      return this.$store.state.location.selectedRegion
-        ? this.$store.state.location.selectedRegion.zones
-        : this.$store.state.location.zones
-    },
+    ...mapGetters({
+      userRole: 'auth/userRole',
+    }),
   },
   mounted() {
+    this.loading = true
     this.initialize()
   },
   methods: {
@@ -66,14 +89,14 @@ export default {
       this.searchValue = value
     },
     navigateToZone(selectedZone) {
-      this.$store.commit('location/SET_SELECTED_ZONE', selectedZone)
-      this.$router.push(`/head/locations/zone`)
+      this.$router.push({
+        name: 'locations-regionId-zoneId',
+        params: { zoneId: selectedZone.id },
+      })
     },
-    initialize() {
+    async initialize() {
       try {
-        if (!this.$store.state.location.selectedRegion) {
-          this.$store.dispatch('location/fetchZones')
-        }
+        this.zones = await fetchZones(this.regionId)
       } catch (error) {
         /* empty */
       } finally {

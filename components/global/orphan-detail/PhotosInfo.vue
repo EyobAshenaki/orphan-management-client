@@ -195,7 +195,7 @@ export default {
 
   methods: {
     async initialize() {
-      const orphanId = this.$route.params.id
+      const orphanId = this.$route.params.orphanId
       console.log('Orphan Id: ' + orphanId)
       await this.$store.dispatch('orphan/fetchOrphanPhotos', orphanId)
     },
@@ -246,7 +246,7 @@ export default {
     },
 
     async addDocument() {
-      const orphanId = this.$route.params.id
+      const orphanId = this.$route.params.orphanId
 
       const photoPortraitUrl =
         this.orphanPortraitPhoto &&

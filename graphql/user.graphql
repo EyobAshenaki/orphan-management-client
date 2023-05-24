@@ -59,6 +59,9 @@ mutation CreateDonor($input: CreateDonorInput!) {
 query FetchCoordinators {
   coordinators {
     id
+    _count_zones
+    _count_orphans
+    _count_projects
     zones {
       id
       name
@@ -88,6 +91,8 @@ query FetchCoordinators {
 query FetchSimpleCoordinatorNames {
   coordinators {
     id
+    _count_zones
+    _count_orphans
     user {
       id
       personalInfo {

@@ -111,7 +111,7 @@
         </v-btn>
         <div class="tw-flex tw-gap-7">
           <v-img
-            :src="orphanOriginalLetter"
+            :src="originalLetter"
             contain
             alt="Original Thankyou Letter"
             class="tw-rounded-lg"
@@ -119,7 +119,7 @@
           </v-img>
 
           <v-img
-            :src="orphanTranslatedLetter"
+            :src="translatedLetter"
             contain
             alt="=Translated Thankyou Letter"
             class="tw-rounded-lg"
@@ -195,7 +195,7 @@ export default {
 
   methods: {
     async initialize() {
-      const orphanId = this.$route.params.id
+      const orphanId = this.$route.params.orphanId
       console.log('Orphan Id: ' + orphanId)
       await this.$store.dispatch('orphan/fetchOrphanLetters', orphanId)
     },
@@ -246,7 +246,7 @@ export default {
     },
 
     async addDocument() {
-      const orphanId = this.$route.params.id
+      const orphanId = this.$route.params.orphanId
 
       const originalThankyouLetterUrl =
         this.orphanOriginalLetter &&
@@ -259,7 +259,7 @@ export default {
           this.orphanTranslatedLetter
         )}`
 
-      await this.$store.dispatch('orphan/addOrphanThankyouLetter', {
+      await this.$store.dispatch('orphan/addOrphanLetter', {
         orphanId,
         originalThankyouLetterUrl,
         translatedThankyouLetterUrl,

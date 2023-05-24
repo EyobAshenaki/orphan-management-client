@@ -28,7 +28,7 @@
 
 <script>
 import TableComponent from '../global/TableComponent.vue'
-import { calculateAge, fullName } from '~/helpers/app.helpers'
+import { calculateAge, fullName } from '~/helpers/app.helper'
 import { fetchSocialWorkers } from '~/services/social-worker.service'
 export default {
   name: 'SocialWorkersTable',
@@ -75,13 +75,15 @@ export default {
   methods: {
     async initialize() {
       try {
-        this.socialWorkers = (await fetchSocialWorkers()).map((sw) => ({
-          ...sw,
-          phoneNumber: sw.user.personalInfo.phoneNumber,
-          age: calculateAge(sw.user.personalInfo.dateOfBirth),
-          gender: sw.user.personalInfo.gender,
-          fullName: fullName(sw.user.personalInfo),
-        }))
+        this.socialWorkers = (await fetchSocialWorkers()).map(
+          (socialWorker) => ({
+            ...socialWorker,
+            phoneNumber: socialWorker.user.personalInfo.phoneNumber,
+            age: calculateAge(socialWorker.user.personalInfo.dateOfBirth),
+            gender: socialWorker.user.personalInfo.gender,
+            fullName: fullName(socialWorker.user.personalInfo),
+          })
+        )
       } catch (error) {
         /* empty */
       } finally {
@@ -94,8 +96,10 @@ export default {
     },
 
     navigateToSocialWorker(item) {
-      this.$store.dispatch('coordinator/setSelectedSocialWorkerId', item.id)
-      this.$router.push('/coordinator/social-workers/social-worker')
+      this.$router.push({
+        name: 'social-workers-socialWorkerId',
+        params: { socialWorkerId: item.id },
+      })
     },
 
     handleItemsPerPage(value) {

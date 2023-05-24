@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { toEnumString } from '~/helpers/app.helpers'
+import { toEnumString } from '~/helpers/app.helper'
 import { createOrphanWithNestedCreate } from '~/services/orphan.service'
 
 export const state = () => ({
@@ -438,8 +438,8 @@ export const mutations = {
       religion: undefined,
       spokenLanguages: [],
       hobbies: [],
-      father: undefined, 
-      mother: undefined, 
+      father: undefined,
+      mother: undefined,
       guardian: undefined,
       healthStatus: undefined,
       educationalRecord: undefined,

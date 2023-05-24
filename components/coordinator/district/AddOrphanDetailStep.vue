@@ -217,7 +217,7 @@
               <button-light
                 color="green darken-1"
                 text
-                class="hover:tw-bg-red-700"
+                class="hover:tw-bg-red-700 hover:tw-text-white"
                 @click="
                   cancelConfirmDialog = false
                   cancel()
@@ -347,13 +347,14 @@ export default {
 
     dateOfBirth: {
       get() {
-        return this.$store.getters['addOrphan/getOrphanDetails'].dateOfBirth
+        return new Date(
+          this.$store.getters['addOrphan/getOrphanDetails'].dateOfBirth
+        ).toLocaleDateString()
       },
       set(value) {
-        this.$store.dispatch(
-          'addOrphan/setDateOfBirth',
-          new Date(value).toISOString()
-        )
+        this.$store.dispatch('addOrphan/setDateOfBirth', {
+          dateOfBirth: new Date(value).toISOString(),
+        })
       },
     },
 

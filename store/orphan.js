@@ -16,7 +16,6 @@ import {
 } from '~/services/orphan.service'
 
 export const state = () => ({
-  orphanEducationHistory: [],
   orphanHealthStatusHistory: [],
   orphanPhotos: [],
   orphanLetters: [],
@@ -108,7 +107,6 @@ export const getters = {
   },
   orphanPersonal: (state) => state.orphanPersonal,
   orphanEducation: (state) => state.orphanEducation,
-  orphanEducationHistory: (state) => state.orphanEducationHistory,
   orphanFamily: (state) => state.orphanFamily,
   orphanGuardian: (state) => state.orphanGuardian,
   orphanCurrentHealthStatus: (state) => state.orphanCurrentHealthStatus,
@@ -158,14 +156,14 @@ export const mutations = {
     { orphanEducation },
     { latestOrphanData: { educationalRecord } }
   ) {
-    orphanEducation.enrollmentStatus = educationalRecord.enrollmentStatus
-    orphanEducation.level = educationalRecord.level
-    orphanEducation.year = educationalRecord.year
+    orphanEducation.enrollmentStatus = educationalRecord?.enrollmentStatus
+    orphanEducation.level = educationalRecord?.level
+    orphanEducation.year = educationalRecord?.year
     orphanEducation.gradeAgeMismatchReason =
-      educationalRecord.gradeAgeMismatchReason
-    orphanEducation.typeofSchool = educationalRecord.typeofSchool
-    orphanEducation.schoolName = educationalRecord.schoolName
-    orphanEducation.reason = educationalRecord.reason
+      educationalRecord?.gradeAgeMismatchReason
+    orphanEducation.typeOfSchool = educationalRecord?.typeOfSchool
+    orphanEducation.schoolName = educationalRecord?.schoolName
+    orphanEducation.reason = educationalRecord?.reason
   },
 
   MODIFY_ORPHAN_EDUCATION({ orphanEducation }, payload) {
