@@ -56,10 +56,10 @@
           v-else-if="tab === 2"
           class="tw-bg-gray-100 tw-border-gray-100 tw-pt-5"
         >
-          <orphans-table
-            route-to="/social-workers/:socialWorkerId/assign-orphan"
-            button-label="Assign Orphan"
-            :button-icon="['fas', 'user-plus']"
+        <!-- route-to="/social-workers/:socialWorkerId/assign-orphan" -->
+        <!-- button-label="Assign Orphan" -->
+        <!-- :button-icon="['fas', 'user-plus']" -->
+        <orphans-table
             @onOrphanDetailClick="handleOrphanDetailClick($event)"
           />
         </div>
@@ -130,9 +130,8 @@ export default {
     handleOrphanDetailClick(item) {
       console.log('Go to orphan detail: ', item)
       this.$router.push({
-        name: 'social-workers-socialWorkerId-orphan',
-        // Instead of passing the id to the route, we should store it in the vuex store
-        // params: { id: item.id },
+        name: 'social-workers-socialWorkerId-orphanId',
+        params: { orphanId: item.id },
       })
     },
   },

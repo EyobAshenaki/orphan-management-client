@@ -1,5 +1,4 @@
 export function layoutGuard(context, layout = 'default') {
-  console.log('layout? : ', layout)
   if (!context.$store.getters['auth/userRole']) {
     context.$toaster.showToast({
       content: 'You must be logged in to view this page',
@@ -14,6 +13,6 @@ export function layoutGuard(context, layout = 'default') {
       content: `Your account must be "${layout}" to view this page`,
       state: 'error',
     })
-    context.$router.push('/dashboard')
+    context.$router.push(`/${layout !== 'admin' ? 'projects' : 'users'}`)
   }
 }

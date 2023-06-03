@@ -172,6 +172,9 @@ export default {
     nodeTarget() {
       return process.env.TARGET
     },
+    userRole() {
+      return this.$store.getters['auth/userRole']
+    },
   },
   mounted() {
     console.log(this.nodeTarget)
@@ -195,7 +198,9 @@ export default {
           state: 'success',
         })
         this.$store.dispatch('auth/setUser', user)
-        this.$router.push({ name: 'dashboard' })
+        this.$router.push({
+          name: this.userRole !== 'admin' ? 'projects' : 'users',
+        })
       } catch (error) {
         console.error(error)
       } finally {
@@ -220,7 +225,9 @@ export default {
           state: 'success',
         })
         this.$store.dispatch('auth/setUser', user)
-        this.$router.push({ name: 'dashboard' })
+        this.$router.push({
+          name: this.userRole !== 'admin' ? 'projects' : 'users',
+        })
       } catch (error) {
         console.error(error)
       } finally {

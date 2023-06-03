@@ -1,6 +1,7 @@
 <template>
   <section class="tw-bg-white tw-rounded-md tw-p-5">
     <button-light
+      v-if="false"
       class="tw-absolute tw-top-11 tw-right-6"
       @click="isEditable = !isEditable"
     >

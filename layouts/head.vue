@@ -23,15 +23,15 @@ export default {
   data() {
     return {
       items: [
+        // {
+        //   icon: ['fas', 'gauge'],
+        //   title: 'Dashboard',
+        //   to: '/dashboard',
+        // },
         {
-          icon: ['fas', 'gauge'],
-          title: 'Dashboard',
-          to: '/dashboard',
-        },
-        {
-          icon: ['fas', 'hand-holding-dollar'],
-          title: 'Donors',
-          to: '/donors',
+          icon: ['fas', 'diagram-project'],
+          title: 'Projects',
+          to: '/projects',
         },
         {
           icon: ['fas', 'map'],
@@ -39,9 +39,9 @@ export default {
           to: '/locations',
         },
         {
-          icon: ['fas', 'diagram-project'],
-          title: 'Projects',
-          to: '/projects',
+          icon: ['fas', 'hand-holding-dollar'],
+          title: 'Donors',
+          to: '/donors',
         },
         {
           icon: ['fas', 'people-roof'],

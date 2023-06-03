@@ -2,6 +2,7 @@
   <section class="tw-bg-white tw-rounded-md tw-p-5">
     <v-form ref="form" v-model="valid" class="tw-max-w-[37rem]">
       <button-light
+      v-if="false"
         class="tw-absolute tw-top-11 tw-right-6"
         @click="isEditable = !isEditable"
       >

@@ -23,26 +23,25 @@ export default {
   data() {
     return {
       items: [
-        {
-          icon: ['fas', 'house'],
-          title: 'Home',
-          to: '/dashboard',
-        },
+        // {
+        //   icon: ['fas', 'house'],
+        //   title: 'Home',
+        //   to: '/dashboard',
+        // },
         {
           icon: ['fas', 'diagram-project'],
           title: 'Projects',
           to: '/projects',
         },
         {
-          icon: ['fas', 'people-group'],
-          title: 'Social Workers',
-          to: '/social-workers',
-        },
-        // todo: uncomment when donors page is ready
-        {
           icon: ['fas', 'hand-holding-dollar'],
           title: 'Donors',
           to: '/donors',
+        },
+        {
+          icon: ['fas', 'people-group'],
+          title: 'Social Workers',
+          to: '/social-workers',
         },
         {
           icon: ['fas', 'city'],

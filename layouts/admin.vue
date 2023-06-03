@@ -23,11 +23,11 @@ export default {
   data() {
     return {
       items: [
-        {
-          icon: ['fas', 'house'],
-          title: 'Home',
-          to: '/admin',
-        },
+        // {
+        //   icon: ['fas', 'house'],
+        //   title: 'Home',
+        //   to: '/dashboard',
+        // },
         {
           icon: ['fas', 'user-group'],
           title: 'Users',
