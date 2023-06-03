@@ -3,7 +3,6 @@
 </template>
 
 <script>
-// import 
 export default {
   name: 'OrphanPage',
   layout: 'dashboard',

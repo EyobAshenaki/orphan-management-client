@@ -1,14 +1,14 @@
 <template>
   <section class="tw-bg-white tw-rounded-md tw-p-5">
     <div class="tw-absolute tw-top-11 tw-right-6">
-      <button-dark class="tw-mr-2">
+      <button-dark v-if="false" class="tw-mr-2">
         <fa-layers class="tw-mr-2">
           <fa :icon="['fa', 'clock-rotate-left']" />
         </fa-layers>
         <span>History</span>
       </button-dark>
 
-      <button-light @click="isEditable = !isEditable">
+      <button-light v-if="false" @click="isEditable = !isEditable">
         <fa-layers class="tw-mr-2">
           <fa :icon="['fa', 'pen-to-square']" />
         </fa-layers>

@@ -5,10 +5,14 @@
         <fa-layers class="tw-mr-2">
           <fa :icon="['fa', 'clock-rotate-left']" />
         </fa-layers>
-        <span>Show History</span>
+        <span
+          ><span v-if="!isHistoryVisible">Show</span>
+          <span v-else>Hide</span> History</span
+        >
       </button-dark>
 
-      <button-light v-if="isEditShowing" @click="isEditable = !isEditable">
+      <!-- <button-light v-if="isEditShowing" @click="isEditable = !isEditable"> -->
+      <button-light v-if="false" @click="isEditable = !isEditable">
         <fa-layers class="tw-mr-2">
           <fa :icon="['fa', 'pen-to-square']" />
         </fa-layers>

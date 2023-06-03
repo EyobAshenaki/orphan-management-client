@@ -39,9 +39,9 @@
               <fa-layers class="tw-mr-3">
                 <!-- <fa class="tw-w-4 tw-h-4" :icon="['fa', 'hourglass-start']" /> -->
                 <!-- <fa
-                  class="tw-w-4 tw-h-4"
-                  :icon="['fa', 'magnifying-glass-chart']"
-                /> -->
+                    class="tw-w-4 tw-h-4"
+                    :icon="['fa', 'magnifying-glass-chart']"
+                  /> -->
                 <fa
                   class="tw-w-4 tw-h-4"
                   :icon="['fa', 'square-poll-vertical']"

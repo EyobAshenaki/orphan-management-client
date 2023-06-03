@@ -6,6 +6,7 @@
       <div class="tw-flex tw-justify-between">
         <h1>Districts</h1>
         <v-btn
+          v-if="false"
           class="tw-w-fit tw-text-sm tw-lowercase hover:tw-text-emerald-800 tw-py-3 tw-px-2"
           text
           :ripple="false"
@@ -92,11 +93,11 @@ export default {
   },
 
   methods: {
-    handleDistrictsViewAll() {
-      this.$router.push({
-        name: 'coordinator-districts',
-      })
-    },
+    // handleDistrictsViewAll() {
+    //   this.$router.push({
+    //     name: 'districts',
+    //   })
+    // },
 
     handleVillagesViewAll() {
       this.$emit('onVillagesViewAllClick')
