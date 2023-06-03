@@ -10,6 +10,14 @@
     group-by="school"
     class="hover:tw-cursor-pointer px-6"
   >
+    <template #progress>
+      <v-progress-linear
+        background-color="teal lighten-3"
+        color="teal darken-2"
+        :active="loading"
+        :indeterminate="loading"
+      ></v-progress-linear>
+    </template>
     <template #top>
       <div class="tw-w-full tw-flex tw-justify-between tw-py-5 tw-px-2">
         <header>
