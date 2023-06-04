@@ -5,7 +5,7 @@
     :ripple="false"
     :to="to"
     :disabled="disabled"
-    :loading="disabled || loading"
+    :loading="loading"
     @click="$emit('click')"
   >
     <slot> Click Me </slot>
