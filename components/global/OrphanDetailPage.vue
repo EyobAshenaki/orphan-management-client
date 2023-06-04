@@ -97,16 +97,16 @@
         </div>
 
         <div v-if="tab === 4" class="tab-content">
-          <health-info />
-        </div>
-
-        <div v-if="tab === 5" class="tab-content">
           <letters-info />
         </div>
 
-        <div v-if="tab === 6" class="tab-content">
+        <div v-if="tab === 5" class="tab-content">
           <photos-info />
         </div>
+
+        <!-- <div v-if="tab === 6" class="tab-content">
+          <health-info />
+        </div> -->
       </v-tab-item>
     </v-tabs-items>
   </section>
@@ -117,7 +117,7 @@ import PersonalInfo from '~/components/global/orphan-detail/PersonalInfo.vue'
 import EducationInfo from '~/components/global/orphan-detail/EducationInfo.vue'
 import FamilyInfo from '~/components/global/orphan-detail/FamilyInfo.vue'
 import GuardianInfo from '~/components/global/orphan-detail/GuardianInfo.vue'
-import HealthInfo from '~/components/global/orphan-detail/HealthInfo.vue'
+// import HealthInfo from '~/components/global/orphan-detail/HealthInfo.vue'
 import LettersInfo from '~/components/global/orphan-detail/LettersInfo.vue'
 import PhotosInfo from '~/components/global/orphan-detail/PhotosInfo.vue'
 
@@ -128,7 +128,7 @@ export default {
     EducationInfo,
     FamilyInfo,
     GuardianInfo,
-    HealthInfo,
+    // HealthInfo,
     LettersInfo,
     PhotosInfo,
   },
@@ -141,7 +141,7 @@ export default {
         'Education',
         'Family',
         'Guardian',
-        'Health',
+        // 'Health',
         'Letters',
         'Photos',
         'Documents',
