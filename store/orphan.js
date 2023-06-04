@@ -75,6 +75,7 @@ export const state = () => ({
     dateOfBirth: undefined,
     nationality: undefined,
     mobileNumber: undefined,
+    monthlyExpense: undefined,
     telephoneNumber: undefined,
     orphanHouseType: undefined,
     orphanLivingArrangement: undefined,
@@ -204,6 +205,7 @@ export const mutations = {
     orphanGuardian.dateOfBirth = guardian.dateOfBirth?.substr(0, 10)
     orphanGuardian.nationality = guardian.nationality
     orphanGuardian.mobileNumber = guardian.mobileNumber
+    orphanGuardian.monthlyExpense = guardian.monthlyExpense
     orphanGuardian.telephoneNumber = guardian.telephoneNumber
     orphanGuardian.orphanHouseType = housing.houseType
     orphanGuardian.orphanLivingArrangement = housing.livingArrangement
@@ -379,6 +381,7 @@ export const actions = {
   async fetchCurrentOrphanHealthStatus({ commit }, id) {
     try {
       const data = await fetchOrphanHealthStatus(id)
+      console.log('fetchCurrentOrphanHealthStatus', data)
       commit('SET_ORPHAN_CURRENT_HEALTH_STATUS', data)
     } catch (error) {
       if (Array.from(error)[0] instanceof GraphQLError) {
