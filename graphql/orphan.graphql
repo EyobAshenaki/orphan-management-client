@@ -16,6 +16,18 @@ mutation CreateOrphanPhoto($input: CreateOrphanPhotoInput!) {
   }
 }
 
+mutation UpdateOrphanLetter($input: UpdateOrphanLetterInput!) {
+  updateOrphanLetter(input: $input) {
+    id
+  }
+}
+
+mutation UpdateOrphanPhoto($input: UpdateOrphanPhotoInput!) {
+  updateOrphanPhoto(input: $input) {
+    id
+  }
+}
+
 query FetchOrphans(
   $status: SponsorshipStatusEnum
   $socialWorkerId: ID

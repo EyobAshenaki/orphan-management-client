@@ -2,7 +2,7 @@
   <div class="tw-flex tw-gap-5">
     <section
       class="tw-grow tw-bg-white tw-rounded-md tw-p-5"
-      :class="{ 'tw-max-w-[48rem]': documentForm }"
+      :class="{ 'tw-max-w-[48rem]': photoForm }"
     >
       <!-- Header -->
       <div class="tw-w-full tw-flex tw-justify-end tw-my-4">
@@ -48,7 +48,7 @@
     <!-- Update -->
     <!-- TODO: Refactor into a component -->
     <v-form
-      v-if="documentForm"
+      v-if="photoForm"
       ref="form"
       class="tw-w-[23rem] tw-border tw-border-gray-400 tw-rounded-lg tw-p-5"
     >
@@ -150,7 +150,7 @@ export default {
 
   data() {
     return {
-      documentForm: false,
+      photoForm: false,
       orphanPhotosDialog: false,
       orphanLongPhoto: null,
       orphanPortraitPhoto: null,
@@ -207,14 +207,14 @@ export default {
 
     handleAddDocument() {
       this.isUpdate = false
-      this.documentForm = true
+      this.photoForm = true
 
       console.log('Add Doc')
     },
 
     handleDocumentUpdate(photoId) {
       this.isUpdate = true
-      this.documentForm = true
+      this.photoForm = true
 
       console.log('Update Doc: ', photoId)
       this.photoId = photoId
@@ -231,21 +231,44 @@ export default {
     },
 
     cancel() {
-      this.documentForm = false
+      this.photoForm = false
       this.photoId = null
     },
 
     submit() {
       if (this.isUpdate) {
-        this.updateDocument()
-        console.log(this.photoId)
+        this.updatePhoto(this.photoId)
       } else {
-        this.addDocument()
+        this.addPhoto()
       }
-      this.documentForm = false
+      this.photoForm = false
     },
 
-    async addDocument() {
+    async updatePhoto(photoId) {
+      const orphanId = this.$route.params.orphanId
+
+      const photoPortraitUrl =
+        this.orphanPortraitPhoto &&
+        `${process.env.NUXT_API_URL}/${await handleUrlUpload(
+          this.orphanPortraitPhoto
+        )}`
+      const photoLongUrl =
+        this.orphanLongPhoto &&
+        `${process.env.NUXT_API_URL}/${await handleUrlUpload(
+          this.orphanLongPhoto
+        )}`
+
+      await this.$store.dispatch('orphan/addOrphanPhoto', {
+        id: photoId,
+        orphanId,
+        photoPortraitUrl,
+        photoLongUrl,
+      })
+
+      await this.initialize()
+    },
+
+    async addPhoto() {
       const orphanId = this.$route.params.orphanId
 
       const photoPortraitUrl =

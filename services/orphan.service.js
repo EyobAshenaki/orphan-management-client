@@ -2,8 +2,10 @@ import { print } from 'graphql'
 import { graphqlInstance } from '~/helpers/axios.helper'
 import {
   CreateOrphanWithNestedCreate,
-  CreateOrphanPhoto,
   CreateOrphanLetter,
+  CreateOrphanPhoto,
+  UpdateOrphanLetter,
+  UpdateOrphanPhoto,
   FetchOrphans,
   FetchOrphan,
   CountOrphans,
@@ -71,6 +73,36 @@ export async function createOrphanPhoto(createOrphanPhotoInput) {
   }
   const { data } = await handleGQL(create)
   return data.createOrphanPhoto
+}
+
+export async function updateOrphanLetter(updateOrphanLetterInput) {
+  const update = async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: 'UpdateOrphanLetter',
+      query: print(UpdateOrphanLetter),
+      variables: {
+        input: updateOrphanLetterInput,
+      },
+    })
+    return response
+  }
+  const { data } = await handleGQL(update)
+  return data.updateOrphanLetter
+}
+
+export async function updateOrphanPhoto(updateOrphanPhotoInput) {
+  const update = async () => {
+    const response = await graphqlInstance.post('', {
+      operationName: 'UpdateOrphanPhoto',
+      query: print(UpdateOrphanPhoto),
+      variables: {
+        input: updateOrphanPhotoInput,
+      },
+    })
+    return response
+  }
+  const { data } = await handleGQL(update)
+  return data.updateOrphanPhoto
 }
 
 export async function fetchOrphans(
