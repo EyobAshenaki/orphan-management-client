@@ -39,3 +39,11 @@ export function generatePassword() {
 export function toEnumString(text) {
   return toUpper(snakeCase(text))
 }
+
+export function formatToISOString(dateString) {
+  return new Date(dateString).toISOString()
+}
+
+export function formatToDatePicker(date) {
+  return date && date.split('T')[0]
+}

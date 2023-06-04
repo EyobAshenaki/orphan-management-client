@@ -1,9 +1,13 @@
 import { GraphQLError } from 'graphql'
-import { toEnumString } from '~/helpers/app.helper'
+import {
+  toEnumString,
+  formatToISOString,
+  formatToDatePicker,
+} from '~/helpers/app.helper'
 import { createOrphanWithNestedCreate } from '~/services/orphan.service'
 
 export const state = () => ({
-  activeStep: 1,
+  activeStep: 4,
   totalSteps: 6,
   registrationSteps: [
     {
@@ -155,7 +159,7 @@ export const getters = {
       fatherName,
       grandFatherName,
       gender,
-      dateOfBirth,
+      dateOfBirth: formatToDatePicker(dateOfBirth),
       placeOfBirth,
       religion,
       spokenLanguages,
@@ -203,16 +207,16 @@ export const getters = {
     },
   }) => {
     return {
-      fatherDateOfBirth,
-      fatherDateOfDeath,
+      fatherDateOfBirth: formatToDatePicker(fatherDateOfBirth),
+      fatherDateOfDeath: formatToDatePicker(fatherDateOfDeath),
       fatherCauseOfDeath,
       motherFirstName,
       motherMiddleName,
       motherLastName,
       motherVitalStatus,
       motherMaritalStatus,
-      motherDateOfBirth,
-      motherDateOfDeath,
+      motherDateOfBirth: formatToDatePicker(motherDateOfBirth),
+      motherDateOfDeath: formatToDatePicker(motherDateOfDeath),
       motherCauseOfDeath,
     }
   },
@@ -236,7 +240,7 @@ export const getters = {
       middleName,
       lastName,
       gender,
-      dateOfBirth,
+      dateOfBirth: formatToDatePicker(dateOfBirth),
       nationality,
       monthlyExpense,
       relationToOrphan,
@@ -563,7 +567,9 @@ export const actions = {
 
   setDateOfBirth({ commit }, payload) {
     // TODO: Calculate age and set enrollment status is orphan is under age
-    commit('MODIFY_ORPHAN_INPUT', { dateOfBirth: payload })
+    commit('MODIFY_ORPHAN_INPUT', {
+      dateOfBirth: formatToISOString(payload),
+    })
   },
 
   setPlaceOfBirth({ commit }, payload) {
@@ -626,11 +632,15 @@ export const actions = {
   // *** Orphan Family ***
 
   setFatherDateOfBirth({ commit }, payload) {
-    commit('MODIFY_CREATE_FATHER_INPUT', { dateOfBirth: payload })
+    commit('MODIFY_CREATE_FATHER_INPUT', {
+      dateOfBirth: formatToISOString(payload),
+    })
   },
 
   setFatherDateOfDeath({ commit }, payload) {
-    commit('MODIFY_CREATE_FATHER_INPUT', { dateOfDeath: payload })
+    commit('MODIFY_CREATE_FATHER_INPUT', {
+      dateOfDeath: formatToISOString(payload),
+    })
   },
 
   setFatherCauseOfDeath({ commit }, payload) {
@@ -660,11 +670,15 @@ export const actions = {
   },
 
   setMotherDateOfBirth({ commit }, payload) {
-    commit('MODIFY_CREATE_MOTHER_INPUT', { dateOfBirth: payload })
+    commit('MODIFY_CREATE_MOTHER_INPUT', {
+      dateOfBirth: formatToISOString(payload),
+    })
   },
 
   setMotherDateOfDeath({ commit }, payload) {
-    commit('MODIFY_CREATE_MOTHER_INPUT', { dateOfDeath: payload })
+    commit('MODIFY_CREATE_MOTHER_INPUT', {
+      dateOfDeath: formatToISOString(payload),
+    })
   },
 
   setMotherCauseOfDeath({ commit }, payload) {
@@ -690,7 +704,9 @@ export const actions = {
   },
 
   setGuardianDateOfBirth({ commit }, payload) {
-    commit('MODIFY_CREATE_GUARDIAN_INPUT', { dateOfBirth: payload })
+    commit('MODIFY_CREATE_GUARDIAN_INPUT', {
+      dateOfBirth: formatToISOString(payload),
+    })
   },
 
   setGuardianRelationToOrphan({ commit }, payload) {

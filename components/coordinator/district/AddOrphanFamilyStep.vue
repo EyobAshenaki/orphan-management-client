@@ -224,7 +224,7 @@ export default {
           .fatherDateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setFatherDateOfBirth', new Date(value).toISOString())
+        this.$store.dispatch('addOrphan/setFatherDateOfBirth', value)
       },
     },
 
@@ -234,7 +234,7 @@ export default {
           .fatherDateOfDeath
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setFatherDateOfDeath', new Date(value).toISOString())
+        this.$store.dispatch('addOrphan/setFatherDateOfDeath', value)
       },
     },
 
@@ -281,7 +281,7 @@ export default {
           .motherDateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherDateOfBirth', new Date(value).toISOString())
+        this.$store.dispatch('addOrphan/setMotherDateOfBirth', value)
       },
     },
 
@@ -311,7 +311,7 @@ export default {
           .motherDateOfDeath
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setMotherDateOfDeath', new Date(value).toISOString())
+        this.$store.dispatch('addOrphan/setMotherDateOfDeath', value)
       },
     },
 
