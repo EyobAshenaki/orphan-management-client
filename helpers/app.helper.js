@@ -39,3 +39,16 @@ export function generatePassword() {
 export function toEnumString(text) {
   return toUpper(snakeCase(text))
 }
+
+export function getObjectDiff(instance, other) {
+  const diff = {}
+  for (const key in instance) {
+    if (instance[key] !== other[key]) {
+      if (Array.isArray(instance[key])) {
+        diff[key] = instance[key].filter((item) => !other[key].includes(item))
+      }
+      diff[key] = other[key]
+    }
+  }
+  return diff
+}

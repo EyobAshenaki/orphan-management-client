@@ -11,6 +11,8 @@ import {
   // OrphanDetails queries
   FetchOrphanDetail,
   FetchOrphanPersonal,
+  UpdateOrphanPersonal,
+  UpdateFather,
   FetchOrphanEducation,
   FetchOrphanEducationHistory,
   FetchLatestEducationalRecord,
@@ -167,6 +169,49 @@ export async function fetchOrphanPersonal(orphanId = null) {
   if (data) return data.orphan
 
   throw errors
+}
+
+export async function updateOrphanPersonal(updateOrphanPersonalInput) {
+  let updateFather = {}
+  let updateOrphanPersonal = {}
+  if (
+    updateOrphanPersonalInput?.fatherName ||
+    updateOrphanPersonalInput?.grandFatherName
+  ) {
+    const { data } = await handleGQL(async () => {
+      const response = await graphqlInstance.post('', {
+        operationName: 'UpdateFather',
+        query: print(UpdateFather),
+        variables: {
+          input: {
+            orphanId: updateOrphanPersonalInput.id,
+            firstName: updateOrphanPersonalInput.fatherName,
+            lastName: updateOrphanPersonalInput.grandFatherName,
+          },
+        },
+      })
+      return response
+    })
+    updateFather = data.updateFather
+  }
+  const { data } = await handleGQL(async () => {
+    const { id, fatherName, grandFatherName, orphanName, ...rest } =
+      updateOrphanPersonalInput
+    const response = await graphqlInstance.post('', {
+      operationName: 'UpdateOrphanPersonal',
+      query: print(UpdateOrphanPersonal),
+      variables: {
+        input: {
+          id,
+          ...rest,
+        },
+      },
+    })
+    return response
+  })
+  updateOrphanPersonal = data.updateOrphan
+
+  return { ...updateOrphanPersonal, updateFather }
 }
 
 export async function fetchOrphanEducation(orphanId = null) {

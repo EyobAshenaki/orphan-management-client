@@ -151,6 +151,30 @@ query FetchOrphanPersonal($orphanId: ID!) {
   }
 }
 
+mutation UpdateOrphanPersonal($input: UpdateOrphanInput!) {
+  updateOrphan(input: $input) {
+    code
+    gender
+    name
+    father {
+      firstName
+      lastName
+    }
+    dateOfBirth
+    placeOfBirth
+    religion
+    spokenLanguages
+    hobbies
+  }
+}
+
+mutation UpdateFather($input: UpdateFatherInput!){
+  updateFather(input: $input){
+    firstName
+    lastName
+  }
+}
+
 query FetchOrphanEducation($orphanId: ID!) {
   orphan(id: $orphanId) {
     latestOrphanData {
