@@ -46,7 +46,7 @@
       <v-list class="tw-flex tw-flex-col tw-gap-1.5">
         <v-list-item
           v-if="false"
-          to="/coordinator/settings"
+          to="/settings"
           router
           exact
           :ripple="false"
