@@ -2,7 +2,7 @@
   <section class="tw-bg-white tw-rounded-md tw-p-5">
     <v-form ref="form" v-model="valid" class="tw-max-w-[37rem]">
       <button-light
-      v-if="false"
+        v-if="false"
         class="tw-absolute tw-top-11 tw-right-6"
         @click="isEditable = !isEditable"
       >
@@ -420,22 +420,23 @@ export default {
 
     livingArrangement: {
       get() {
-        return this.$store.getters['orphan/orphanGuardian'].livingArrangement
+        return this.$store.getters['orphan/orphanGuardian']
+          .orphanLivingArrangement
       },
       set(value) {
         this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
-          livingArrangement: value,
+          orphanLivingArrangement: value,
         })
       },
     },
 
     houseType: {
       get() {
-        return this.$store.getters['orphan/orphanGuardian'].houseType
+        return this.$store.getters['orphan/orphanGuardian'].orphanHouseType
       },
       set(value) {
         this.$store.commit('orphan/MODIFY_ORPHAN_GUARDIAN', {
-          houseType: value,
+          orphanHouseType: value,
         })
       },
     },
