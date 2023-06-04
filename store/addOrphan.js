@@ -7,7 +7,7 @@ import {
 import { createOrphanWithNestedCreate } from '~/services/orphan.service'
 
 export const state = () => ({
-  activeStep: 4,
+  activeStep: 1,
   totalSteps: 6,
   registrationSteps: [
     {
