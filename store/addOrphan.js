@@ -355,6 +355,22 @@ export const mutations = {
     }
   },
 
+  CLEAR_EDUCATIONAL_RECORD_INPUT(state) {
+    state.createEducationalRecordInput = {
+      enrollmentStatus: undefined,
+      schoolName: undefined,
+      gradeAgeMismatchReason: undefined,
+      level: undefined,
+      reason: undefined,
+      typeOfSchool: undefined,
+      year: undefined,
+    }
+    // state.createEducationalRecordInput = {
+    //   ...state.createEducationalRecordInput,
+    //   ...initialEducationalRecordInput,
+    // } // reset to initial state
+  },
+
   MODIFY_CREATE_ORPHAN_ASSET_INPUT(state, payload) {
     console.log('MODIFY_CREATE_ORPHAN_ASSET_INPUT', payload)
     state.createOrphanAssetInput = {
