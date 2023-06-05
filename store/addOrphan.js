@@ -430,7 +430,7 @@ export const mutations = {
     state.createOrphanPhotoInput = payload
   },
 
-  CLEAR_FORM(state) {
+  CLEAR_ORPHAN_INPUT(state) {
     state.activeStep = 1
     state.createOrphanInput = {
       villageId: undefined,
@@ -527,6 +527,17 @@ export const mutations = {
       photoPortraitUrl: undefined,
       photoLongUrl: undefined,
     }
+  },
+
+  FILL_ORPHAN_INPUT(state) {
+    state.createOrphanInput.father = state.createFatherInput
+    state.createOrphanInput.mother = state.createMotherInput
+    state.createOrphanInput.guardian = state.createGuardianInput
+    state.createOrphanInput.healthStatus = state.createHealthStatusInput
+    state.createOrphanInput.educationalRecord =
+      state.createEducationalRecordInput
+    state.createOrphanInput.housing = state.createOrphanHousingInput
+    state.createOrphanInput.photos = state.createOrphanPhotoInput
   },
 }
 
@@ -812,25 +823,19 @@ export const actions = {
   // *** Orphan Submit ***
 
   async submitOrphan({ commit, state }) {
-    state.createOrphanInput.father = state.createFatherInput
-    state.createOrphanInput.mother = state.createMotherInput
-    state.createOrphanInput.guardian = state.createGuardianInput
-    state.createOrphanInput.healthStatus = state.createHealthStatusInput
-    state.createOrphanInput.educationalRecord =
-      state.createEducationalRecordInput
-    state.createOrphanInput.housing = state.createOrphanHousingInput
-    state.createOrphanInput.photos = state.createOrphanPhotoInput
-    try {
-      const orphan = state.createOrphanInput
+    commit('FILL_ORPHAN_INPUT')
 
-      const data = await createOrphanWithNestedCreate(orphan)
+    try {
+      const data = await createOrphanWithNestedCreate(state.createOrphanInput)
       console.log(data)
+
       this.$toaster.showToast({
         content: 'Orphan created successfully',
         state: 'success',
       })
+      commit('CLEAR_ORPHAN_INPUT')
+
       return data
-      // commit('CLEAR_CREATE_ORPHAN_INPUT')
     } catch (error) {
       if (Array.from(error)[0] instanceof GraphQLError) {
         error.forEach((e) => {
@@ -851,6 +856,6 @@ export const actions = {
 
   // *** Orphan Form Clear ***
   clearForm({ commit }) {
-    commit('CLEAR_FORM')
+    commit('CLEAR_ORPHAN_INPUT')
   },
 }
