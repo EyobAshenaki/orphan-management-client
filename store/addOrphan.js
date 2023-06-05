@@ -125,11 +125,6 @@ export const state = () => ({
     attachments: [],
   },
 
-  createOrphanDocumentInput: {
-    documentType: undefined,
-    documentUrl: undefined,
-  },
-
   createOrphanPhotoInput: {
     photoPortraitUrl: undefined,
     photoLongUrl: undefined,
@@ -423,16 +418,20 @@ export const mutations = {
         'Payload must be an array of objects with documentType property'
       )
 
-    const documents = state.createOrphanInput.documents.map((item) => {
-      const newDoc = payload.find(
-        (item2) => item?.documentType === item2?.documentType
-      )
-      return newDoc || item
-    })
+    // console.log('Before_ADD_DOCUMENT_TO_ORPHAN', payload)
+
+    // const documents = state.createOrphanInput.documents.map((item) => {
+    //   const newDoc = payload.find(
+    //     (item2) => item?.documentType === item2?.documentType
+    //   )
+    //   return newDoc || item
+    // })
+
+    // console.log('After_ADD_DOCUMENT_TO_ORPHAN', documents)
 
     state.createOrphanInput = {
       ...state.createOrphanInput,
-      documents,
+      documents: payload,
     }
   },
 
@@ -532,11 +531,6 @@ export const mutations = {
       amount: undefined,
       unit: undefined,
       attachments: [],
-    }
-
-    state.createOrphanDocumentInput = {
-      documentType: undefined,
-      documentUrl: undefined,
     }
 
     state.createOrphanPhotoInput = {
