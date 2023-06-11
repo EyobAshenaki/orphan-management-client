@@ -42,23 +42,17 @@
             row
           >
             <custom-radio
-              :class="[
-                isReligiousSchool ? 'tw-border-emerald-800' : '',
-              ]"
+              :class="[isReligiousSchool ? 'tw-border-emerald-800' : '']"
               label="Religious"
               value="RELIGIOUS_EDUCATION"
             />
             <custom-radio
-              :class="[
-                isPreschool ? 'tw-border-emerald-800' : '',
-              ]"
+              :class="[isPreschool ? 'tw-border-emerald-800' : '']"
               label="Pre-School"
               value="PRE_SCHOOL"
             />
             <custom-radio
-              :class="[
-                isElementary ? 'tw-border-emerald-800' : '',
-              ]"
+              :class="[isElementary ? 'tw-border-emerald-800' : '']"
               label="Primary/Elementary"
               value="PRIMARY_ELEMENTARY"
             />
@@ -137,7 +131,7 @@
           </label>
           <v-text-field
             v-model="gradeAgeMismatchReason"
-            :rules="[rules.empty, rules.textWithSpaces]"
+            :rules="[rules.textWithSpaces]"
             class="tw-w-1/2"
             color="teal darken-2"
             dense
@@ -311,7 +305,7 @@ export default {
     },
 
     isNotEnrolled() {
-      return this.enrollmentStatus === 'NOT_ENROLLED' 
+      return this.enrollmentStatus === 'NOT_ENROLLED'
     },
 
     hasGradeAgeMismatch() {
@@ -385,12 +379,21 @@ export default {
   },
 
   watch: {
-    enrollmentStatus() {
+    enrollmentStatus(value) {
       this.$refs.form.resetValidation()
+      this.$store.commit('addOrphan/CLEAR_EDUCATIONAL_RECORD_INPUT')
+
+      this.enrollmentStatus = value
     },
 
-    schoolLevel() {
+    schoolLevel(value) {
+      const tempES = this.enrollmentStatus
+
       this.$refs.form.resetValidation()
+      this.$store.commit('addOrphan/CLEAR_EDUCATIONAL_RECORD_INPUT')
+
+      this.enrollmentStatus = tempES
+      this.schoolLevel = value
     },
   },
 

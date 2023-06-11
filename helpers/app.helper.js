@@ -52,3 +52,11 @@ export function getObjectDiff(instance, other) {
   }
   return diff
 }
+
+export function formatToISOString(dateString) {
+  return new Date(dateString).toISOString()
+}
+
+export function formatToDatePicker(date) {
+  return date && date.split('T')[0]
+}

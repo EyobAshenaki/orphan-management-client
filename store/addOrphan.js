@@ -1,5 +1,9 @@
 import { GraphQLError } from 'graphql'
-import { toEnumString } from '~/helpers/app.helper'
+import {
+  toEnumString,
+  formatToISOString,
+  formatToDatePicker,
+} from '~/helpers/app.helper'
 import { createOrphanWithNestedCreate } from '~/services/orphan.service'
 
 export const state = () => ({
@@ -121,11 +125,6 @@ export const state = () => ({
     attachments: [],
   },
 
-  createOrphanDocumentInput: {
-    documentType: undefined,
-    documentUrl: undefined,
-  },
-
   createOrphanPhotoInput: {
     photoPortraitUrl: undefined,
     photoLongUrl: undefined,
@@ -155,7 +154,7 @@ export const getters = {
       fatherName,
       grandFatherName,
       gender,
-      dateOfBirth,
+      dateOfBirth: formatToDatePicker(dateOfBirth),
       placeOfBirth,
       religion,
       spokenLanguages,
@@ -203,16 +202,16 @@ export const getters = {
     },
   }) => {
     return {
-      fatherDateOfBirth,
-      fatherDateOfDeath,
+      fatherDateOfBirth: formatToDatePicker(fatherDateOfBirth),
+      fatherDateOfDeath: formatToDatePicker(fatherDateOfDeath),
       fatherCauseOfDeath,
       motherFirstName,
       motherMiddleName,
       motherLastName,
       motherVitalStatus,
       motherMaritalStatus,
-      motherDateOfBirth,
-      motherDateOfDeath,
+      motherDateOfBirth: formatToDatePicker(motherDateOfBirth),
+      motherDateOfDeath: formatToDatePicker(motherDateOfDeath),
       motherCauseOfDeath,
     }
   },
@@ -236,7 +235,7 @@ export const getters = {
       middleName,
       lastName,
       gender,
-      dateOfBirth,
+      dateOfBirth: formatToDatePicker(dateOfBirth),
       nationality,
       monthlyExpense,
       relationToOrphan,
@@ -351,6 +350,22 @@ export const mutations = {
     }
   },
 
+  CLEAR_EDUCATIONAL_RECORD_INPUT(state) {
+    state.createEducationalRecordInput = {
+      enrollmentStatus: undefined,
+      schoolName: undefined,
+      gradeAgeMismatchReason: undefined,
+      level: undefined,
+      reason: undefined,
+      typeOfSchool: undefined,
+      year: undefined,
+    }
+    // state.createEducationalRecordInput = {
+    //   ...state.createEducationalRecordInput,
+    //   ...initialEducationalRecordInput,
+    // } // reset to initial state
+  },
+
   MODIFY_CREATE_ORPHAN_ASSET_INPUT(state, payload) {
     console.log('MODIFY_CREATE_ORPHAN_ASSET_INPUT', payload)
     state.createOrphanAssetInput = {
@@ -403,16 +418,20 @@ export const mutations = {
         'Payload must be an array of objects with documentType property'
       )
 
-    const documents = state.createOrphanInput.documents.map((item) => {
-      const newDoc = payload.find(
-        (item2) => item?.documentType === item2?.documentType
-      )
-      return newDoc || item
-    })
+    // console.log('Before_ADD_DOCUMENT_TO_ORPHAN', payload)
+
+    // const documents = state.createOrphanInput.documents.map((item) => {
+    //   const newDoc = payload.find(
+    //     (item2) => item?.documentType === item2?.documentType
+    //   )
+    //   return newDoc || item
+    // })
+
+    // console.log('After_ADD_DOCUMENT_TO_ORPHAN', documents)
 
     state.createOrphanInput = {
       ...state.createOrphanInput,
-      documents,
+      documents: payload,
     }
   },
 
@@ -426,7 +445,7 @@ export const mutations = {
     state.createOrphanPhotoInput = payload
   },
 
-  CLEAR_FORM(state) {
+  CLEAR_ORPHAN_INPUT(state) {
     state.activeStep = 1
     state.createOrphanInput = {
       villageId: undefined,
@@ -514,15 +533,21 @@ export const mutations = {
       attachments: [],
     }
 
-    state.createOrphanDocumentInput = {
-      documentType: undefined,
-      documentUrl: undefined,
-    }
-
     state.createOrphanPhotoInput = {
       photoPortraitUrl: undefined,
       photoLongUrl: undefined,
     }
+  },
+
+  FILL_ORPHAN_INPUT(state) {
+    state.createOrphanInput.father = state.createFatherInput
+    state.createOrphanInput.mother = state.createMotherInput
+    state.createOrphanInput.guardian = state.createGuardianInput
+    state.createOrphanInput.healthStatus = state.createHealthStatusInput
+    state.createOrphanInput.educationalRecord =
+      state.createEducationalRecordInput
+    state.createOrphanInput.housing = state.createOrphanHousingInput
+    state.createOrphanInput.photos = state.createOrphanPhotoInput
   },
 }
 
@@ -563,7 +588,9 @@ export const actions = {
 
   setDateOfBirth({ commit }, payload) {
     // TODO: Calculate age and set enrollment status is orphan is under age
-    commit('MODIFY_ORPHAN_INPUT', { dateOfBirth: payload })
+    commit('MODIFY_ORPHAN_INPUT', {
+      dateOfBirth: formatToISOString(payload),
+    })
   },
 
   setPlaceOfBirth({ commit }, payload) {
@@ -626,11 +653,15 @@ export const actions = {
   // *** Orphan Family ***
 
   setFatherDateOfBirth({ commit }, payload) {
-    commit('MODIFY_CREATE_FATHER_INPUT', { dateOfBirth: payload })
+    commit('MODIFY_CREATE_FATHER_INPUT', {
+      dateOfBirth: formatToISOString(payload),
+    })
   },
 
   setFatherDateOfDeath({ commit }, payload) {
-    commit('MODIFY_CREATE_FATHER_INPUT', { dateOfDeath: payload })
+    commit('MODIFY_CREATE_FATHER_INPUT', {
+      dateOfDeath: formatToISOString(payload),
+    })
   },
 
   setFatherCauseOfDeath({ commit }, payload) {
@@ -660,11 +691,15 @@ export const actions = {
   },
 
   setMotherDateOfBirth({ commit }, payload) {
-    commit('MODIFY_CREATE_MOTHER_INPUT', { dateOfBirth: payload })
+    commit('MODIFY_CREATE_MOTHER_INPUT', {
+      dateOfBirth: formatToISOString(payload),
+    })
   },
 
   setMotherDateOfDeath({ commit }, payload) {
-    commit('MODIFY_CREATE_MOTHER_INPUT', { dateOfDeath: payload })
+    commit('MODIFY_CREATE_MOTHER_INPUT', {
+      dateOfDeath: formatToISOString(payload),
+    })
   },
 
   setMotherCauseOfDeath({ commit }, payload) {
@@ -690,7 +725,9 @@ export const actions = {
   },
 
   setGuardianDateOfBirth({ commit }, payload) {
-    commit('MODIFY_CREATE_GUARDIAN_INPUT', { dateOfBirth: payload })
+    commit('MODIFY_CREATE_GUARDIAN_INPUT', {
+      dateOfBirth: formatToISOString(payload),
+    })
   },
 
   setGuardianRelationToOrphan({ commit }, payload) {
@@ -796,25 +833,19 @@ export const actions = {
   // *** Orphan Submit ***
 
   async submitOrphan({ commit, state }) {
-    state.createOrphanInput.father = state.createFatherInput
-    state.createOrphanInput.mother = state.createMotherInput
-    state.createOrphanInput.guardian = state.createGuardianInput
-    state.createOrphanInput.healthStatus = state.createHealthStatusInput
-    state.createOrphanInput.educationalRecord =
-      state.createEducationalRecordInput
-    state.createOrphanInput.housing = state.createOrphanHousingInput
-    state.createOrphanInput.photos = state.createOrphanPhotoInput
-    try {
-      const orphan = state.createOrphanInput
+    commit('FILL_ORPHAN_INPUT')
 
-      const data = await createOrphanWithNestedCreate(orphan)
+    try {
+      const data = await createOrphanWithNestedCreate(state.createOrphanInput)
       console.log(data)
+
       this.$toaster.showToast({
         content: 'Orphan created successfully',
         state: 'success',
       })
+      commit('CLEAR_ORPHAN_INPUT')
+
       return data
-      // commit('CLEAR_CREATE_ORPHAN_INPUT')
     } catch (error) {
       if (Array.from(error)[0] instanceof GraphQLError) {
         error.forEach((e) => {
@@ -835,6 +866,6 @@ export const actions = {
 
   // *** Orphan Form Clear ***
   clearForm({ commit }) {
-    commit('CLEAR_FORM')
+    commit('CLEAR_ORPHAN_INPUT')
   },
 }

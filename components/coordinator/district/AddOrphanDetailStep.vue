@@ -347,14 +347,10 @@ export default {
 
     dateOfBirth: {
       get() {
-        return new Date(
-          this.$store.getters['addOrphan/getOrphanDetails'].dateOfBirth
-        ).toLocaleDateString()
+        return this.$store.getters['addOrphan/getOrphanDetails'].dateOfBirth
       },
       set(value) {
-        this.$store.dispatch('addOrphan/setDateOfBirth', {
-          dateOfBirth: new Date(value).toISOString(),
-        })
+        this.$store.dispatch('addOrphan/setDateOfBirth', value)
       },
     },
 

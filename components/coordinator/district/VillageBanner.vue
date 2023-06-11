@@ -43,7 +43,7 @@
         class="tw-text-sm tw-capitalize tw-text-gray-500 tw-bg-gray-200 tw-ring-1 tw-ring-gray-400"
         depressed
         :ripple="false"
-        @click="saveVillage"
+        @click="cancelVillage"
         >Cancel</v-btn
       >
     </div>
@@ -78,14 +78,18 @@ export default {
     try {
       this.villages = await fetchVillages(this.$route.params.districtId)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   },
 
   methods: {
     saveVillage() {
-      console.log('Save Village')
       this.$store.dispatch('addOrphan/setVillageId', this.selectedVillageId)
+
+      this.showVillageSelect = true
+    },
+    cancelVillage() {
+      this.selectedVillageId = null
 
       this.showVillageSelect = true
     },

@@ -2,6 +2,8 @@ import { GraphQLError } from 'graphql'
 import {
   createOrphanPhoto,
   createOrphanLetter,
+  updateOrphanPhoto,
+  updateOrphanLetter,
   fetchOrphanDetail,
   fetchOrphanPersonal,
   fetchOrphanEducation,
@@ -76,6 +78,7 @@ export const state = () => ({
     dateOfBirth: undefined,
     nationality: undefined,
     mobileNumber: undefined,
+    monthlyExpense: undefined,
     telephoneNumber: undefined,
     orphanHouseType: undefined,
     orphanLivingArrangement: undefined,
@@ -204,6 +207,7 @@ export const mutations = {
     orphanGuardian.dateOfBirth = guardian.dateOfBirth?.substr(0, 10)
     orphanGuardian.nationality = guardian.nationality
     orphanGuardian.mobileNumber = guardian.mobileNumber
+    orphanGuardian.monthlyExpense = guardian.monthlyExpense
     orphanGuardian.telephoneNumber = guardian.telephoneNumber
     orphanGuardian.orphanHouseType = housing.houseType
     orphanGuardian.orphanLivingArrangement = housing.livingArrangement
@@ -379,6 +383,7 @@ export const actions = {
   async fetchCurrentOrphanHealthStatus({ commit }, id) {
     try {
       const data = await fetchOrphanHealthStatus(id)
+      console.log('fetchCurrentOrphanHealthStatus', data)
       commit('SET_ORPHAN_CURRENT_HEALTH_STATUS', data)
     } catch (error) {
       if (Array.from(error)[0] instanceof GraphQLError) {
@@ -524,6 +529,80 @@ export const actions = {
       })
       return data
       // commit('CLEAR_CREATE_ORPHAN_INPUT')
+    } catch (error) {
+      if (Array.from(error)[0] instanceof GraphQLError) {
+        error.forEach((e) => {
+          this.$toaster.showToast({
+            content: e.message,
+            state: 'error',
+          })
+        })
+        // eslint-disable-next-line no-console
+      } else console.error(error)
+      throw error
+    }
+  },
+
+  async updateOrphanPhoto(
+    { commit },
+    { id, orphanId, photoPortraitUrl, photoLongUrl }
+  ) {
+    try {
+      const updateOrphanPhotoInput = {
+        id,
+        orphanId,
+        photoLongUrl,
+        photoPortraitUrl,
+      }
+
+      console.log('Update Orphan Input: ', updateOrphanPhotoInput)
+
+      const data = await updateOrphanPhoto(updateOrphanPhotoInput)
+
+      console.log(data)
+      this.$toaster.showToast({
+        content: 'Photo updated successfully',
+        state: 'success',
+      })
+      return data
+      // commit('CLEAR_UPDATE_ORPHAN_INPUT')
+    } catch (error) {
+      if (Array.from(error)[0] instanceof GraphQLError) {
+        error.forEach((e) => {
+          this.$toaster.showToast({
+            content: e.message,
+            state: 'error',
+          })
+        })
+        // eslint-disable-next-line no-console
+      } else console.error(error)
+      throw error
+    }
+  },
+
+  async updateOrphanLetter(
+    { commit },
+    { id, orphanId, originalThankyouLetterUrl, translatedThankyouLetterUrl }
+  ) {
+    try {
+      const updateOrphanLetterInput = {
+        id,
+        orphanId,
+        originalThankyouLetterUrl,
+        translatedThankyouLetterUrl,
+      }
+
+      console.log('Update Orphan Input: ', updateOrphanLetterInput)
+
+      const data = await updateOrphanLetter(updateOrphanLetterInput)
+
+      console.log(data)
+      this.$toaster.showToast({
+        content: 'Letter updated successfully',
+        state: 'success',
+      })
+      return data
+      // commit('CLEAR_UPDATE_ORPHAN_INPUT')
     } catch (error) {
       if (Array.from(error)[0] instanceof GraphQLError) {
         error.forEach((e) => {

@@ -2,7 +2,7 @@
   <div class="tw-flex tw-gap-5">
     <section
       class="tw-grow tw-bg-white tw-rounded-md tw-p-5"
-      :class="{ 'tw-max-w-[48rem]': documentForm }"
+      :class="{ 'tw-max-w-[48rem]': letterForm }"
     >
       <!-- Header -->
       <div class="tw-w-full tw-flex tw-justify-end tw-my-4">
@@ -48,7 +48,7 @@
     <!-- Update -->
     <!-- TODO: Refactor into a component -->
     <v-form
-      v-if="documentForm"
+      v-if="letterForm"
       ref="form"
       class="tw-w-[23rem] tw-border tw-border-gray-400 tw-rounded-lg tw-p-5"
     >
@@ -150,7 +150,7 @@ export default {
 
   data() {
     return {
-      documentForm: false,
+      letterForm: false,
       orphanLettersDialog: false,
       orphanOriginalLetter: null,
       orphanTranslatedLetter: null,
@@ -207,14 +207,14 @@ export default {
 
     handleAddDocument() {
       this.isUpdate = false
-      this.documentForm = true
+      this.letterForm = true
 
       console.log('Add Doc')
     },
 
     handleDocumentUpdate(letterId) {
       this.isUpdate = true
-      this.documentForm = true
+      this.letterForm = true
 
       console.log('Update Doc: ', letterId)
       this.letterId = letterId
@@ -231,21 +231,44 @@ export default {
     },
 
     cancel() {
-      this.documentForm = false
+      this.letterForm = false
       this.letterId = null
     },
 
     submit() {
       if (this.isUpdate) {
-        this.updateDocument()
-        console.log(this.letterId)
+        this.updateLetter(this.letterId)
       } else {
-        this.addDocument()
+        this.addLetter()
       }
-      this.documentForm = false
+      this.letterForm = false
     },
 
-    async addDocument() {
+    async updateLetter(letterId) {
+      const orphanId = this.$route.params.orphanId
+
+      const originalThankyouLetterUrl =
+        this.orphanOriginalLetter &&
+        `${process.env.NUXT_API_URL}/${await handleUrlUpload(
+          this.orphanOriginalLetter
+        )}`
+      const translatedThankyouLetterUrl =
+        this.orphanTranslatedLetter &&
+        `${process.env.NUXT_API_URL}/${await handleUrlUpload(
+          this.orphanTranslatedLetter
+        )}`
+
+      await this.$store.dispatch('orphan/addOrphanLetter', {
+        id: letterId,
+        orphanId,
+        originalThankyouLetterUrl,
+        translatedThankyouLetterUrl,
+      })
+
+      await this.initialize()
+    },
+
+    async addLetter() {
       const orphanId = this.$route.params.orphanId
 
       const originalThankyouLetterUrl =
