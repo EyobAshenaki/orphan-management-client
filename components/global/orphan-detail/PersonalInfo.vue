@@ -1,9 +1,9 @@
 <template>
   <section class="tw-bg-white tw-rounded-md tw-p-5">
     <button-light
-      v-if="false"
+      v-if="!isEditable"
       class="tw-absolute tw-top-11 tw-right-6"
-      @click="isEditable = !isEditable"
+      @click="showEdit"
     >
       <fa-layers class="tw-mr-2">
         <fa :icon="['fa', 'pen-to-square']" />
@@ -39,11 +39,13 @@
           :readonly="!isEditable"
         >
           <custom-radio
+            v-if="isEditable || gender === 'M'"
             :class="[gender === 'M' ? 'tw-border-emerald-800' : '']"
             label="Male"
             value="M"
           />
           <custom-radio
+            v-if="isEditable || gender === 'F'"
             :class="[gender === 'F' ? 'tw-border-emerald-800' : '']"
             label="Female"
             value="F"
@@ -176,9 +178,11 @@
               outlined
             ></v-text-field>
           </div>
-          <button-dark @click="addHobby"> Save </button-dark>
+          <button-dark class="tw-mb-auto tw-h-[40px]" @click="addHobby">
+            Save
+          </button-dark>
           <v-btn
-            class="tw-text-sm tw-capitalize tw-text-gray-500 tw-bg-gray-200 tw-ring-1 tw-ring-gray-400"
+            class="tw-text-sm tw-capitalize tw-text-gray-500 tw-bg-gray-200 tw-ring-1 tw-ring-gray-400 tw-mb-auto tw-h-[40px]"
             :rules="[rules.textWithSpaces]"
             depressed
             :ripple="false"
@@ -188,7 +192,7 @@
           </v-btn>
         </div>
 
-        <div v-else>
+        <div v-else class="tw-flex tw-flex-col tw-gap-2">
           <div class="tw-flex tw-items-center tw-gap-2">
             <div v-if="hasHobbies">
               <v-chip
@@ -197,7 +201,7 @@
                 class="tw-mx-2 tw-my-1"
                 color="teal darken-3"
                 text-color="white"
-                close
+                :close="isEditable"
                 @click:close="deleteHobby(hobby)"
               >
                 <div
@@ -228,6 +232,7 @@
                 :readonly="!isEditable"
               ></v-text-field>
             </div>
+          </div>
 
             <button-light v-if="isEditable" @click="openHobbyField">
               <fa-layers>
@@ -240,7 +245,6 @@
                 Add New Hobby
               </span>
             </button-light>
-          </div>
         </div>
       </div>
 
@@ -251,7 +255,7 @@
           @click="cancel"
         >
           <fa-layers class="fa-lg">
-            <fa :icon="['fa', 'arrow-left-long']" />
+            <fa :icon="['fa', 'xmark']" />
           </fa-layers>
           <span class="tw-ml-4"> Cancel </span>
         </button-dark>
@@ -272,12 +276,13 @@
 </template>
 
 <script>
+import { isEqual } from 'lodash'
 import ButtonDark from '~/components/global/ButtonDark.vue'
 import ButtonLight from '~/components/global/ButtonLight.vue'
 import CustomCombobox from '~/components/global/CustomCombobox.vue'
 import CustomRadio from '~/components/global/CustomRadio.vue'
 
-import { calculateAge } from '~/helpers/app.helper'
+import { calculateAge, getObjectDiff } from '~/helpers/app.helper'
 
 import * as ethiopianLanguages from '~/helpers/commonEthiopianLanguages.json'
 import * as ethiopianReligions from '~/helpers/commonEthiopianReligions.json'
@@ -292,6 +297,18 @@ export default {
       valid: false,
       isHobbyFieldOpen: false,
       hobbyValue: '',
+      localCopy: {
+        code: '',
+        gender: '',
+        orphanName: '',
+        fatherName: '',
+        grandFatherName: '',
+        dateOfBirth: '',
+        placeOfBirth: '',
+        religion: '',
+        spokenLanguages: [],
+        hobbies: [],
+      },
       rules: {
         required: (value) => !!value || 'Required.',
         textWithSpaces: (value) =>
@@ -334,7 +351,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].code
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', { code: value })
+        this.localCopy.code = value
       },
     },
 
@@ -343,7 +360,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].gender
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', { gender: value })
+        this.localCopy.gender = value
       },
     },
 
@@ -352,7 +369,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].name
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', { name: value })
+        this.localCopy.orphanName = value
       },
     },
 
@@ -361,9 +378,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].fatherName
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
-          fatherName: value,
-        })
+        this.localCopy.fatherName = value
       },
     },
 
@@ -372,9 +387,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].grandFatherName
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
-          grandFatherName: value,
-        })
+        this.localCopy.grandFatherName = value
       },
     },
 
@@ -383,9 +396,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].dateOfBirth
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
-          dateOfBirth: value,
-        })
+        this.localCopy.dateOfBirth = value
       },
     },
 
@@ -394,9 +405,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].placeOfBirth
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
-          placeOfBirth: value,
-        })
+        this.localCopy.placeOfBirth = value
       },
     },
 
@@ -405,7 +414,7 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].religion
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', { religion: value })
+        this.localCopy.religion = value
       },
     },
 
@@ -414,14 +423,26 @@ export default {
         return this.$store.getters['orphan/orphanPersonal'].spokenLanguages
       },
       set(value) {
-        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
-          spokenLanguages: value,
-        })
+        this.localCopy.spokenLanguages = value
       },
     },
   },
 
   methods: {
+    showEdit() {
+      this.isEditable = true
+
+      this.localCopy.code = this.code
+      this.localCopy.gender = this.gender
+      this.localCopy.orphanName = this.orphanName
+      this.localCopy.fatherName = this.fatherName
+      this.localCopy.grandFatherName = this.grandFatherName
+      this.localCopy.dateOfBirth = this.dateOfBirth
+      this.localCopy.placeOfBirth = this.placeOfBirth
+      this.localCopy.religion = this.religion
+      this.localCopy.spokenLanguages = this.spokenLanguages
+      this.localCopy.hobbies = this.hobbies
+    },
     closeHobbyField() {
       this.isHobbyFieldOpen = false
     },
@@ -443,13 +464,16 @@ export default {
 
     cancel() {
       // TODO: show confirmation dialog
-      // and if confirmed, reset the store and go back to the previous page
       if (this.$refs.form.validate()) {
         this.isEditable = false
 
+        this.$store.commit('orphan/MODIFY_ORPHAN_PERSONAL', {
+          hobbies: this.localCopy.hobbies,
+        })
+
         this.$toaster.showToast({
           content: 'Profile Edit Cancelled',
-          state: 'error',
+          state: 'warning',
         })
       }
     },
@@ -458,9 +482,30 @@ export default {
       if (this.$refs.form.validate()) {
         this.isEditable = false
 
-        this.$toaster.showToast({
-          content: 'Profile Edited successfully',
-          state: 'success',
+        const original = {
+          code: this.code,
+          gender: this.gender,
+          orphanName: this.orphanName,
+          fatherName: this.fatherName,
+          grandFatherName: this.grandFatherName,
+          dateOfBirth: this.dateOfBirth,
+          placeOfBirth: this.placeOfBirth,
+          religion: this.religion,
+          spokenLanguages: this.spokenLanguages,
+          hobbies: this.hobbies,
+        }
+
+        if (isEqual(original, this.localCopy)) return
+
+        const diff = getObjectDiff(original, this.localCopy)
+        if (diff?.orphanName) {
+          diff.name = diff.orphanName
+          delete diff.orphanName
+        }
+
+        this.$store.dispatch('orphan/updateOrphanPersonal', {
+          id: this.$route.params.orphanId,
+          ...diff,
         })
       }
     },

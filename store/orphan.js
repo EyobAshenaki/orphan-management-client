@@ -15,6 +15,7 @@ import {
   fetchOrphanPhotos,
   fetchOrphanLetters,
   fetchOrphanDocuments,
+  updateOrphanPersonal,
 } from '~/services/orphan.service'
 
 export const state = () => ({
@@ -150,9 +151,8 @@ export const mutations = {
     orphanPersonal.hobbies = payload.hobbies
   },
 
-  MODIFY_ORPHAN_PERSONAL({ orphanPersonal }, payload) {
-    orphanPersonal = { ...orphanPersonal, ...payload }
-    console.log('MODIFY_ORPHAN_PERSONAL', orphanPersonal)
+  MODIFY_ORPHAN_PERSONAL(state, payload) {
+    state.orphanPersonal = { ...state.orphanPersonal, ...payload }
   },
 
   SET_ORPHAN_EDUCATION(
@@ -259,14 +259,14 @@ export const mutations = {
     console.log('MODIFY_ORPHAN_DOCUMENTS', orphanDocuments)
   },
 
-  ADD_HOBBY({ orphanPersonal }, payload) {
-    orphanPersonal.hobbies.push(payload)
-    console.log('ADD_HOBBY', orphanPersonal.hobbies)
+  ADD_HOBBY(state, payload) {
+    state.orphanPersonal.hobbies = [...state.orphanPersonal.hobbies, payload]
   },
 
-  REMOVE_HOBBY({ orphanPersonal }, payload) {
-    orphanPersonal.hobbies.splice(payload, 1)
-    console.log('REMOVE_HOBBY', orphanPersonal.hobbies)
+  REMOVE_HOBBY(state, payload) {
+    state.orphanPersonal.hobbies = state.orphanPersonal.hobbies.filter(
+      (h) => h !== payload
+    )
   },
 }
 
@@ -612,6 +612,32 @@ export const actions = {
           })
         })
         // eslint-disable-next-line no-console
+      } else console.error(error)
+      throw error
+    }
+  },
+
+  async updateOrphanPersonal({ state, commit }, payload) {
+    try {
+      const data = await updateOrphanPersonal({
+        ...payload,
+        hobbies: state.orphanPersonal.hobbies,
+      })
+      commit('SET_ORPHAN_PERSONAL', data)
+      this.$toaster.showToast({
+        content: 'Orphan personal updated successfully',
+        state: 'success',
+      })
+      return data
+    } catch (error) {
+      if (Array.from(error)[0] instanceof GraphQLError) {
+        console.log(error)
+        error.forEach((e) => {
+          this.$toaster.showToast({
+            content: e.message,
+            state: 'error',
+          })
+        })
       } else console.error(error)
       throw error
     }

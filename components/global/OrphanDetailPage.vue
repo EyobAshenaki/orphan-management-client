@@ -63,6 +63,7 @@
         slider-size="3"
         class="pb-7 mt-8"
         active-class="tw-text-emerald-800"
+        show-arrows
       >
         <v-tabs-slider
           class="tw-w-[65%] tw-absolute tw-top-1/2 tw-left-1/2 tw--translate-x-1/2 tw--translate-y-1/2"
