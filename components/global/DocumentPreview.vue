@@ -49,20 +49,20 @@
 
         <!-- Menu Content -->
         <v-list>
-          <v-list-item dense @click="handleUpdateClick">
-            <div class="tw-w-32 tw-flex tw-gap-2.5 tw-items-center">
-              <fa-layers class="tw-mr-2">
-                <fa :icon="['fa', 'arrows-rotate']" />
-              </fa-layers>
-              <span>Update</span>
-            </div>
-          </v-list-item>
           <v-list-item dense @click="handleViewClick">
             <div class="tw-w-32 tw-flex tw-gap-2.5 tw-items-center">
               <fa-layers class="tw-mr-2">
                 <fa :icon="['fas', 'eye']" />
               </fa-layers>
               <span>View</span>
+            </div>
+          </v-list-item>
+          <v-list-item dense @click="handleUpdateClick">
+            <div class="tw-w-32 tw-flex tw-gap-2.5 tw-items-center">
+              <fa-layers class="tw-mr-2">
+                <fa :icon="['fa', 'arrows-rotate']" />
+              </fa-layers>
+              <span>Update</span>
             </div>
           </v-list-item>
         </v-list>

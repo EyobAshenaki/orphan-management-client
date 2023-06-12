@@ -257,6 +257,9 @@ export const getters = {
       assets,
     }
   },
+
+  villageSelected: ({ createOrphanInput: { villageId } }) =>
+    villageId?.length > 0,
 }
 
 export const mutations = {

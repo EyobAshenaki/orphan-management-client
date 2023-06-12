@@ -109,7 +109,10 @@
             <fa class="tw-w-6 tw-h-6" :icon="['fa', 'xmark']" />
           </fa-layers>
         </v-btn>
-        <div class="tw-flex tw-gap-7">
+        <div class="tw-flex tw-flex-col tw-gap-7">
+          <h3 class="tw-w-1/2 tw-font-serif tw-text-xl">
+            Portrait Photo
+          </h3>
           <v-img
             :src="portraitPhoto"
             contain
@@ -117,6 +120,12 @@
             class="tw-rounded-lg"
           >
           </v-img>
+
+          <v-divider></v-divider>
+
+          <h3 class="tw-w-1/2 tw-font-serif tw-text-xl">
+            Long Photo
+          </h3>
 
           <v-img
             :src="longPhoto"
@@ -126,14 +135,7 @@
           >
           </v-img>
         </div>
-        <div class="tw-flex tw-gap-7 mt-7">
-          <h3 class="tw-w-1/2 tw-font-mono tw-text-xl tw-text-center">
-            Portrait Photo
-          </h3>
-          <h3 class="tw-w-1/2 tw-font-mono tw-text-xl tw-text-center">
-            Long Photo
-          </h3>
-        </div>
+        <div class="tw-flex tw-gap-7 mt-7"></div>
       </div>
     </v-dialog>
   </div>
