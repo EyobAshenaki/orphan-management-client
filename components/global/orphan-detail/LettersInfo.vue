@@ -109,7 +109,10 @@
             <fa class="tw-w-6 tw-h-6" :icon="['fa', 'xmark']" />
           </fa-layers>
         </v-btn>
-        <div class="tw-flex tw-gap-7">
+        <div class="tw-flex tw-flex-col tw-gap-7">
+          <h3 class="tw-w-1/2 tw-font-serif tw-text-xl">
+            Original Thankyou Letter
+          </h3>
           <v-img
             :src="originalLetter"
             contain
@@ -118,6 +121,12 @@
           >
           </v-img>
 
+          <v-divider></v-divider>
+
+          <h3 class="tw-w-1/2 tw-font-serif tw-text-xl">
+            Translated Thankyou Letter
+          </h3>
+
           <v-img
             :src="translatedLetter"
             contain
@@ -125,14 +134,6 @@
             class="tw-rounded-lg"
           >
           </v-img>
-        </div>
-        <div class="tw-flex tw-gap-7 mt-7">
-          <h3 class="tw-w-1/2 tw-font-mono tw-text-xl tw-text-center">
-            Original Thankyou Letter
-          </h3>
-          <h3 class="tw-w-1/2 tw-font-mono tw-text-xl tw-text-center">
-            Translated Thankyou Letter
-          </h3>
         </div>
       </div>
     </v-dialog>

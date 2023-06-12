@@ -145,7 +145,7 @@ export default {
         // 'Health',
         'Letters',
         'Photos',
-        'Documents',
+        // 'Documents',
       ],
     }
   },
