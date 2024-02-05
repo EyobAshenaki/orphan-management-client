@@ -175,7 +175,7 @@
             Grade / Age Mismatch Reason (Optional)
           </label>
           <v-text-field
-            v-model="gradeAgeMismatchReason"
+            v-model="yearAgeMismatchReason"
             :rules="[rules.textWithSpaces]"
             class="tw-w-1/2"
             color="teal darken-2"
@@ -380,7 +380,7 @@ export default {
     },
 
     hasGradeAgeMismatch() {
-      return this.gradeAgeMismatchReason?.length > 0
+      return this.yearAgeMismatchReason?.length > 0
     },
 
     enrollmentStatus: {
@@ -416,14 +416,14 @@ export default {
       },
     },
 
-    gradeAgeMismatchReason: {
+    yearAgeMismatchReason: {
       get() {
         return this.$store.getters['orphan/orphanEducation']
-          .gradeAgeMismatchReason
+          .yearAgeMismatchReason
       },
       set(value) {
         this.$store.commit('orphan/MODIFY_ORPHAN_EDUCATION', {
-          gradeAgeMismatchReason: value,
+          yearAgeMismatchReason: value,
         })
       },
     },

@@ -88,7 +88,7 @@ query FetchOrphan($orphanId: ID!) {
         status
       }
     }
-    latestOrphanData {
+    currentOrphanData {
       photos {
         photoPortraitUrl
       }
@@ -132,7 +132,7 @@ query FetchOrphanDetail($orphanId: ID!) {
         name
       }
     }
-    latestOrphanData {
+    currentOrphanData {
       photos {
         photoLongUrl
         photoPortraitUrl
@@ -180,8 +180,8 @@ mutation UpdateOrphanPersonal($input: UpdateOrphanInput!) {
   }
 }
 
-mutation UpdateFather($input: UpdateFatherInput!){
-  updateFather(input: $input){
+mutation UpdateFather($input: UpdateFatherInput!) {
+  updateFather(input: $input) {
     firstName
     lastName
   }
@@ -189,15 +189,19 @@ mutation UpdateFather($input: UpdateFatherInput!){
 
 query FetchOrphanEducation($orphanId: ID!) {
   orphan(id: $orphanId) {
-    latestOrphanData {
-      educationalRecord {
-        enrollmentStatus
+    currentOrphanData {
+      enrollmentStatusRecord {
+        status
+        reason
+      }
+      schoolInfo {
+        name
+        type
+      }
+      academicInfo {
         level
         year
-        gradeAgeMismatchReason
-        typeOfSchool
-        schoolName
-        reason
+        yearAgeMismatchReason
       }
     }
   }
@@ -205,71 +209,66 @@ query FetchOrphanEducation($orphanId: ID!) {
 
 query FetchOrphanEducationHistory($orphanId: ID!) {
   orphan(id: $orphanId) {
-    educationalRecords {
-      id
-      year
-      level
-      typeOfSchool
-      schoolName
+    schoolHistory {
+      createdAt
+      name
+      type
       yearDivision
-      semester
-      quarter
-      totalMark
-      numberOfSubjects
-      average
-      rank
-      reportCard {
-        documentUrl
-      }
-    }
-  }
-}
-
-query FetchLatestEducationalRecord($id: ID!) {
-  orphan(id: $id) {
-    latestOrphanData {
-      educationalRecord {
-        id
-        yearDivision
-        year
+      academicInfo {
+        createdAt
         level
-        typeOfSchool
-        schoolName
-        semester
-        quarter
+        year
         numberOfSubjects
-        enrollmentStatus
-        gradeAgeMismatchReason
-        reason
-        semesterGPA
-        cumulativeGPA
+        yearAgeMismatchReason
+        academicResults {
+          createdAt
+          currentDivision
+          totalMark
+          average
+          rank
+          reportCard {
+            documentUrl
+            documentType
+          }
+        }
       }
     }
   }
 }
 
-mutation CreateEducationalRecord($input: CreateEducationalRecordInput!) {
-  createEducationalRecord(input: $input) {
-    id
-    enrollmentStatus
-    gradeAgeMismatchReason
-    reason
-    semester
-    quarter
-    totalMark
-    average
-    rank
-    semesterGPA
-    cumulativeGPA
-    reportCard {
-      documentType
-      documentUrl
+query FetchCurrentEducationalRecord($id: ID!) {
+  orphan(id: $id) {
+    currentOrphanData {
+      enrollmentStatusRecord {
+        status
+        reason
+      }
+      schoolInfo {
+        name
+        type
+        yearDivision
+      }
+      academicInfo {
+        id
+        level
+        year
+        numberOfSubjects
+        yearAgeMismatchReason
+      }
+      academicResult {
+        currentDivision
+        totalMark
+        average
+        rank
+      }
     }
   }
 }
 
-mutation DeleteEducationalRecord($id: ID!) {
-  deleteEducationalRecord(id: $id) {
+mutation CreateAcademicResult(
+  $input: CreateAcademicResultWithAcademicInfoInput!
+) {
+  createAcademicResult(input: $input) {
     id
   }
 }

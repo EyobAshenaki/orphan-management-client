@@ -17,9 +17,8 @@ import {
   UpdateFather,
   FetchOrphanEducation,
   FetchOrphanEducationHistory,
-  FetchLatestEducationalRecord,
-  CreateEducationalRecord,
-  DeleteEducationalRecord,
+  FetchCurrentEducationalRecord,
+  CreateAcademicResult,
   FetchOrphanFamily,
   FetchOrphanGuardian,
   FetchOrphanHealthStatus,
@@ -276,49 +275,34 @@ export async function fetchOrphanEducationHistory(orphanId = null) {
   throw errors
 }
 
-export async function fetchLatestEducationalRecord(id = null) {
+export async function fetchCurrentEducationalRecord(id = null) {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
-      operationName: 'FetchLatestEducationalRecord',
-      query: print(FetchLatestEducationalRecord),
+      operationName: 'FetchCurrentEducationalRecord',
+      query: print(FetchCurrentEducationalRecord),
       variables: {
         id,
       },
     })
   )
-  if (data) return data?.orphan?.latestOrphanData?.educationalRecord
+  if (data) return data?.orphan?.currentOrphanData
 
   throw errors
 }
 
-export async function createLatestEducationalRecord(
-  createEducationalRecordInput = { enrollmentStatus: 'ENROLLED' }
+export async function createAcademicResult(
+  createAcademicResultInput
 ) {
   const { data, errors } = await handleGQL(() =>
     graphqlInstance.post('', {
-      operationName: 'CreateEducationalRecord',
-      query: print(CreateEducationalRecord),
+      operationName: 'CreateAcademicResult',
+      query: print(CreateAcademicResult),
       variables: {
-        input: createEducationalRecordInput,
+        input: createAcademicResultInput,
       },
     })
   )
   if (data) return data?.orphan?.latestOrphanData?.educationalRecord
-
-  throw errors
-}
-
-export async function deleteEducationalRecord(id) {
-  const { data, errors } = await handleGQL(() => {
-    return graphqlInstance.post('', {
-      operationName: 'DeleteEducationalRecord',
-      query: print(DeleteEducationalRecord),
-      variables: {
-        id,
-      },
-    })
-  })
-  if (data) return data?.id
 
   throw errors
 }
