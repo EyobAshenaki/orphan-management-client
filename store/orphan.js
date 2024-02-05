@@ -48,8 +48,8 @@ export const state = () => ({
     enrollmentStatus: undefined,
     level: undefined,
     year: undefined,
-    gradeAgeMismatchReason: undefined,
-    typeofSchool: undefined,
+    yearAgeMismatchReason: undefined,
+    typeOfSchool: undefined,
     schoolName: undefined,
     reason: undefined,
   },
@@ -125,7 +125,7 @@ export const mutations = {
     { orphanDetail },
     {
       village: { name, district },
-      latestOrphanData: {
+      currentOrphanData: {
         photos: { photoPortraitUrl, photoLongUrl },
       },
       currentOrphanData,
@@ -157,16 +157,16 @@ export const mutations = {
 
   SET_ORPHAN_EDUCATION(
     { orphanEducation },
-    { latestOrphanData: { educationalRecord } }
+    { currentOrphanData: { enrollmentStatusRecord, schoolInfo, academicInfo } }
   ) {
-    orphanEducation.enrollmentStatus = educationalRecord?.enrollmentStatus
-    orphanEducation.level = educationalRecord?.level
-    orphanEducation.year = educationalRecord?.year
-    orphanEducation.gradeAgeMismatchReason =
-      educationalRecord?.gradeAgeMismatchReason
-    orphanEducation.typeOfSchool = educationalRecord?.typeOfSchool
-    orphanEducation.schoolName = educationalRecord?.schoolName
-    orphanEducation.reason = educationalRecord?.reason
+    orphanEducation.enrollmentStatus = enrollmentStatusRecord?.status
+    orphanEducation.level = academicInfo?.level
+    orphanEducation.year = academicInfo?.year
+    orphanEducation.yearAgeMismatchReason =
+      academicInfo?.yearAgeMismatchReason
+    orphanEducation.typeOfSchool = schoolInfo?.type
+    orphanEducation.schoolName = schoolInfo?.name
+    orphanEducation.reason = enrollmentStatusRecord?.reason
   },
 
   MODIFY_ORPHAN_EDUCATION({ orphanEducation }, payload) {

@@ -7,7 +7,7 @@ export function calculateAge(dateOfBirth) {
 }
 
 export function orphanFullName(orphan) {
-  return `${orphan.name} ${orphan.father.firstName} ${orphan.father.middleName}`
+  return `${orphan.name} ${orphan.father.firstName} ${orphan.father.lastName}`
 }
 
 export function fullName(person) {

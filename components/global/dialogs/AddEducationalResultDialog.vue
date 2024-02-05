@@ -120,8 +120,8 @@
 import { startCase } from 'lodash'
 import { handleUrlUpload } from '~/helpers/upload.helper'
 import {
-  createLatestEducationalRecord,
-  fetchLatestEducationalRecord,
+  createAcademicResult,
+  fetchCurrentEducationalRecord,
 } from '~/services/orphan.service'
 export default {
   name: 'AddEducationalResultDialog',
@@ -152,13 +152,15 @@ export default {
           'Only letters and spaces allowed.',
       },
       loading: false,
-      latestEducationalRecord: null,
+      currentEducationalRecord: null,
+      yearDivision: null,
       currentYearDivisionValue: null,
       totalMark: null,
       average: null,
       rank: null,
       yearOutcome: null,
       reportCard: null,
+      eoy: null,
     }
   },
 
@@ -175,14 +177,15 @@ export default {
     currentYearDivisionLabel() {
       return startCase(
         (
-          this.latestEducationalRecord?.yearDivision ??
-          'Year Division (Semester/Quarter/Term)'
+          this.yearDivision ?? 'Year Division (Semester/Quarter/Term)'
         ).toLowerCase()
       )
     },
 
     currentYearDivisionOptions() {
-      return this.latestEducationalRecord?.yearDivision === 'QUARTER'
+      const isQuarter = this.yearDivision === 'QUARTER'
+      const isSemester = this.yearDivision === 'SEMESTER'
+      return isQuarter
         ? [
             {
               text: 'First (1st Quarter)',
@@ -201,7 +204,7 @@ export default {
               value: 'FOURTH',
             },
           ]
-        : this.latestEducationalRecord?.yearDivision === 'SEMESTER'
+        : isSemester
         ? [
             {
               text: 'First (1st Semester)',
@@ -217,9 +220,9 @@ export default {
 
     endOfYear() {
       return (
-        (this.latestEducationalRecord?.yearDivision === 'SEMESTER' &&
+        (this.yearDivision === 'SEMESTER' &&
           this.currentYearDivisionValue === 'SECOND') ||
-        (this.latestEducationalRecord?.yearDivision === 'QUARTER' &&
+        (this.yearDivision === 'QUARTER' &&
           this.currentYearDivisionValue === 'FOURTH')
       )
     },
@@ -232,9 +235,14 @@ export default {
       this.loading = true
 
       try {
-        this.latestEducationalRecord = await fetchLatestEducationalRecord(
+        this.currentEducationalRecord = await fetchCurrentEducationalRecord(
           this.orphanId
         )
+        this.yearDivision =
+          this.currentEducationalRecord?.schoolInfo?.yearDivision
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error)
       } finally {
         this.loading = false
       }
@@ -245,34 +253,27 @@ export default {
     async submit() {
       this.$refs.form.validate()
       if (this.valid) {
-        const { yearDivision, id, ...unchangedData } =
-          this.latestEducationalRecord
-        const createEducationalRecordInput = {
-          ...unchangedData,
-          orphanId: this.orphanId,
-          yearDivision,
-          semester:
-            yearDivision === 'SEMESTER'
-              ? this.currentYearDivisionValue
-              : 'NONE',
-          quarter:
-            yearDivision === 'QUARTER' ? this.currentYearDivisionValue : 'NONE',
-          totalMark: +Number(this.totalMark).toFixed(2),
+        const {
+          academicInfo: { id: academicInfoId },
+        } = this.currentEducationalRecord
+        const createAcademicResultInput = {
+          academicInfoId,
           average: +Number(this.average).toFixed(2),
+          currentDivision: this.currentYearDivisionValue,
           rank: +Number(this.rank).toFixed(0),
-          yearOutcome: this.endOfYear ? this.yearOutcome : 'NONE',
           reportCard: {
             documentType: 'REPORT_CARD',
             documentUrl: `${process.env.NUXT_API_URL}/${await handleUrlUpload(
               this.reportCard
             )}`,
+            orphanId: this.orphanId,
           },
+          totalMark: +Number(this.totalMark).toFixed(2),
+          yearOutcome: this.endOfYear ? this.yearOutcome : 'NONE',
         }
 
-        console.log({ createEducationalRecordInput })
-
         try {
-          await createLatestEducationalRecord(createEducationalRecordInput)
+          await createAcademicResult(createAcademicResultInput)
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error(error)
@@ -291,6 +292,7 @@ export default {
 .form-control {
   @apply tw-w-full tw-flex tw-flex-col tw-gap-1;
 }
+
 .form-label {
   @apply tw-text-sm tw-text-gray-800 tw-font-light;
 }

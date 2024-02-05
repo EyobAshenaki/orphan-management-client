@@ -110,7 +110,7 @@
         </button-dark>
 
         <button-dark
-          :disabled="!valid"
+          :disabled="!valid || !villageSelected"
           class="tw-rounded-lg tw-py-6 tw-px-5"
           @click="submit"
         >
@@ -154,6 +154,12 @@ export default {
         required: (value) => !!value || 'Required.',
       },
     }
+  },
+
+  computed: {
+    villageSelected() {
+      return this.$store.getters['addOrphan/villageSelected']
+    },
   },
 
   methods: {
@@ -246,6 +252,14 @@ export default {
         const data = await this.$store.dispatch('addOrphan/submitOrphan')
 
         console.log(data)
+
+        this.$router.push({
+          name: 'districts-districtId-orphanId',
+          params: {
+            districtId: this.$route.params.districtId,
+            orphanId: data.id,
+          },
+        })
       }
     },
   },

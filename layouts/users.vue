@@ -6,9 +6,9 @@
 
         <v-spacer></v-spacer>
 
-        <search-field />
+        <search-field v-if="false" />
 
-        <v-avatar size="40" color="grey lighten-2">
+        <v-avatar v-if="false" size="40" color="grey lighten-2">
           <fa-layers class="fa-lg">
             <fa :icon="['fa', 'user']" />
           </fa-layers>

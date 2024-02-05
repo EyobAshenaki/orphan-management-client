@@ -62,10 +62,10 @@
         ></v-progress-linear>
       </template>
       <div class="tw-p-7 tw-font-sans tw-antialiased tw-font-normal">
-        <p class="tw-text-4xl">⚠️This is a testing environment⚠️</p>
+        <p class="tw-text-4xl">⚠️This is a demo environment⚠️</p>
         <v-divider class="tw-mb-2" />
         <p class="tw-break-keep tw-italic tw-text-lg tw-font-medium">
-          You can check and evaluate the application without affecting the main
+          You can check and examine the application without affecting the main
           data.Therefore any changes you make here will not be reflected on the
           main site. Furthermore, changes you make here could be deleted at any
           time. Yon can login as one of the following users:
